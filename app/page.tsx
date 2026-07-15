@@ -1,16 +1,9 @@
+import Navbar from "./components/Navbar";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100">
-      <nav className="bg-black text-white p-5 flex justify-between">
-        <h1 className="text-2xl font-bold">AutoBazaar Finds</h1>
-
-        <div className="space-x-6">
-          <a href="#">Home</a>
-          <a href="#">Browse Cars</a>
-          <a href="#">Sell</a>
-          <a href="#">Contact</a>
-        </div>
-      </nav>
+      <Navbar />
 
       <section className="text-center py-24">
         <h2 className="text-5xl font-bold">
@@ -114,7 +107,6 @@ export default function Home() {
 
         </div>
       </section>
-
     </main>
   );
 }
