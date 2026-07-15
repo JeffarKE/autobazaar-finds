@@ -1,23 +1,12 @@
 import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100">
       <Navbar />
 
-      <section className="text-center py-24">
-        <h2 className="text-5xl font-bold">
-          Find Your Perfect Car
-        </h2>
-
-        <p className="mt-6 text-gray-600 text-xl">
-          Kenya's trusted marketplace for quality vehicles.
-        </p>
-
-        <button className="mt-8 bg-black text-white px-8 py-4 rounded-lg">
-          Browse Cars
-        </button>
-      </section>
+      <Hero />
 
       {/* Featured Vehicles */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
@@ -47,7 +36,7 @@ export default function Home() {
                 KSh 4,850,000
               </p>
 
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg">
+              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
                 View Details
               </button>
             </div>
@@ -73,7 +62,7 @@ export default function Home() {
                 KSh 8,999,999
               </p>
 
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg">
+              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
                 View Details
               </button>
             </div>
@@ -99,7 +88,7 @@ export default function Home() {
                 KSh 1,600,000
               </p>
 
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg">
+              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
                 View Details
               </button>
             </div>
