@@ -1,0 +1,32 @@
+export const cars = [
+  {
+    id: 1,
+    make: "Toyota",
+    model: "Land Cruiser Prado",
+    year: 2018,
+    price: 4850000,
+    fuel: "Diesel",
+    transmission: "Automatic",
+    image: "https://placehold.co/400x250",
+  },
+  {
+    id: 2,
+    make: "BMW",
+    model: "X5 M Sport",
+    year: 2019,
+    price: 8999999,
+    fuel: "Diesel",
+    transmission: "Automatic",
+    image: "https://placehold.co/400x250",
+  },
+  {
+    id: 3,
+    make: "Subaru",
+    model: "Forester SG5",
+    year: 2007,
+    price: 1600000,
+    fuel: "Petrol",
+    transmission: "Manual",
+    image: "https://placehold.co/400x250",
+  },
+];
