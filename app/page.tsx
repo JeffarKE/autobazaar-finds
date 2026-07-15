@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import CarCard from "./components/CarCard";
 
 export default function Home() {
   return (
@@ -16,83 +17,26 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <img
-              src="https://placehold.co/400x250"
-              alt="Toyota Prado"
-              className="w-full"
-            />
+          <CarCard
+            image="https://placehold.co/400x250"
+            title="Toyota Land Cruiser Prado"
+            details="2018 • Diesel • Automatic"
+            price="KSh 4,850,000"
+          />
 
-            <div className="p-5">
-              <h3 className="text-2xl font-bold">
-                Toyota Land Cruiser Prado
-              </h3>
+          <CarCard
+            image="https://placehold.co/400x250"
+            title="BMW X5 M Sport"
+            details="2019 • Diesel • Automatic"
+            price="KSh 8,999,999"
+          />
 
-              <p className="text-gray-600 mt-2">
-                2018 • Diesel • Automatic
-              </p>
-
-              <p className="text-2xl font-bold mt-4">
-                KSh 4,850,000
-              </p>
-
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
-                View Details
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <img
-              src="https://placehold.co/400x250"
-              alt="BMW X5"
-              className="w-full"
-            />
-
-            <div className="p-5">
-              <h3 className="text-2xl font-bold">
-                BMW X5 M Sport
-              </h3>
-
-              <p className="text-gray-600 mt-2">
-                2019 • Diesel • Automatic
-              </p>
-
-              <p className="text-2xl font-bold mt-4">
-                KSh 8,999,999
-              </p>
-
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
-                View Details
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <img
-              src="https://placehold.co/400x250"
-              alt="Subaru Forester"
-              className="w-full"
-            />
-
-            <div className="p-5">
-              <h3 className="text-2xl font-bold">
-                Subaru Forester SG5
-              </h3>
-
-              <p className="text-gray-600 mt-2">
-                Manual • Turbo • AWD
-              </p>
-
-              <p className="text-2xl font-bold mt-4">
-                KSh 1,600,000
-              </p>
-
-              <button className="mt-5 w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
-                View Details
-              </button>
-            </div>
-          </div>
+          <CarCard
+            image="https://placehold.co/400x250"
+            title="Subaru Forester SG5"
+            details="Manual • Turbo • AWD"
+            price="KSh 1,600,000"
+          />
 
         </div>
       </section>
