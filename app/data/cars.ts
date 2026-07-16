@@ -1,32 +1,45 @@
-export const cars = [
+// Data file for cars used by the app. Export a named `cars` array.
+
+export type Car = {
+  id: string;
+  image: string;
+  make: string;
+  model: string;
+  year: number;
+  fuel: string;
+  transmission: string;
+  price: number;
+};
+
+export const cars: Car[] = [
   {
-    id: 1,
+    id: "1",
+    image: "/images/toyota-corolla.jpg",
     make: "Toyota",
-    model: "Land Cruiser Prado",
+    model: "Corolla",
     year: 2018,
-    price: 4850000,
-    fuel: "Diesel",
+    fuel: "Petrol",
     transmission: "Automatic",
-    image: "https://placehold.co/400x250",
+    price: 1200000,
   },
   {
-    id: 2,
-    make: "BMW",
-    model: "X5 M Sport",
+    id: "2",
+    image: "/images/mazda-cx5.jpg",
+    make: "Mazda",
+    model: "CX-5",
     year: 2019,
-    price: 8999999,
     fuel: "Diesel",
     transmission: "Automatic",
-    image: "https://placehold.co/400x250",
+    price: 2200000,
   },
   {
-    id: 3,
-    make: "Subaru",
-    model: "Forester SG5",
-    year: 2007,
-    price: 1600000,
+    id: "3",
+    image: "/images/honda-fit.jpg",
+    make: "Honda",
+    model: "Fit",
+    year: 2017,
     fuel: "Petrol",
     transmission: "Manual",
-    image: "https://placehold.co/400x250",
+    price: 800000,
   },
 ];
