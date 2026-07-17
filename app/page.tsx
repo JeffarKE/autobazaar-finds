@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CarCard from "./components/CarCard";
+import { cars } from "./data/cars";
 
 export default function Home() {
   return (
@@ -16,28 +17,16 @@ export default function Home() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-          <CarCard
-            image="https://placehold.co/400x250"
-            title="Toyota Land Cruiser Prado"
-            details="2018 • Diesel • Automatic"
-            price="KSh 4,850,000"
-          />
-
-          <CarCard
-            image="https://placehold.co/400x250"
-            title="BMW X5 M Sport"
-            details="2019 • Diesel • Automatic"
-            price="KSh 8,999,999"
-          />
-
-          <CarCard
-            image="https://placehold.co/400x250"
-            title="Subaru Forester SG5"
-            details="Manual • Turbo • AWD"
-            price="KSh 1,600,000"
-          />
-
+          {cars.map((car) => (
+            <CarCard
+              key={car.id}
+              id={car.id}
+              image={car.image}
+              title={`${car.make} ${car.model}`}
+              details={`${car.year} • ${car.fuel} • ${car.transmission}`}
+              price={`KSh ${car.price.toLocaleString()}`}
+            />
+          ))}
         </div>
       </section>
     </main>
