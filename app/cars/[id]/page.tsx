@@ -36,6 +36,7 @@ export default async function CarDetails({ params }: PageProps) {
         priority
       />
 
+
       {/* Image Gallery */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
 
@@ -52,23 +53,29 @@ export default async function CarDetails({ params }: PageProps) {
 
       </section>
 
+
       <h1 className="text-4xl font-bold mt-8">
         {car.make} {car.model}
       </h1>
+
 
       <p className="text-gray-600 mt-2">
         {car.year} • {car.fuel} • {car.transmission}
       </p>
 
+
       <p className="text-3xl font-bold mt-6">
         KSh {car.price.toLocaleString()}
       </p>
+
 
       {/* Professional Action Bar */}
       <ActionBar
         whatsappLink={whatsappLink}
         phone={car.phone}
+        carId={car.id}
       />
+
 
       {/* Vehicle Specifications */}
       <section className="mt-10 bg-white rounded-xl shadow-md p-6">
@@ -107,6 +114,7 @@ export default async function CarDetails({ params }: PageProps) {
 
       </section>
 
+
       {/* Description */}
       <section className="mt-8 bg-white rounded-xl shadow-md p-6">
 
@@ -119,6 +127,7 @@ export default async function CarDetails({ params }: PageProps) {
         </p>
 
       </section>
+
 
     </main>
   );

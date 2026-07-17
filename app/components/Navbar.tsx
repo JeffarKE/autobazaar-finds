@@ -1,16 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Home,
   CarFront,
+  Heart,
   CircleDollarSign,
   Phone,
 } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
+
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    function updateSavedCount() {
+      const savedCars: string[] = JSON.parse(
+        localStorage.getItem("savedCars") || "[]"
+      );
+
+      setSavedCount(savedCars.length);
+    }
+
+    // Load when navbar mounts
+    updateSavedCount();
+
+    // Update whenever localStorage changes
+    window.addEventListener("storage", updateSavedCount);
+
+    // Update when another component tells us saved cars changed
+    window.addEventListener("savedCarsUpdated", updateSavedCount);
+
+    return () => {
+      window.removeEventListener("storage", updateSavedCount);
+      window.removeEventListener(
+        "savedCarsUpdated",
+        updateSavedCount
+      );
+    };
+  }, []);
 
   const navItems = [
     {
@@ -22,6 +53,14 @@ export default function Navbar() {
       href: "/browse",
       label: "Browse Cars",
       icon: CarFront,
+    },
+    {
+      href: "/saved",
+      label:
+        savedCount > 0
+          ? `Saved (${savedCount})`
+          : "Saved",
+      icon: Heart,
     },
     {
       href: "/sell",
