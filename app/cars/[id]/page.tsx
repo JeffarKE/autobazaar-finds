@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ActionBar from "../../components/ActionBar";
 import { cars } from "../../data/cars";
 
 type PageProps = {
@@ -16,6 +17,12 @@ export default async function CarDetails({ params }: PageProps) {
     return <h1 className="text-center mt-20">Car not found.</h1>;
   }
 
+  const whatsappMessage = encodeURIComponent(
+    `Hi, I'm interested in the ${car.year} ${car.make} ${car.model} listed on Auto Baazar Finds. Is it still available?`
+  );
+
+  const whatsappLink = `https://wa.me/${car.phone}?text=${whatsappMessage}`;
+
   return (
     <main className="max-w-5xl mx-auto p-8">
 
@@ -26,8 +33,8 @@ export default async function CarDetails({ params }: PageProps) {
         width={1000}
         height={600}
         className="w-full rounded-xl object-cover"
+        priority
       />
-
 
       {/* Image Gallery */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
@@ -45,21 +52,23 @@ export default async function CarDetails({ params }: PageProps) {
 
       </section>
 
-
       <h1 className="text-4xl font-bold mt-8">
         {car.make} {car.model}
       </h1>
-
 
       <p className="text-gray-600 mt-2">
         {car.year} • {car.fuel} • {car.transmission}
       </p>
 
-
       <p className="text-3xl font-bold mt-6">
         KSh {car.price.toLocaleString()}
       </p>
 
+      {/* Professional Action Bar */}
+      <ActionBar
+        whatsappLink={whatsappLink}
+        phone={car.phone}
+      />
 
       {/* Vehicle Specifications */}
       <section className="mt-10 bg-white rounded-xl shadow-md p-6">
@@ -98,7 +107,6 @@ export default async function CarDetails({ params }: PageProps) {
 
       </section>
 
-
       {/* Description */}
       <section className="mt-8 bg-white rounded-xl shadow-md p-6">
 
@@ -111,11 +119,6 @@ export default async function CarDetails({ params }: PageProps) {
         </p>
 
       </section>
-
-
-      <button className="mt-8 bg-green-600 text-white px-8 py-4 rounded-lg hover:bg-green-700">
-        Contact Seller on WhatsApp
-      </button>
 
     </main>
   );

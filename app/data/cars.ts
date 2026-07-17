@@ -14,6 +14,7 @@ export type Car = {
   driveType: string;
   condition: string;
   location: string;
+  phone: string;
   description: string;
 };
 
@@ -36,6 +37,7 @@ export const cars: Car[] = [
     driveType: "Front Wheel Drive",
     condition: "Clean Used",
     location: "Nairobi",
+    phone: "254712345678",
     description:
       "A clean and reliable Toyota Corolla suitable for daily commuting and family use.",
   },
@@ -58,6 +60,7 @@ export const cars: Car[] = [
     driveType: "Front Wheel Drive",
     condition: "Foreign Used",
     location: "Nairobi",
+    phone: "254712345678",
     description:
       "A stylish and fuel-efficient Mazda CX-5 SUV with premium comfort and modern features.",
   },
@@ -83,6 +86,7 @@ export const cars: Car[] = [
     driveType: "AWD",
     condition: "Enthusiast Build",
     location: "Nairobi",
+    phone: "254712345678",
     description:
       "A capable Subaru Forester with manual transmission, perfect for enthusiasts who enjoy performance and driving experience.",
   },
