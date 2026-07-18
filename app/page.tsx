@@ -1,4 +1,3 @@
-import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import CarCard from "./components/CarCard";
 import { cars } from "./data/cars";
@@ -6,17 +5,15 @@ import { cars } from "./data/cars";
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100">
-      <Navbar />
-
       <Hero />
 
       {/* Featured Vehicles */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
-        <h2 className="text-4xl font-bold text-center mb-10">
+        <h2 className="mb-10 text-center text-4xl font-bold">
           Featured Vehicles
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {cars.map((car) => (
             <CarCard
               key={car.id}
