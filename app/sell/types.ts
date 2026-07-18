@@ -1,4 +1,4 @@
-export type Transmission = "Automatic" | "Manual" | "CVT";
+export type Transmission = "Automatic" | "Manual";
 
 export type FuelType =
   | "Petrol"
@@ -39,6 +39,13 @@ export type BestTime =
   | "Afternoon"
   | "Evening"
   | "Anytime";
+
+export interface VehiclePhoto {
+  id: string;
+  file: File;
+  preview: string;
+  isCover: boolean;
+}
 
 export interface SellFormData {
   // Vehicle Information
