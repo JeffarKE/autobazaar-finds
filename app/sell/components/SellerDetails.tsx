@@ -1,4 +1,11 @@
-import { User, Lock } from "lucide-react";
+"use client";
+
+import { Lock, User } from "lucide-react";
+
+import FormInput from "@/app/components/ui/FormInput";
+import FormSelect from "@/app/components/ui/FormSelect";
+
+import { SellFormData } from "../types";
 
 export default function SellerDetails() {
   return (
@@ -20,79 +27,78 @@ export default function SellerDetails() {
 
       <div className="grid gap-6 md:grid-cols-2">
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Full Name <span className="text-red-500">*</span>
-          </label>
+        <FormInput<SellFormData>
+          name="sellerName"
+          label="Full Name"
+          placeholder="e.g. John Mwangi"
+          required
+        />
 
-          <input
-            type="text"
-            placeholder="e.g. John Mwangi"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormInput<SellFormData>
+          name="phone"
+          label="Phone Number"
+          type="tel"
+          placeholder="07XXXXXXXX"
+          required
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Phone Number <span className="text-red-500">*</span>
-          </label>
+        <FormInput<SellFormData>
+          name="email"
+          label="Email Address"
+          type="email"
+          placeholder="you@example.com"
+        />
 
-          <input
-            type="tel"
-            placeholder="07XXXXXXXX"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormSelect<SellFormData>
+          name="preferredContact"
+          label="Preferred Contact Method"
+          required
+          options={[
+            {
+              label: "Phone Call",
+              value: "Phone Call",
+            },
+            {
+              label: "WhatsApp",
+              value: "WhatsApp",
+            },
+            {
+              label: "Email",
+              value: "Email",
+            },
+          ]}
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Email Address
-          </label>
+        <FormInput<SellFormData>
+          name="location"
+          label="County / Town"
+          placeholder="e.g. Karen, Nairobi"
+          required
+        />
 
-          <input
-            type="email"
-            placeholder="you@example.com"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            Preferred Contact Method
-          </label>
-
-          <select className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100">
-            <option>Phone Call</option>
-            <option>WhatsApp</option>
-            <option>SMS</option>
-            <option>Email</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            County / Town <span className="text-red-500">*</span>
-          </label>
-
-          <input
-            type="text"
-            placeholder="e.g. Karen, Nairobi"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            Best Time to Contact
-          </label>
-
-          <select className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100">
-            <option>Anytime</option>
-            <option>Morning</option>
-            <option>Afternoon</option>
-            <option>Evening</option>
-          </select>
-        </div>
+        <FormSelect<SellFormData>
+          name="bestTime"
+          label="Best Time to Contact"
+          required
+          options={[
+            {
+              label: "Anytime",
+              value: "Anytime",
+            },
+            {
+              label: "Morning",
+              value: "Morning",
+            },
+            {
+              label: "Afternoon",
+              value: "Afternoon",
+            },
+            {
+              label: "Evening",
+              value: "Evening",
+            },
+          ]}
+        />
 
       </div>
 
@@ -105,9 +111,10 @@ export default function SellerDetails() {
           </p>
 
           <p className="mt-1 text-sm leading-relaxed text-gray-700">
-            Your phone number and email address will never be publicly displayed
-            without your permission. We only use your contact details to verify
-            your listing and communicate with you regarding your submission.
+            Your phone number and email address will never be publicly
+            displayed without your permission. We only use your contact
+            details to verify your listing and communicate with you
+            regarding your submission.
           </p>
         </div>
       </div>

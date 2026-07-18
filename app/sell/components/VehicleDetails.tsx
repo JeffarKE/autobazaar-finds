@@ -1,4 +1,11 @@
+"use client";
+
 import { Car } from "lucide-react";
+
+import FormInput from "@/app/components/ui/FormInput";
+import FormSelect from "@/app/components/ui/FormSelect";
+
+import { SellFormData } from "../types";
 
 export default function VehicleDetails() {
   return (
@@ -7,7 +14,9 @@ export default function VehicleDetails() {
         <Car className="mt-1 h-7 w-7 text-green-700" />
 
         <div>
-          <h2 className="text-2xl font-bold">Vehicle Details</h2>
+          <h2 className="text-2xl font-bold">
+            Vehicle Details
+          </h2>
 
           <p className="mt-1 text-sm text-gray-500">
             Tell us everything buyers should know about your vehicle.
@@ -16,142 +25,156 @@ export default function VehicleDetails() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div>
-          <label className="mb-2 block font-medium">
-            Make <span className="text-red-500">*</span>
-          </label>
 
-          <input
-            type="text"
-            placeholder="e.g. Toyota"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormInput<SellFormData>
+          name="make"
+          label="Make"
+          placeholder="e.g. Toyota"
+          required
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Model <span className="text-red-500">*</span>
-          </label>
+        <FormInput<SellFormData>
+          name="model"
+          label="Model"
+          placeholder="e.g. Land Cruiser Prado TX"
+          required
+        />
 
-          <input
-            type="text"
-            placeholder="e.g. Land Cruiser Prado TX"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormInput<SellFormData>
+          name="year"
+          label="Year"
+          type="number"
+          placeholder="e.g. 2020"
+          required
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Year <span className="text-red-500">*</span>
-          </label>
+        <FormInput<SellFormData>
+          name="engineSize"
+          label="Engine Size (cc)"
+          placeholder="e.g. 1998"
+        />
 
-          <input
-            type="number"
-            placeholder="e.g. 2020"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormInput<SellFormData>
+          name="mileage"
+          label="Mileage (km)"
+          placeholder="e.g. 85,000"
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Engine Size (cc)
-          </label>
+        <FormInput<SellFormData>
+          name="price"
+          label="Asking Price (KSh)"
+          placeholder="e.g. 2,350,000"
+          required
+        />
 
-          <input
-            type="text"
-            placeholder="e.g. 1998"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormSelect<SellFormData>
+          name="transmission"
+          label="Transmission"
+          required
+          options={[
+            {
+              label: "Automatic",
+              value: "Automatic",
+            },
+            {
+              label: "Manual",
+              value: "Manual",
+            },
+          ]}
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Mileage (km)
-          </label>
+        <FormSelect<SellFormData>
+          name="fuelType"
+          label="Fuel Type"
+          required
+          options={[
+            {
+              label: "Petrol",
+              value: "Petrol",
+            },
+            {
+              label: "Diesel",
+              value: "Diesel",
+            },
+            {
+              label: "Hybrid",
+              value: "Hybrid",
+            },
+            {
+              label: "Electric",
+              value: "Electric",
+            },
+          ]}
+        />
 
-          <input
-            type="text"
-            placeholder="e.g. 85,000"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-        </div>
+        <FormSelect<SellFormData>
+          name="bodyType"
+          label="Body Type"
+          required
+          options={[
+            {
+              label: "Sedan",
+              value: "Sedan",
+            },
+            {
+              label: "Hatchback",
+              value: "Hatchback",
+            },
+            {
+              label: "SUV",
+              value: "SUV",
+            },
+            {
+              label: "Pickup",
+              value: "Pickup",
+            },
+            {
+              label: "Van",
+              value: "Van",
+            },
+            {
+              label: "Coupe",
+              value: "Coupe",
+            },
+            {
+              label: "Convertible",
+              value: "Convertible",
+            },
+            {
+              label: "Wagon",
+              value: "Wagon",
+            },
+          ]}
+        />
 
-        <div>
-          <label className="mb-2 block font-medium">
-            Asking Price (KSh) <span className="text-red-500">*</span>
-          </label>
+        <FormSelect<SellFormData>
+          name="driveType"
+          label="Drive Type"
+          required
+          options={[
+            {
+              label: "2WD",
+              value: "2WD",
+            },
+            {
+              label: "FWD",
+              value: "FWD",
+            },
+            {
+              label: "RWD",
+              value: "RWD",
+            },
+            {
+              label: "AWD",
+              value: "AWD",
+            },
+            {
+              label: "4WD",
+              value: "4WD",
+            },
+          ]}
+        />
 
-          <input
-            type="text"
-            placeholder="e.g. 2,350,000"
-            className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100"
-          />
-
-          <label className="mt-3 flex items-center gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              className="h-4 w-4 accent-green-600"
-            />
-
-            I'm open to reasonable offers.
-          </label>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            Transmission
-          </label>
-
-          <select className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100">
-            <option>Automatic</option>
-            <option>Manual</option>
-            <option>CVT</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            Fuel Type
-          </label>
-
-          <select className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100">
-            <option>Petrol</option>
-            <option>Diesel</option>
-            <option>Hybrid</option>
-            <option>Electric</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            Body Type
-          </label>
-
-          <select className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100">
-            <option>Sedan</option>
-            <option>Hatchback</option>
-            <option>SUV</option>
-            <option>Pickup</option>
-            <option>Van</option>
-            <option>Coupe</option>
-            <option>Convertible</option>
-            <option>Wagon</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-medium">
-            Drive Type
-          </label>
-
-          <select className="w-full rounded-xl border border-gray-300 p-3 transition focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-100">
-            <option>2WD</option>
-            <option>FWD</option>
-            <option>RWD</option>
-            <option>AWD</option>
-            <option>4WD</option>
-          </select>
-        </div>
       </div>
     </section>
   );
