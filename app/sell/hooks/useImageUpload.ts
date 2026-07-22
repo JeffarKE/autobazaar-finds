@@ -44,6 +44,13 @@ export function useImageUpload() {
           file,
           preview: URL.createObjectURL(file),
           isCover: index === 0,
+
+          // Upload state (for future Supabase integration)
+          url: undefined,
+          storagePath: undefined,
+          isUploading: false,
+          uploadProgress: 0,
+          uploadError: undefined,
         };
       });
 
@@ -63,9 +70,7 @@ export function useImageUpload() {
    */
   useEffect(() => {
     return () => {
-      photos.forEach((photo) =>
-        URL.revokeObjectURL(photo.preview)
-      );
+      photos.forEach((photo) => URL.revokeObjectURL(photo.preview));
     };
   }, [photos]);
 

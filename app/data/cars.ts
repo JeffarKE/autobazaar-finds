@@ -1,93 +1,105 @@
-export type Car = {
-  id: string;
-  image: string;
-  images: string[];
-  make: string;
-  model: string;
-  year: number;
-  fuel: string;
-  transmission: string;
-  price: number;
-  engine: string;
-  mileage: string;
-  bodyType: string;
-  driveType: string;
-  condition: string;
-  location: string;
-  phone: string;
-  description: string;
-};
+import type { Vehicle } from "@/app/cars/types";
 
-export const cars: Car[] = [
+export const cars: Vehicle[] = [
   {
     id: "1",
-    image: "/images/toyota-corolla.jpg",
-    images: [
-      "/images/toyota-corolla.jpg",
-    ],
+    title: "2020 Toyota Corolla",
     make: "Toyota",
     model: "Corolla",
-    year: 2018,
-    fuel: "Petrol",
+    year: 2020,
+    price: 2150000,
+    mileage: 62000,
+    engine: "1800cc",
     transmission: "Automatic",
-    price: 1200000,
-    engine: "1500cc",
-    mileage: "85,000 km",
+    fuel: "Petrol",
     bodyType: "Sedan",
-    driveType: "Front Wheel Drive",
-    condition: "Clean Used",
+    driveType: "2WD",
+    color: "White",
     location: "Nairobi",
-    phone: "254712345678",
+    featured: false,
+    verified: true,
+    images: [
+      "/cars/corolla.jpg",
+      "/cars/corolla.jpg",
+      "/cars/corolla.jpg",
+    ],
     description:
-      "A clean and reliable Toyota Corolla suitable for daily commuting and family use.",
+      "Well maintained Toyota Corolla with excellent fuel economy and a spotless interior.",
+    seller: {
+      id: "seller-1",
+      name: "Auto Bazaar Finds",
+      phone: "+254700000001",
+      avatar: "/images/avatar-placeholder.png",
+      verified: true,
+    },
+    createdAt: "2026-07-01",
   },
 
   {
     id: "2",
-    image: "/images/mazda-cx5.jpg",
-    images: [
-      "/images/mazda-cx5.jpg",
-    ],
+    title: "2019 Mazda CX-5",
     make: "Mazda",
     model: "CX-5",
     year: 2019,
-    fuel: "Diesel",
+    price: 3250000,
+    mileage: 71500,
+    engine: "2200cc",
     transmission: "Automatic",
-    price: 2200000,
-    engine: "2200cc SkyActiv",
-    mileage: "70,000 km",
+    fuel: "Diesel",
     bodyType: "SUV",
-    driveType: "Front Wheel Drive",
-    condition: "Foreign Used",
-    location: "Nairobi",
-    phone: "254712345678",
+    driveType: "AWD",
+    color: "White",
+    location: "Mombasa",
+    featured: true,
+    verified: true,
+    images: [
+      "/cars/cx5.jpg",
+      "/cars/cx5.jpg",
+      "/cars/cx5.jpg",
+    ],
     description:
-      "A stylish and fuel-efficient Mazda CX-5 SUV with premium comfort and modern features.",
+      "Clean Mazda CX-5 with leather interior, Bose audio and AWD.",
+    seller: {
+      id: "seller-2",
+      name: "Auto Bazaar Finds",
+      phone: "+254700000002",
+      avatar: "/images/avatar-placeholder.png",
+      verified: true,
+    },
+    createdAt: "2026-07-03",
   },
 
   {
     id: "3",
-    image: "/images/subaru-forester.jpg",
-    images: [
-      "/images/subaru-forester-1.jpg",
-      "/images/subaru-forester-2.jpg",
-      "/images/subaru-forester-3.jpg",
-      "/images/subaru-forester-4.jpg",
-    ],
+    title: "2018 Subaru Forester",
     make: "Subaru",
     model: "Forester",
-    year: 2017,
+    year: 2018,
+    price: 2480000,
+    mileage: 84000,
+    engine: "2000cc",
+    transmission: "Automatic",
     fuel: "Petrol",
-    transmission: "Manual",
-    price: 800000,
-    engine: "2000cc Boxer Engine",
-    mileage: "95,000 km",
     bodyType: "SUV",
     driveType: "AWD",
-    condition: "Enthusiast Build",
-    location: "Nairobi",
-    phone: "254712345678",
+    color: "Silver",
+    location: "Nakuru",
+    featured: false,
+    verified: true,
+    images: [
+      "/cars/forester.jpg",
+      "/cars/forester.jpg",
+      "/cars/forester.jpg",
+    ],
     description:
-      "A capable Subaru Forester with manual transmission, perfect for enthusiasts who enjoy performance and driving experience.",
+      "Subaru Forester with symmetrical AWD, excellent condition and full service history.",
+    seller: {
+      id: "seller-3",
+      name: "Auto Bazaar Finds",
+      phone: "+254700000003",
+      avatar: "/images/avatar-placeholder.png",
+      verified: true,
+    },
+    createdAt: "2026-07-05",
   },
 ];

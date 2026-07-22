@@ -16,18 +16,14 @@ import {
   FaTiktok,
 } from "react-icons/fa6";
 
-const marketplace = [
-  { name: "Cars", href: "/cars" },
-  { name: "Motorcycles", href: "/marketplace" },
-  { name: "Trucks", href: "/marketplace" },
-  { name: "Boats", href: "/marketplace" },
-  { name: "Aircraft", href: "/marketplace" },
-  { name: "Machinery", href: "/marketplace" },
+const browse = [
+  { name: "Browse Cars", href: "/cars" },
+  { name: "Sell Your Car", href: "/sell" },
+  { name: "Contact Us", href: "/contact" },
 ];
 
 const company = [
   { name: "About", href: "#" },
-  { name: "Contact", href: "#" },
   { name: "Privacy Policy", href: "#" },
   { name: "Terms of Service", href: "#" },
 ];
@@ -36,23 +32,19 @@ export default function Footer() {
   return (
     <footer className="mt-24 bg-neutral-950 text-white">
       <div className="mx-auto max-w-7xl px-6 py-16">
-
         <div className="grid gap-12 lg:grid-cols-4">
-
           {/* Brand */}
           <div>
-
             <h2 className="text-3xl font-black tracking-tight">
-              Auto Baazar Finds
+              Auto Bazaar Finds
             </h2>
 
             <p className="mt-5 leading-7 text-neutral-400">
               Kenya's modern vehicle marketplace built to connect buyers and
-              sellers through trust, transparency and premium listings.
+              sellers through trust, transparency and premium vehicle listings.
             </p>
 
             <div className="mt-8 space-y-4 text-sm text-neutral-400">
-
               <div className="flex items-center gap-3">
                 <MapPin size={18} />
                 Nairobi, Kenya
@@ -60,29 +52,24 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <Phone size={18} />
-                +254 XXX XXX XXX
+                +254 741 056 053
               </div>
 
               <div className="flex items-center gap-3">
                 <Mail size={18} />
-                hello@autobazaarfinds.co.ke
+                jeffersonndungu001@gmail.com
               </div>
-
             </div>
-
           </div>
 
-          {/* Marketplace */}
-
+          {/* Browse */}
           <div>
-
             <h3 className="mb-6 text-lg font-semibold">
-              Marketplace
+              Browse
             </h3>
 
             <div className="space-y-3">
-
-              {marketplace.map((item) => (
+              {browse.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -91,24 +78,18 @@ export default function Footer() {
                   {item.name}
 
                   <ArrowRight size={16} />
-
                 </Link>
               ))}
-
             </div>
-
           </div>
 
           {/* Company */}
-
           <div>
-
             <h3 className="mb-6 text-lg font-semibold">
               Company
             </h3>
 
             <div className="space-y-3">
-
               {company.map((item) => (
                 <Link
                   key={item.name}
@@ -118,25 +99,20 @@ export default function Footer() {
                   {item.name}
                 </Link>
               ))}
-
             </div>
-
           </div>
 
           {/* Newsletter */}
-
           <div>
-
             <h3 className="text-lg font-semibold">
               Stay Updated
             </h3>
 
             <p className="mt-4 text-neutral-400">
-              Subscribe for newly listed vehicles and marketplace updates.
+              Subscribe to receive notifications whenever new vehicles are added.
             </p>
 
             <div className="mt-6 flex">
-
               <input
                 type="email"
                 placeholder="Email address"
@@ -146,11 +122,9 @@ export default function Footer() {
               <button className="rounded-r-xl bg-white px-5 text-black transition hover:bg-neutral-200">
                 Join
               </button>
-
             </div>
 
             <div className="mt-8 flex gap-5 text-xl">
-
               <a href="#" className="transition hover:text-blue-500">
                 <FaFacebookF />
               </a>
@@ -170,20 +144,13 @@ export default function Footer() {
               <a href="#" className="transition hover:text-white">
                 <FaTiktok />
               </a>
-
             </div>
-
           </div>
-
         </div>
 
         <div className="mt-14 border-t border-neutral-800 pt-8 text-center text-sm text-neutral-500">
-
-          © {new Date().getFullYear()} Auto Baazar Finds.
-          Built with ❤️ in Kenya.
-
+          © {new Date().getFullYear()} Auto Bazaar Finds. Built with ❤️ in Kenya.
         </div>
-
       </div>
     </footer>
   );

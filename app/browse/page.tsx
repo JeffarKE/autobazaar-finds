@@ -20,11 +20,9 @@ export default function BrowseCars() {
       car.make.toLowerCase().includes(query) ||
       car.model.toLowerCase().includes(query);
 
-    const matchesMake =
-      make === "" || car.make === make;
+    const matchesMake = make === "" || car.make === make;
 
-    const matchesFuel =
-      fuel === "" || car.fuel === fuel;
+    const matchesFuel = fuel === "" || car.fuel === fuel;
 
     const matchesTransmission =
       transmission === "" ||
@@ -40,10 +38,8 @@ export default function BrowseCars() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-8">
-
-      <section className="max-w-6xl mx-auto">
-
-        <h1 className="text-4xl font-bold text-center mb-10">
+      <section className="mx-auto max-w-6xl">
+        <h1 className="mb-10 text-center text-4xl font-bold">
           Browse Cars
         </h1>
 
@@ -64,29 +60,25 @@ export default function BrowseCars() {
           {filteredCars.length === 1 ? "vehicle" : "vehicles"}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {filteredCars.length > 0 ? (
             filteredCars.map((car) => (
               <CarCard
                 key={car.id}
                 id={car.id}
-                image={car.image}
+                image={car.images[0]}
                 title={`${car.make} ${car.model}`}
                 details={`${car.year} • ${car.fuel} • ${car.transmission}`}
                 price={`KSh ${car.price.toLocaleString()}`}
               />
             ))
           ) : (
-            <p className="text-center col-span-full text-gray-500 text-lg">
+            <p className="col-span-full text-center text-lg text-gray-500">
               No vehicles found.
             </p>
           )}
-
         </div>
-
       </section>
-
     </main>
   );
 }

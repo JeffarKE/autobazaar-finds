@@ -1,0 +1,109 @@
+Folder PATH listing
+Volume serial number is 000000B6 D0A6:BFA0
+C:\USERS\ADMIN\AUTOBAZAAR-FINDS\APP
+³   favicon.ico
+³   globals.css
+³   layout.tsx
+³   loading.tsx
+³   page.tsx
+³   
+ÃÄÄÄbrowse
+³       page.tsx
+³       
+ÃÄÄÄcars
+³   ³   loading.tsx
+³   ³   page.tsx
+³   ³   types.ts
+³   ³   
+³   ÃÄÄÄcomponents
+³   ³       ContactCard.tsx
+³   ³       DescriptionCard.tsx
+³   ³       FilterBar.tsx
+³   ³       RelatedCars.tsx
+³   ³       ResultsGrid.tsx
+³   ³       SearchBar.tsx
+³   ³       SortDropdown.tsx
+³   ³       VehicleCard.tsx
+³   ³       VehicleGallery.tsx
+³   ³       VehicleSpecs.tsx
+³   ³       
+³   ÃÄÄÄhooks
+³   ³       useCarFilters.ts
+³   ³       useVehicleFilters.ts
+³   ³       
+³   ÀÄÄÄ[id]
+³           loading.tsx
+³           page.tsx
+³           
+ÃÄÄÄcomponents
+³   ³   ActionBar.tsx
+³   ³   CarCard.tsx
+³   ³   Hero.tsx
+³   ³   SaveButton.tsx
+³   ³   SearchFilters.tsx
+³   ³   
+³   ÃÄÄÄdesign-system
+³   ³       Container.tsx
+³   ³       Heading.tsx
+³   ³       Section.tsx
+³   ³       
+³   ÃÄÄÄlayout
+³   ³       Footer.tsx
+³   ³       Navbar.tsx
+³   ³       
+³   ÃÄÄÄui
+³   ³       Button.tsx
+³   ³       FormCheckbox.tsx
+³   ³       FormInput.tsx
+³   ³       FormSection.tsx
+³   ³       FormSelect.tsx
+³   ³       FormTextarea.tsx
+³   ³       
+³   ÀÄÄÄvehicle
+³           index.ts
+³           VehicleActions.tsx
+³           VehicleBadge.tsx
+³           VehicleCard.tsx
+³           VehicleGrid.tsx
+³           VehiclePrice.tsx
+³           VehicleSpecs.tsx
+³           
+ÃÄÄÄdata
+³       cars.ts
+³       vehicles.ts
+³       
+ÃÄÄÄmarketplace
+³   ³   page.tsx
+³   ³   
+³   ÀÄÄÄcomponents
+³           CategoryCard.tsx
+³           CategoryGrid.tsx
+³           MarketplaceHero.tsx
+³           MarketplaceStats.tsx
+³           
+ÃÄÄÄsaved
+³       page.tsx
+³       
+ÀÄÄÄsell
+    ³   defaultValues.ts
+    ³   page.tsx
+    ³   schema.ts
+    ³   SellForm.tsx
+    ³   types.ts
+    ³   
+    ÃÄÄÄcomponents
+    ³       ImageDropzone.tsx
+    ³       ImagePreviewCard.tsx
+    ³       ImagePreviewGrid.tsx
+    ³       Intro.tsx
+    ³       ReviewProcess.tsx
+    ³       SellerDetails.tsx
+    ³       SubmitSection.tsx
+    ³       VehicleDescription.tsx
+    ³       VehicleDetails.tsx
+    ³       VehiclePhotos.tsx
+    ³       
+    ÀÄÄÄhooks
+            useImageUpload.ts
+            useSellForm.ts
+            

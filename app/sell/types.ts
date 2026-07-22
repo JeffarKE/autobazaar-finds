@@ -42,9 +42,25 @@ export type BestTime =
 
 export interface VehiclePhoto {
   id: string;
+
   file: File;
+
   preview: string;
+
   isCover: boolean;
+
+  // Supabase public URL
+  url?: string;
+
+  // Storage object path
+  storagePath?: string;
+
+  // Upload state
+  isUploading: boolean;
+
+  uploadProgress: number;
+
+  uploadError?: string;
 }
 
 export interface SellFormData {

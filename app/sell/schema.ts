@@ -1,5 +1,52 @@
 import { z } from "zod";
 
+const transmissions = ["Automatic", "Manual"] as const;
+
+const fuelTypes = [
+  "Petrol",
+  "Diesel",
+  "Hybrid",
+  "Electric",
+  "Plug-in Hybrid",
+] as const;
+
+const bodyTypes = [
+  "SUV",
+  "Sedan",
+  "Hatchback",
+  "Coupe",
+  "Convertible",
+  "Pickup",
+  "Van",
+  "Wagon",
+  "Minivan",
+  "Truck",
+  "Bus",
+  "Other",
+] as const;
+
+const driveTypes = [
+  "2WD",
+  "FWD",
+  "RWD",
+  "AWD",
+  "4WD",
+] as const;
+
+const preferredContacts = [
+  "Phone Call",
+  "WhatsApp",
+  "SMS",
+  "Email",
+] as const;
+
+const bestTimes = [
+  "Morning",
+  "Afternoon",
+  "Evening",
+  "Anytime",
+] as const;
+
 export const sellFormSchema = z.object({
   make: z.string().min(1, "Vehicle make is required"),
 
@@ -16,13 +63,13 @@ export const sellFormSchema = z.object({
 
   price: z.string().min(1, "Price is required"),
 
-  transmission: z.string(),
+  transmission: z.enum(transmissions),
 
-  fuelType: z.string(),
+  fuelType: z.enum(fuelTypes),
 
-  bodyType: z.string(),
+  bodyType: z.enum(bodyTypes),
 
-  driveType: z.string(),
+  driveType: z.enum(driveTypes),
 
   sellerName: z.string().min(2, "Your name is required"),
 
@@ -35,21 +82,21 @@ export const sellFormSchema = z.object({
 
   location: z.string().min(2, "Location is required"),
 
-  preferredContact: z.string(),
+  preferredContact: z.enum(preferredContacts),
 
-  bestTime: z.string(),
+  bestTime: z.enum(bestTimes),
 
   description: z
     .string()
     .min(30, "Description should be at least 30 characters"),
 
-  photos: z.array(z.instanceof(File)).min(1, "Upload at least one photo"),
+  photos: z
+    .array(z.instanceof(File))
+    .min(1, "Upload at least one photo"),
 
-  agreeToTerms: z
-    .boolean()
-    .refine((value) => value === true, {
-      message: "You must accept the terms before continuing.",
-    }),
+  agreeToTerms: z.boolean().refine((value) => value === true, {
+    message: "You must accept the terms before continuing.",
+  }),
 });
 
 export type SellFormSchema = z.infer<typeof sellFormSchema>;

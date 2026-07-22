@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 
 import { useSellForm } from "./hooks/useSellForm";
+import { submitListing } from "./services/submitListing";
+import { SellFormData } from "./types";
 
 import Intro from "./components/Intro";
 import VehicleDetails from "./components/VehicleDetails";
@@ -15,14 +18,24 @@ import SubmitSection from "./components/SubmitSection";
 export default function SellForm() {
   const form = useSellForm();
 
-  const onSubmit = (data: any) => {
-    console.log("Sell Form Submitted:", data);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Later:
-    // - Upload images
-    // - Send data to API
-    // - Save to database
-    // - Redirect to success page
+  const onSubmit = async (data: SellFormData) => {
+    try {
+      setIsSubmitting(true);
+
+      await submitListing(data);
+
+      alert("🎉 Vehicle submitted successfully!");
+
+      form.reset();
+    } catch (error) {
+      console.error(error);
+
+      alert("Something went wrong while submitting the listing.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -43,7 +56,7 @@ export default function SellForm() {
 
         <ReviewProcess />
 
-        <SubmitSection />
+        <SubmitSection isSubmitting={isSubmitting} />
       </form>
     </FormProvider>
   );

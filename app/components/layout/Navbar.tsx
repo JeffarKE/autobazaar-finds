@@ -8,39 +8,17 @@ import {
   X,
   Home,
   CarFront,
-  Heart,
   CircleDollarSign,
-  Phone,
+  Info,
+  MessageCircle,
 } from "lucide-react";
+
+const whatsappUrl =
+  "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I'm%20interested%20in%20one%20of%20your%20vehicles.";
 
 export default function Navbar() {
   const pathname = usePathname();
-
-  const [savedCount, setSavedCount] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    function updateSavedCount() {
-      const savedCars: string[] = JSON.parse(
-        localStorage.getItem("savedCars") || "[]"
-      );
-
-      setSavedCount(savedCars.length);
-    }
-
-    updateSavedCount();
-
-    window.addEventListener("storage", updateSavedCount);
-    window.addEventListener("savedCarsUpdated", updateSavedCount);
-
-    return () => {
-      window.removeEventListener("storage", updateSavedCount);
-      window.removeEventListener(
-        "savedCarsUpdated",
-        updateSavedCount
-      );
-    };
-  }, []);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -54,44 +32,45 @@ export default function Navbar() {
     },
     {
       href: "/cars",
-      label: "Cars",
+      label: "Browse Cars",
       icon: CarFront,
     },
     {
-      href: "/saved",
-      label:
-        savedCount > 0
-          ? `Saved (${savedCount})`
-          : "Saved",
-      icon: Heart,
-    },
-    {
       href: "/sell",
-      label: "Sell",
+      label: "Sell Your Car",
       icon: CircleDollarSign,
     },
     {
-      href: "/contact",
-      label: "Contact",
-      icon: Phone,
+      href: "/about",
+      label: "About",
+      icon: Info,
     },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+        {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-extrabold tracking-tight"
+          className="flex items-center gap-1 text-2xl font-extrabold tracking-tight"
         >
           <span className="text-white">Auto</span>
-          <span className="text-green-500"> Baazar</span>
-          <span className="text-white"> Finds</span>
+          <span className="text-green-500">Bazaar</span>
+          <span className="text-white">Finds</span>
+
+          <span className="rounded-md bg-green-500 px-2 py-0.5 text-xs font-bold text-black">
+            KE
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-2 md:flex">
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-2 lg:flex">
           {navItems.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href;
+            const active =
+              href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(href);
 
             return (
               <Link
@@ -110,28 +89,46 @@ export default function Navbar() {
           })}
         </nav>
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="rounded-lg p-2 text-white transition hover:bg-white/10 md:hidden"
-        >
-          {mobileOpen ? <X /> : <Menu />}
-        </button>
+        {/* Right Side */}
+        <div className="flex items-center gap-3">
+          <Link
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-600 lg:flex"
+          >
+            <MessageCircle size={18} />
+            WhatsApp Us
+          </Link>
+
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="rounded-lg p-2 text-white transition hover:bg-white/10 lg:hidden"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
+      {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-black/95 md:hidden">
+        <div className="border-t border-white/10 bg-black/95 backdrop-blur-xl lg:hidden">
           <div className="flex flex-col p-4">
             {navItems.map(({ href, label, icon: Icon }) => {
-              const active = pathname === href;
+              const active =
+                href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(href);
 
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`mb-2 flex items-center gap-3 rounded-xl px-4 py-3 ${
+                  className={`mb-2 flex items-center gap-3 rounded-xl px-4 py-3 transition ${
                     active
                       ? "bg-green-500 text-white"
-                      : "text-gray-300 hover:bg-white/10"
+                      : "text-gray-300 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   <Icon size={20} />
@@ -139,6 +136,16 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            <Link
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-3 font-semibold text-white transition hover:bg-green-600"
+            >
+              <MessageCircle size={20} />
+              WhatsApp Us
+            </Link>
           </div>
         </div>
       )}
