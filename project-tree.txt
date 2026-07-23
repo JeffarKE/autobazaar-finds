@@ -1,0 +1,158 @@
+================= APP =================
+Folder PATH listing
+Volume serial number is 00000054 D0A6:BFA0
+C:\USERS\ADMIN\AUTOBAZAAR-FINDS\APP
+|   favicon.ico
+|   globals.css
+|   layout.tsx
+|   loading.tsx
+|   page.tsx
+|   
++---about
+|       page.tsx
+|       
++---admin
+|   |   layout.tsx
+|   |   page.tsx
+|   |   
+|   +---inventory
+|   |       page.tsx
+|   |       
+|   +---listing
+|   |   |   page.tsx
+|   |   |   
+|   |   \---components
+|   |           Description.tsx
+|   |           LivePreview.tsx
+|   |           Pricing.tsx
+|   |           PublishBar.tsx
+|   |           SellerInformation.tsx
+|   |           UploadPhotos.tsx
+|   |           VehicleInformation.tsx
+|   |           VehicleSpecifications.tsx
+|   |           
+|   +---settings
+|   |       page.tsx
+|   |       
+|   +---test
+|   |       page.tsx
+|   |       
+|   \---upload-test
+|           page.tsx
+|           
++---browse
+|       page.tsx
+|       
++---cars
+|   |   loading.tsx
+|   |   page.tsx
+|   |   types.ts
+|   |   
+|   +---components
+|   |       ContactCard.tsx
+|   |       DescriptionCard.tsx
+|   |       FilterBar.tsx
+|   |       RelatedCars.tsx
+|   |       ResultsGrid.tsx
+|   |       SearchBar.tsx
+|   |       SortDropdown.tsx
+|   |       VehicleCard.tsx
+|   |       VehicleGallery.tsx
+|   |       VehicleSpecs.tsx
+|   |       
+|   +---hooks
+|   |       useCarFilters.ts
+|   |       
+|   \---[id]
+|           loading.tsx
+|           page.tsx
+|           
++---compare
+|       page.tsx
+|       
++---components
+|   |   ActionBar.tsx
+|   |   CarCard.tsx
+|   |   Hero.tsx
+|   |   SaveButton.tsx
+|   |   SearchFilters.tsx
+|   |   
+|   +---design-system
+|   |       Container.tsx
+|   |       Heading.tsx
+|   |       Section.tsx
+|   |       
+|   \---layout
+|           Footer.tsx
+|           Navbar.tsx
+|           
++---data
+|       cars.ts
+|       vehicles.ts
+|       
++---saved
+|       page.tsx
+|       
++---sell
+|   |   defaultValues.ts
+|   |   page.tsx
+|   |   schema.ts
+|   |   SellForm.tsx
+|   |   types.ts
+|   |   
+|   +---components
+|   |       ImageDropzone.tsx
+|   |       ImagePreviewCard.tsx
+|   |       ImagePreviewGrid.tsx
+|   |       Intro.tsx
+|   |       ReviewProcess.tsx
+|   |       SellerDetails.tsx
+|   |       SubmitSection.tsx
+|   |       VehicleDescription.tsx
+|   |       VehicleDetails.tsx
+|   |       VehiclePhotos.tsx
+|   |       
+|   +---hooks
+|   |       useImageUpload.ts
+|   |       useSellForm.ts
+|   |       
+|   \---services
+|           createVehicle.ts
+|           createVehicleImages.ts
+|           submitListing.ts
+|           uploadPhoto.ts
+|           
+\---types
+
+================= COMPONENTS =================
+Folder PATH listing
+Volume serial number is 00000015 D0A6:BFA0
+C:\USERS\ADMIN\AUTOBAZAAR-FINDS\COMPONENTS
+\---ui
+        avatar.tsx
+        badge.tsx
+        button.tsx
+        card.tsx
+        dialog.tsx
+        dropdown-menu.tsx
+        input.tsx
+        navigation-menu.tsx
+        select.tsx
+        separator.tsx
+        sheet.tsx
+        skeleton.tsx
+        sonner.tsx
+        tabs.tsx
+        textarea.tsx
+        
+
+================= LIB =================
+Folder PATH listing
+Volume serial number is 00000032 D0A6:BFA0
+C:\USERS\ADMIN\AUTOBAZAAR-FINDS\LIB
+    imageUpload.ts
+    supabase.ts
+    utils.ts
+    
+No subfolders exist 
+
