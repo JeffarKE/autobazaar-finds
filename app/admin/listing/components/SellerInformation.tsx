@@ -1,15 +1,25 @@
 "use client";
 
+import { Dispatch, SetStateAction } from "react";
 import {
   User,
   Phone,
   Mail,
-  MapPin,
-  Building2,
   Globe,
+  Building2,
 } from "lucide-react";
 
-export default function SellerInformation() {
+import { Vehicle } from "@/lib/vehicle";
+
+type Props = {
+  vehicle: Vehicle;
+  setVehicle: Dispatch<SetStateAction<Vehicle>>;
+};
+
+export default function SellerInformation({
+  vehicle,
+  setVehicle,
+}: Props) {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
       {/* Header */}
@@ -42,8 +52,8 @@ export default function SellerInformation() {
             </h3>
 
             <p className="mt-2 text-gray-300">
-              Your dealership information will automatically appear on new
-              listings unless you change it below.
+              Your dealership information will automatically appear unless
+              changed below.
             </p>
           </div>
 
@@ -55,87 +65,95 @@ export default function SellerInformation() {
 
       {/* Form */}
       <div className="mt-8 grid gap-6 md:grid-cols-2">
-
         <InputField
           label="Seller Name"
           placeholder="Auto Baazar Finds"
           icon={<Building2 className="h-5 w-5" />}
+          value={vehicle.sellerName}
+          onChange={(value) =>
+            setVehicle((prev) => ({
+              ...prev,
+              sellerName: value,
+            }))
+          }
         />
 
         <InputField
           label="Contact Number"
           placeholder="+254 700 000 000"
           icon={<Phone className="h-5 w-5" />}
+          value={vehicle.phone}
+          onChange={(value) =>
+            setVehicle((prev) => ({
+              ...prev,
+              phone: value,
+            }))
+          }
         />
 
         <InputField
           label="Email Address"
           placeholder="sales@autobaazarfinds.co.ke"
           icon={<Mail className="h-5 w-5" />}
+          value={vehicle.email}
+          onChange={(value) =>
+            setVehicle((prev) => ({
+              ...prev,
+              email: value,
+            }))
+          }
         />
 
-        <InputField
-          label="Website"
-          placeholder="www.autobaazarfinds.co.ke"
+        <SelectField
+          label="Preferred Contact"
           icon={<Globe className="h-5 w-5" />}
+          value={vehicle.preferredContact}
+          options={[
+            "Phone",
+            "WhatsApp",
+            "Email",
+          ]}
+          onChange={(value) =>
+            setVehicle((prev) => ({
+              ...prev,
+              preferredContact: value,
+            }))
+          }
         />
 
         <div className="md:col-span-2">
           <InputField
-            label="Business Address"
-            placeholder="Karen, Nairobi"
-            icon={<MapPin className="h-5 w-5" />}
+            label="Best Time to Contact"
+            placeholder="9AM - 5PM"
+            icon={<Phone className="h-5 w-5" />}
+            value={vehicle.bestTime}
+            onChange={(value) =>
+              setVehicle((prev) => ({
+                ...prev,
+                bestTime: value,
+              }))
+            }
           />
-        </div>
-
-      </div>
-
-      {/* Contact Preferences */}
-      <div className="mt-10">
-        <h3 className="mb-5 text-lg font-semibold">
-          Preferred Contact Methods
-        </h3>
-
-        <div className="grid gap-4 md:grid-cols-2">
-
-          <ToggleCard
-            title="Phone Calls"
-            description="Allow customers to call directly."
-          />
-
-          <ToggleCard
-            title="WhatsApp"
-            description="Display WhatsApp contact option."
-          />
-
-          <ToggleCard
-            title="Email"
-            description="Allow enquiries via email."
-          />
-
-          <ToggleCard
-            title="Hide Contact Until Enquiry"
-            description="Only reveal details after buyer interaction."
-          />
-
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------------- Input ---------------- */
-
 type InputFieldProps = {
   label: string;
   placeholder: string;
   icon: React.ReactNode;
+  value: string;
+  onChange: (value: string) => void;
 };
 
 function InputField({
   label,
   placeholder,
   icon,
+  value,
+  onChange,
 }: InputFieldProps) {
   return (
     <div>
@@ -144,11 +162,11 @@ function InputField({
       </label>
 
       <div className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
-        <div className="text-gray-400">
-          {icon}
-        </div>
+        <div className="text-gray-400">{icon}</div>
 
         <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="w-full bg-transparent outline-none"
         />
@@ -157,39 +175,47 @@ function InputField({
   );
 }
 
-/* ---------------- Toggle ---------------- */
-
-type ToggleCardProps = {
-  title: string;
-  description: string;
+type SelectFieldProps = {
+  label: string;
+  icon: React.ReactNode;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
 };
 
-function ToggleCard({
-  title,
-  description,
-}: ToggleCardProps) {
+function SelectField({
+  label,
+  icon,
+  value,
+  options,
+  onChange,
+}: SelectFieldProps) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border p-5 transition hover:border-black">
-      <div>
-        <h4 className="font-semibold text-gray-900">
-          {title}
-        </h4>
-
-        <p className="mt-1 text-sm text-gray-500">
-          {description}
-        </p>
-      </div>
-
-      <label className="relative inline-flex cursor-pointer items-center">
-        <input
-          type="checkbox"
-          className="peer sr-only"
-        />
-
-        <div className="h-7 w-12 rounded-full bg-gray-300 transition peer-checked:bg-black"></div>
-
-        <div className="absolute left-1 h-5 w-5 rounded-full bg-white transition peer-checked:translate-x-5"></div>
+    <div>
+      <label className="mb-2 block text-sm font-semibold text-gray-700">
+        {label}
       </label>
+
+      <div className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
+        <div className="text-gray-400">{icon}</div>
+
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full bg-transparent outline-none"
+        >
+          <option value="">Select</option>
+
+          {options.map((option) => (
+            <option
+              key={option}
+              value={option}
+            >
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

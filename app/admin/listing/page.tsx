@@ -18,6 +18,7 @@ export default function ListingPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
+      {/* Header */}
       <section className="border-b bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900">
@@ -31,8 +32,10 @@ export default function ListingPage() {
         </div>
       </section>
 
+      {/* Content */}
       <section className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_420px]">
+          {/* Left Column */}
           <form className="space-y-8">
             <UploadPhotos />
 
@@ -46,13 +49,23 @@ export default function ListingPage() {
               setVehicle={setVehicle}
             />
 
-            <Pricing />
+            <Pricing
+              vehicle={vehicle}
+              setVehicle={setVehicle}
+            />
 
-            <Description />
+            <Description
+              vehicle={vehicle}
+              setVehicle={setVehicle}
+            />
 
-            <SellerInformation />
+            <SellerInformation
+              vehicle={vehicle}
+              setVehicle={setVehicle}
+            />
           </form>
 
+          {/* Right Sidebar */}
           <aside className="space-y-6">
             <LivePreview />
 

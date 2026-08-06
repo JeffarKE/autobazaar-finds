@@ -1,6 +1,14 @@
 "use client";
 
+import { Dispatch, SetStateAction } from "react";
 import { FileText, Sparkles, RotateCcw } from "lucide-react";
+
+import { Vehicle } from "@/lib/vehicle";
+
+type Props = {
+  vehicle: Vehicle;
+  setVehicle: Dispatch<SetStateAction<Vehicle>>;
+};
 
 const templates = [
   "Accident Free",
@@ -13,7 +21,19 @@ const templates = [
   "One Owner",
 ];
 
-export default function Description() {
+export default function Description({
+  vehicle,
+  setVehicle,
+}: Props) {
+  const addTemplate = (text: string) => {
+    setVehicle((prev) => ({
+      ...prev,
+      description: prev.description
+        ? `${prev.description}\n• ${text}`
+        : `• ${text}`,
+    }));
+  };
+
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
       {/* Header */}
@@ -40,7 +60,16 @@ export default function Description() {
             Quick Templates
           </h3>
 
-          <button className="flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition hover:bg-gray-100">
+          <button
+            type="button"
+            onClick={() =>
+              setVehicle((prev) => ({
+                ...prev,
+                description: "",
+              }))
+            }
+            className="flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition hover:bg-gray-100"
+          >
             <RotateCcw className="h-4 w-4" />
             Clear
           </button>
@@ -50,6 +79,8 @@ export default function Description() {
           {templates.map((template) => (
             <button
               key={template}
+              type="button"
+              onClick={() => addTemplate(template)}
               className="rounded-full border px-4 py-2 text-sm transition hover:border-black hover:bg-black hover:text-white"
             >
               + {template}
@@ -66,14 +97,26 @@ export default function Description() {
 
         <textarea
           rows={12}
+          value={vehicle.description}
+          onChange={(e) =>
+            setVehicle((prev) => ({
+              ...prev,
+              description: e.target.value,
+            }))
+          }
           placeholder="Describe the vehicle, its condition, service history, ownership, features and any additional information buyers should know..."
           className="w-full resize-none rounded-2xl border bg-gray-50 p-5 outline-none transition focus:border-black focus:bg-white"
         />
 
         <div className="mt-3 flex items-center justify-between text-sm text-gray-500">
-          <span>0 / 2,000 characters</span>
+          <span>
+            {vehicle.description.length} / 2,000 characters
+          </span>
 
-          <button className="flex items-center gap-2 rounded-xl border px-4 py-2 transition hover:bg-gray-100">
+          <button
+            type="button"
+            className="flex items-center gap-2 rounded-xl border px-4 py-2 transition hover:bg-gray-100"
+          >
             <Sparkles className="h-4 w-4" />
             AI Writer (Coming Soon)
           </button>
