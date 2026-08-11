@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Archive,
   ChevronDown,
-  Copy,
   Eye,
   LayoutGrid,
   List,
@@ -51,7 +50,7 @@ type VehicleRow = {
   mileage: number | string | null;
   location: string | null;
   status: string | null;
-  featured: boolean | null;
+  featured?: boolean | null;
 };
 
 type VehicleImageRow = {
@@ -74,7 +73,7 @@ const filters = [
 type Filter = (typeof filters)[number];
 
 function formatPrice(price: number) {
-  if (!Number.isFinite(price)) {
+  if (!Number.isFinite(price) || price <= 0) {
     return "Price unavailable";
   }
 
@@ -90,13 +89,21 @@ function formatMileage(mileage: number) {
 }
 
 function normalizeStatus(status: string | null): VehicleStatus {
-  switch (status) {
-    case "Live":
-    case "Draft":
-    case "Reserved":
-    case "Sold":
-    case "Archived":
-      return status;
+  switch (status?.toLowerCase()) {
+    case "live":
+      return "Live";
+
+    case "draft":
+      return "Draft";
+
+    case "reserved":
+      return "Reserved";
+
+    case "sold":
+      return "Sold";
+
+    case "archived":
+      return "Archived";
 
     default:
       return "Draft";
@@ -122,6 +129,43 @@ function statusClasses(status: VehicleStatus) {
   }
 }
 
+function getStatusAction(status: VehicleStatus) {
+  switch (status) {
+    case "Draft":
+      return {
+        label: "Publish",
+        nextStatus: "Live" as VehicleStatus,
+      };
+
+    case "Live":
+      return {
+        label: "Reserve",
+        nextStatus: "Reserved" as VehicleStatus,
+      };
+
+    case "Reserved":
+      return {
+        label: "Release",
+        nextStatus: "Live" as VehicleStatus,
+      };
+
+    case "Sold":
+      return {
+        label: "Re-list",
+        nextStatus: "Draft" as VehicleStatus,
+      };
+
+    case "Archived":
+      return {
+        label: "Unarchive",
+        nextStatus: "Draft" as VehicleStatus,
+      };
+
+    default:
+      return null;
+  }
+}
+
 export default function InventoryPage() {
   const [vehicles, setVehicles] = useState<InventoryVehicle[]>([]);
   const [search, setSearch] = useState("");
@@ -131,9 +175,14 @@ export default function InventoryPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [archivingId, setArchivingId] = useState<string | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const loadInventory = useCallback(async () => {
     setErrorMessage("");
@@ -207,6 +256,7 @@ export default function InventoryPage() {
       );
 
       setVehicles(mappedVehicles);
+      setImageErrors({});
     } catch (error) {
       setErrorMessage(
         error instanceof Error
@@ -220,30 +270,27 @@ export default function InventoryPage() {
   }, []);
 
   useEffect(() => {
-    void Promise.resolve().then(loadInventory);
+    void loadInventory();
   }, [loadInventory]);
 
   function refreshInventory() {
     setIsRefreshing(true);
-    loadInventory();
+    void loadInventory();
   }
 
-  async function archiveVehicle(vehicle: InventoryVehicle) {
-    const confirmed = window.confirm(
-      `Archive ${vehicle.year} ${vehicle.make} ${vehicle.model}?\\n\\nThe listing will be removed from active inventory but kept in Supabase.`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    setArchivingId(vehicle.id);
+  async function updateVehicleStatus(
+    vehicle: InventoryVehicle,
+    nextStatus: VehicleStatus
+  ) {
+    setUpdatingId(vehicle.id);
     setErrorMessage("");
 
     try {
       const { error } = await supabase
         .from("vehicles")
-        .update({ status: "Archived" })
+        .update({
+          status: nextStatus,
+        })
         .eq("id", vehicle.id);
 
       if (error) {
@@ -253,7 +300,10 @@ export default function InventoryPage() {
       setVehicles((current) =>
         current.map((item) =>
           item.id === vehicle.id
-            ? { ...item, status: "Archived" }
+            ? {
+                ...item,
+                status: nextStatus,
+              }
             : item
         )
       );
@@ -261,16 +311,78 @@ export default function InventoryPage() {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Unable to archive vehicle."
+          : "Unable to update vehicle status."
       );
     } finally {
-      setArchivingId(null);
+      setUpdatingId(null);
     }
+  }
+
+  async function handleStatusAction(vehicle: InventoryVehicle) {
+    const action = getStatusAction(vehicle.status);
+
+    if (!action) {
+      return;
+    }
+
+    let message = "";
+
+    switch (vehicle.status) {
+      case "Draft":
+        message = `Publish ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        break;
+
+      case "Live":
+        message = `Reserve ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        break;
+
+      case "Reserved":
+        message = `Release the reservation for ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        break;
+
+      case "Sold":
+        message = `Re-list ${vehicle.year} ${vehicle.make} ${vehicle.model} as a draft?`;
+        break;
+
+      case "Archived":
+        message = `Unarchive ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        break;
+    }
+
+    if (!window.confirm(message)) {
+      return;
+    }
+
+    await updateVehicleStatus(vehicle, action.nextStatus);
+  }
+
+  async function markSold(vehicle: InventoryVehicle) {
+    const confirmed = window.confirm(
+      `Mark ${vehicle.year} ${vehicle.make} ${vehicle.model} as sold?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    await updateVehicleStatus(vehicle, "Sold");
+  }
+
+  async function archiveVehicle(vehicle: InventoryVehicle) {
+    const confirmed = window.confirm(
+      `Archive ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nThe vehicle will remain in Supabase and can be unarchived later.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    await updateVehicleStatus(vehicle, "Archived");
   }
 
   async function deleteVehicle(vehicle: InventoryVehicle) {
     const confirmed = window.confirm(
-      `Delete ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nThis will permanently remove the vehicle listing and its uploaded photos.`
+      `Delete ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nThis will permanently remove the vehicle listing and its uploaded photos. This cannot be undone.`
     );
 
     if (!confirmed) {
@@ -281,31 +393,28 @@ export default function InventoryPage() {
     setErrorMessage("");
 
     try {
-      /*
-       * First get all image records belonging to this vehicle.
-       * We need the storage paths so the actual uploaded files
-       * can be removed from Supabase Storage as well.
-       */
-      const { data: imageRows, error: imageFetchError } = await supabase
-        .from("vehicle_images")
-        .select("storage_path")
-        .eq("vehicle_id", vehicle.id);
+      const { data: imageRows, error: imageFetchError } =
+        await supabase
+          .from("vehicle_images")
+          .select("storage_path")
+          .eq("vehicle_id", vehicle.id);
 
       if (imageFetchError) {
         throw new Error(imageFetchError.message);
       }
 
       const storagePaths =
-        (imageRows as Array<{ storage_path: string | null }> | null)
+        (
+          imageRows as Array<{
+            storage_path: string | null;
+          }> | null
+        )
           ?.map((image) => image.storage_path)
           .filter(
             (path): path is string =>
               typeof path === "string" && path.length > 0
           ) ?? [];
 
-      /*
-       * Remove the vehicle image database records first.
-       */
       const { error: imageDeleteError } = await supabase
         .from("vehicle_images")
         .delete()
@@ -315,9 +424,6 @@ export default function InventoryPage() {
         throw new Error(imageDeleteError.message);
       }
 
-      /*
-       * Remove the vehicle itself.
-       */
       const { error: vehicleDeleteError } = await supabase
         .from("vehicles")
         .delete()
@@ -327,10 +433,6 @@ export default function InventoryPage() {
         throw new Error(vehicleDeleteError.message);
       }
 
-      /*
-       * Remove the actual files from Storage.
-       * Database deletion has already succeeded at this point.
-       */
       if (storagePaths.length > 0) {
         const { error: storageDeleteError } = await supabase.storage
           .from("vehicle-images")
@@ -442,7 +544,6 @@ export default function InventoryPage() {
                     isRefreshing ? "animate-spin" : ""
                   }`}
                 />
-
                 Refresh
               </button>
 
@@ -514,31 +615,37 @@ export default function InventoryPage() {
         {/* Toolbar */}
         <section className="rounded-2xl border bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Search */}
             <div className="relative w-full lg:max-w-xl">
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
 
               <input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) =>
+                  setSearch(event.target.value)
+                }
                 type="search"
                 placeholder="Search make, model, year or location..."
                 className="w-full rounded-xl border bg-gray-50 py-3 pl-12 pr-4 outline-none transition focus:border-black focus:bg-white"
               />
             </div>
 
-            {/* Sort + View */}
             <div className="flex items-center gap-3">
               <div className="relative">
                 <select
                   value={sort}
-                  onChange={(event) => setSort(event.target.value)}
+                  onChange={(event) =>
+                    setSort(event.target.value)
+                  }
                   className="appearance-none rounded-xl border bg-white py-3 pl-4 pr-10 text-sm font-medium outline-none focus:border-black"
                 >
                   <option value="newest">Newest</option>
                   <option value="year-new">Newest Year</option>
-                  <option value="price-high">Highest Price</option>
-                  <option value="price-low">Lowest Price</option>
+                  <option value="price-high">
+                    Highest Price
+                  </option>
+                  <option value="price-low">
+                    Lowest Price
+                  </option>
                   <option value="mileage-low">
                     Lowest Mileage
                   </option>
@@ -626,7 +733,7 @@ export default function InventoryPage() {
           </div>
         )}
 
-        {/* Loading / Listings */}
+        {/* Listings */}
         {isLoading ? (
           <LoadingState />
         ) : filteredVehicles.length > 0 ? (
@@ -643,9 +750,18 @@ export default function InventoryPage() {
                 vehicle={vehicle}
                 view={view}
                 isDeleting={deletingId === vehicle.id}
-                isArchiving={archivingId === vehicle.id}
+                isUpdating={updatingId === vehicle.id}
+                imageError={Boolean(imageErrors[vehicle.id])}
                 onDelete={deleteVehicle}
+                onStatusAction={handleStatusAction}
+                onMarkSold={markSold}
                 onArchive={archiveVehicle}
+                onImageError={() =>
+                  setImageErrors((current) => ({
+                    ...current,
+                    [vehicle.id]: true,
+                  }))
+                }
               />
             ))}
           </div>
@@ -685,28 +801,37 @@ type VehicleCardProps = {
   vehicle: InventoryVehicle;
   view: "list" | "grid";
   isDeleting: boolean;
-  isArchiving: boolean;
+  isUpdating: boolean;
+  imageError: boolean;
   onDelete: (vehicle: InventoryVehicle) => void;
+  onStatusAction: (vehicle: InventoryVehicle) => void;
+  onMarkSold: (vehicle: InventoryVehicle) => void;
   onArchive: (vehicle: InventoryVehicle) => void;
+  onImageError: () => void;
 };
 
 function VehicleCard({
   vehicle,
   view,
   isDeleting,
-  isArchiving,
+  isUpdating,
+  imageError,
   onDelete,
+  onStatusAction,
+  onMarkSold,
   onArchive,
+  onImageError,
 }: VehicleCardProps) {
   if (view === "grid") {
     return (
       <article className="overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
         <div className="relative bg-gray-100">
-          {vehicle.image ? (
+          {!imageError && vehicle.image ? (
             <img
               src={vehicle.image}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
               className="h-52 w-full object-cover"
+              onError={onImageError}
             />
           ) : (
             <div className="flex h-52 items-center justify-center text-sm text-gray-400">
@@ -736,8 +861,10 @@ function VehicleCard({
           <VehicleActions
             vehicle={vehicle}
             isDeleting={isDeleting}
-            isArchiving={isArchiving}
+            isUpdating={isUpdating}
             onDelete={onDelete}
+            onStatusAction={onStatusAction}
+            onMarkSold={onMarkSold}
             onArchive={onArchive}
           />
         </div>
@@ -749,11 +876,12 @@ function VehicleCard({
     <article className="rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
         <div className="relative shrink-0">
-          {vehicle.image ? (
+          {!imageError && vehicle.image ? (
             <img
               src={vehicle.image}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
               className="h-32 w-full rounded-xl object-cover sm:w-52"
+              onError={onImageError}
             />
           ) : (
             <div className="flex h-32 w-full items-center justify-center rounded-xl bg-gray-100 text-sm text-gray-400 sm:w-52">
@@ -777,8 +905,10 @@ function VehicleCard({
         <VehicleActions
           vehicle={vehicle}
           isDeleting={isDeleting}
-          isArchiving={isArchiving}
+          isUpdating={isUpdating}
           onDelete={onDelete}
+          onStatusAction={onStatusAction}
+          onMarkSold={onMarkSold}
           onArchive={onArchive}
         />
       </div>
@@ -851,27 +981,33 @@ function StatusBadge({
 type VehicleActionsProps = {
   vehicle: InventoryVehicle;
   isDeleting: boolean;
-  isArchiving: boolean;
+  isUpdating: boolean;
   onDelete: (vehicle: InventoryVehicle) => void;
+  onStatusAction: (vehicle: InventoryVehicle) => void;
+  onMarkSold: (vehicle: InventoryVehicle) => void;
   onArchive: (vehicle: InventoryVehicle) => void;
 };
 
 function VehicleActions({
   vehicle,
   isDeleting,
-  isArchiving,
+  isUpdating,
   onDelete,
+  onStatusAction,
+  onMarkSold,
   onArchive,
 }: VehicleActionsProps) {
+  const statusAction = getStatusAction(vehicle.status);
+
   return (
-    <div className="mt-5 grid grid-cols-2 gap-2 border-t pt-5 sm:grid-cols-4 lg:mt-0 lg:w-[420px] lg:border-0 lg:pt-0">
-      <button
-        type="button"
+    <div className="mt-5 grid grid-cols-2 gap-2 border-t pt-5 sm:grid-cols-3 lg:mt-0 lg:w-[430px] lg:border-0 lg:pt-0">
+      <Link
+        href={`/cars/${encodeURIComponent(vehicle.id)}`}
         className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition hover:bg-gray-100"
       >
         <Eye className="h-4 w-4" />
         View
-      </button>
+      </Link>
 
       <Link
         href={`/admin/listing?edit=${encodeURIComponent(vehicle.id)}`}
@@ -881,29 +1017,65 @@ function VehicleActions({
         Edit
       </Link>
 
-      <button
-        type="button"
-        className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition hover:bg-gray-100"
-      >
-        <Copy className="h-4 w-4" />
-        Copy
-      </button>
+      {statusAction && (
+        <button
+          type="button"
+          onClick={() => onStatusAction(vehicle)}
+          disabled={isUpdating || isDeleting}
+          className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isUpdating ? (
+            <RefreshCw className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
 
-      <button
-        type="button"
-        onClick={() => onArchive(vehicle)}
-        disabled={isArchiving || isDeleting || vehicle.status === "Archived"}
-        className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        <Archive className="h-4 w-4" />
-        {isArchiving ? "Archiving..." : vehicle.status === "Archived" ? "Archived" : "Archive"}
-      </button>
+          {isUpdating ? "Updating..." : statusAction.label}
+        </button>
+      )}
+
+      {vehicle.status === "Live" && (
+        <button
+          type="button"
+          onClick={() => onMarkSold(vehicle)}
+          disabled={isUpdating || isDeleting}
+          className="flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Sold
+        </button>
+      )}
+
+      {vehicle.status === "Reserved" && (
+        <button
+          type="button"
+          onClick={() => onMarkSold(vehicle)}
+          disabled={isUpdating || isDeleting}
+          className="flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Sold
+        </button>
+      )}
+
+      {(vehicle.status === "Live" ||
+        vehicle.status === "Reserved" ||
+        vehicle.status === "Sold" ||
+        vehicle.status === "Draft") && (
+        <button
+          type="button"
+          onClick={() => onArchive(vehicle)}
+          disabled={isUpdating || isDeleting}
+          className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <Archive className="h-4 w-4" />
+          Archive
+        </button>
+      )}
 
       <button
         type="button"
         onClick={() => onDelete(vehicle)}
-        disabled={isDeleting}
-        className="col-span-2 flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-4"
+        disabled={isDeleting || isUpdating}
+        className="col-span-2 flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-3"
       >
         <Trash2 className="h-4 w-4" />
         {isDeleting ? "Deleting..." : "Delete"}
