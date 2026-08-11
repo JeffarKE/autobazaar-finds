@@ -21,7 +21,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    setMobileOpen(false);
+    void Promise.resolve().then(() => setMobileOpen(false));
   }, [pathname]);
 
   const navItems = [

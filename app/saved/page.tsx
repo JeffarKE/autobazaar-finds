@@ -12,7 +12,7 @@ export default function SavedPage() {
       localStorage.getItem("savedCars") || "[]"
     );
 
-    setSavedCars(saved);
+    void Promise.resolve().then(() => setSavedCars(saved));
   }, []);
 
   const vehicles = cars.filter((car) =>

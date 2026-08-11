@@ -1,275 +1,104 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
-import {
-  DollarSign,
-  MapPin,
-  BadgeCheck,
-  Star,
-  HandCoins,
-  Globe,
-} from "lucide-react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { BadgeCheck, DollarSign, Globe, HandCoins, MapPin, Star } from "lucide-react";
 
-import { Vehicle } from "@/lib/vehicle";
+import type { Vehicle } from "@/lib/vehicle";
 
 type Props = {
   vehicle: Vehicle;
-  setVehicle: Dispatch<SetStateAction<Vehicle>>;
+  setVehicleAction: Dispatch<SetStateAction<Vehicle>>;
 };
 
-export default function Pricing({
-  vehicle,
-  setVehicle,
-}: Props) {
+export default function Pricing({ vehicle, setVehicleAction }: Props) {
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-      {/* Header */}
+    <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
       <div className="flex items-center gap-3">
-        <div className="rounded-xl bg-gray-100 p-3">
-          <DollarSign className="h-6 w-6" />
-        </div>
-
+        <div className="rounded-xl bg-gray-100 p-3"><DollarSign className="h-6 w-6" /></div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Pricing & Listing
-          </h2>
-
-          <p className="text-gray-500">
-            Configure the selling price and listing options.
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900">Pricing &amp; Listing</h2>
+          <p className="text-gray-500">Configure the selling price and listing options.</p>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        <InputField
-          label="Selling Price"
-          placeholder="4850000"
-          icon={<DollarSign className="h-5 w-5" />}
-          value={vehicle.price}
-          onChange={(value) =>
-            setVehicle((prev) => ({
-              ...prev,
-              price: value,
-            }))
-          }
-        />
-
-        <InputField
-          label="Vehicle Location"
-          placeholder="Karen, Nairobi"
-          icon={<MapPin className="h-5 w-5" />}
-          value={vehicle.location}
-          onChange={(value) =>
-            setVehicle((prev) => ({
-              ...prev,
-              location: value,
-            }))
-          }
-        />
-
-        <SelectField
-          label="Listing Status"
-          icon={<Globe className="h-5 w-5" />}
-          options={[
-            "Draft",
-            "Live",
-            "Reserved",
-            "Sold",
-            "Archived",
-          ]}
-          value={vehicle.status}
-          onChange={(value) =>
-            setVehicle((prev) => ({
-              ...prev,
-              status: value as Vehicle["status"],
-            }))
-          }
-        />
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:gap-6">
+        <InputField label="Selling Price" placeholder="4850000" icon={<DollarSign className="h-5 w-5" />} value={vehicle.price} onChange={(price) => setVehicleAction((current) => ({ ...current, price }))} />
+        <InputField label="Vehicle Location" placeholder="Karen, Nairobi" icon={<MapPin className="h-5 w-5" />} value={vehicle.location} onChange={(location) => setVehicleAction((current) => ({ ...current, location }))} />
+        <SelectField label="Listing Status" icon={<Globe className="h-5 w-5" />} options={["Draft", "Live", "Reserved", "Sold", "Archived"]} value={vehicle.status} onChange={(status) => setVehicleAction((current) => ({ ...current, status: status as Vehicle["status"] }))} />
       </div>
 
-      <div className="mt-10 grid gap-4 md:grid-cols-2">
-        <ToggleCard
-          icon={<HandCoins className="h-5 w-5" />}
-          title="Negotiable Price"
-          description="Allow buyers to negotiate."
-          checked={vehicle.negotiable}
-          onChange={(checked) =>
-            setVehicle((prev) => ({
-              ...prev,
-              negotiable: checked,
-            }))
-          }
-        />
-
-        <ToggleCard
-          icon={<Star className="h-5 w-5" />}
-          title="Featured Listing"
-          description="Display this vehicle prominently."
-          checked={vehicle.featured}
-          onChange={(checked) =>
-            setVehicle((prev) => ({
-              ...prev,
-              featured: checked,
-            }))
-          }
-        />
-
-        <ToggleCard
-          icon={<BadgeCheck className="h-5 w-5" />}
-          title="Verified Listing"
-          description="Show a verified badge."
-          checked={vehicle.verified}
-          onChange={(checked) =>
-            setVehicle((prev) => ({
-              ...prev,
-              verified: checked,
-            }))
-          }
-        />
-
-        <ToggleCard
-          icon={<Globe className="h-5 w-5" />}
-          title="Publish Immediately"
-          description="Make this listing visible after saving."
-          checked={vehicle.publishImmediately}
-          onChange={(checked) =>
-            setVehicle((prev) => ({
-              ...prev,
-              publishImmediately: checked,
-            }))
-          }
-        />
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <ToggleCard icon={<HandCoins className="h-5 w-5" />} title="Negotiable Price" description="Allow buyers to negotiate." checked={vehicle.negotiable} onChange={(negotiable) => setVehicleAction((current) => ({ ...current, negotiable }))} />
+        <ToggleCard icon={<Star className="h-5 w-5" />} title="Featured Listing" description="Display this vehicle prominently." checked={vehicle.featured} onChange={(featured) => setVehicleAction((current) => ({ ...current, featured }))} />
+        <ToggleCard icon={<BadgeCheck className="h-5 w-5" />} title="Verified Listing" description="Show a verified badge." checked={vehicle.verified} onChange={(verified) => setVehicleAction((current) => ({ ...current, verified }))} />
+        <ToggleCard icon={<Globe className="h-5 w-5" />} title="Publish Immediately" description="Make this listing visible after saving." checked={vehicle.publishImmediately} onChange={(publishImmediately) => setVehicleAction((current) => ({ ...current, publishImmediately }))} />
       </div>
     </section>
   );
 }
 
-/* ---------------- Input ---------------- */
-
 type InputFieldProps = {
   label: string;
   placeholder: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   value: string;
   onChange: (value: string) => void;
 };
 
-function InputField({
-  label,
-  placeholder,
-  icon,
-  value,
-  onChange,
-}: InputFieldProps) {
+function InputField({ label, placeholder, icon, value, onChange }: InputFieldProps) {
   return (
-    <div>
-      <label className="mb-2 block text-sm font-semibold text-gray-700">
-        {label}
-      </label>
-
-      <div className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
-        <div className="text-gray-400">{icon}</div>
-
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-transparent outline-none"
-          placeholder={placeholder}
-        />
-      </div>
-    </div>
+    <label className="block min-w-0">
+      <span className="mb-2 block text-sm font-semibold text-gray-700">{label}</span>
+      <span className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
+        <span className="shrink-0 text-gray-400">{icon}</span>
+        <input value={value} onChange={(event) => onChange(event.target.value)} className="min-w-0 w-full bg-transparent outline-none" placeholder={placeholder} />
+      </span>
+    </label>
   );
 }
 
-/* ---------------- Select ---------------- */
-
 type SelectFieldProps = {
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   options: readonly string[];
   value: string;
   onChange: (value: string) => void;
 };
 
-function SelectField({
-  label,
-  icon,
-  options,
-  value,
-  onChange,
-}: SelectFieldProps) {
+function SelectField({ label, icon, options, value, onChange }: SelectFieldProps) {
   return (
-    <div>
-      <label className="mb-2 block text-sm font-semibold text-gray-700">
-        {label}
-      </label>
-
-      <div className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
-        <div className="text-gray-400">{icon}</div>
-
-        <select
-          className="w-full bg-transparent outline-none"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        >
-          {options.map((option) => (
-            <option
-              key={option}
-              value={option}
-            >
-              {option}
-            </option>
-          ))}
+    <label className="block min-w-0">
+      <span className="mb-2 block text-sm font-semibold text-gray-700">{label}</span>
+      <span className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
+        <span className="shrink-0 text-gray-400">{icon}</span>
+        <select value={value} onChange={(event) => onChange(event.target.value)} className="min-w-0 w-full bg-transparent outline-none">
+          {options.map((option) => <option key={option} value={option}>{option}</option>)}
         </select>
-      </div>
-    </div>
+      </span>
+    </label>
   );
 }
 
-/* ---------------- Toggle ---------------- */
-
 type ToggleCardProps = {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
 };
 
-function ToggleCard({
-  icon,
-  title,
-  description,
-  checked,
-  onChange,
-}: ToggleCardProps) {
+function ToggleCard({ icon, title, description, checked, onChange }: ToggleCardProps) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border p-5 transition hover:border-black">
-      <div className="flex items-center gap-4">
-        <div className="rounded-xl bg-gray-100 p-3">
-          {icon}
-        </div>
-
-        <div>
-          <h3 className="font-semibold">{title}</h3>
-
-          <p className="text-sm text-gray-500">
-            {description}
-          </p>
-        </div>
+    <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border p-4 transition hover:border-black sm:p-5">
+      <div className="rounded-xl bg-gray-100 p-3 text-gray-800">{icon}</div>
+      <div className="min-w-0">
+        <h3 className="font-semibold leading-5 text-gray-950">{title}</h3>
+        <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>
       </div>
-
-      <label className="relative inline-flex cursor-pointer items-center">
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          className="peer sr-only"
-        />
-
-        <div className="h-7 w-12 rounded-full bg-gray-300 transition peer-checked:bg-black"></div>
-
-        <div className="absolute left-1 h-5 w-5 rounded-full bg-white transition peer-checked:translate-x-5"></div>
+      <label className="relative inline-flex shrink-0 cursor-pointer items-center">
+        <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="peer sr-only" aria-label={title} />
+        <span className="h-6 w-11 rounded-full bg-gray-300 transition peer-checked:bg-black" />
+        <span className="absolute left-1 h-4 w-4 rounded-full bg-white transition peer-checked:translate-x-5" />
       </label>
     </div>
   );

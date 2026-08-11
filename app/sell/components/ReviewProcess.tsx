@@ -36,7 +36,7 @@ export default function ReviewProcess() {
           </h3>
 
           <p className="mt-2 text-sm text-gray-600">
-            If we require additional information, we'll contact you using your
+            If we require additional information, we&apos;ll contact you using your
             preferred contact method.
           </p>
         </div>

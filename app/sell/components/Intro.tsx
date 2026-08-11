@@ -4,7 +4,7 @@ export default function Intro() {
   return (
     <section className="rounded-2xl border border-green-200 bg-green-50 p-6">
       <h1 className="text-3xl font-bold text-green-800">
-        Selling your car shouldn't be complicated.
+        Selling your car shouldn&apos;t be complicated.
       </h1>
 
       <p className="mt-3 leading-relaxed text-gray-700">

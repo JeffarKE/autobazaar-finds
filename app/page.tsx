@@ -133,7 +133,7 @@ export default function Home() {
               </h3>
 
               <p className="mt-4 text-slate-600">
-                Whether buying or selling, we're here to guide you throughout
+                Whether buying or selling, we&apos;re here to guide you throughout
                 the process.
               </p>
             </div>

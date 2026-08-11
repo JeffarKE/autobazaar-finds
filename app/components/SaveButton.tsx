@@ -15,7 +15,7 @@ export default function SaveButton({ carId }: SaveButtonProps) {
       localStorage.getItem("savedCars") || "[]"
     );
 
-    setSaved(savedCars.includes(carId));
+    void Promise.resolve().then(() => setSaved(savedCars.includes(carId)));
   }, [carId]);
 
   function toggleSave() {

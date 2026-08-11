@@ -15,21 +15,22 @@ const ALLOWED_TYPES = [
 ];
 
 export async function uploadVehicleImage(file: File) {
-  // Empty or cloud-only placeholder file
+  // --------------------------------------------------
+  // 1. Validate the selected file
+  // --------------------------------------------------
+
   if (file.size === 0) {
     throw new Error(
       "The selected image appears to be empty or hasn't been fully downloaded. If it's stored in Google Drive, OneDrive, Dropbox, or iCloud, please download it to your device first and then try again."
     );
   }
 
-  // Check file type
   if (!ALLOWED_TYPES.includes(file.type)) {
     throw new Error(
       "Unsupported image format. Please upload a JPG, PNG, WebP, or HEIC image."
     );
   }
 
-  // Check file size before compression
   const maxBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
 
   if (file.size > maxBytes) {
@@ -37,6 +38,10 @@ export async function uploadVehicleImage(file: File) {
       `Image is too large. Please choose an image smaller than ${MAX_FILE_SIZE_MB} MB.`
     );
   }
+
+  // --------------------------------------------------
+  // 2. Compress the image in the browser
+  // --------------------------------------------------
 
   let compressedFile: File;
 
@@ -53,25 +58,57 @@ export async function uploadVehicleImage(file: File) {
     );
   }
 
+  // --------------------------------------------------
+  // 3. Create a safe unique storage path
+  // --------------------------------------------------
+
   const extension =
     compressedFile.name.split(".").pop()?.toLowerCase() || "jpg";
 
-  const filename = `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+  const filename = `${crypto.randomUUID()}.${extension}`;
 
-  const { error } = await supabase.storage
+  const storagePath = `vehicles/${filename}`;
+
+  // --------------------------------------------------
+  // 4. Upload to Supabase Storage
+  // --------------------------------------------------
+
+  const { error: uploadError } = await supabase.storage
     .from(BUCKET)
-    .upload(filename, compressedFile);
+    .upload(storagePath, compressedFile, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: compressedFile.type || "image/jpeg",
+    });
 
-  if (error) {
-    throw new Error(error.message);
+  if (uploadError) {
+    throw new Error(
+      `Image upload failed: ${uploadError.message}`
+    );
   }
+
+  // --------------------------------------------------
+  // 5. Generate the public URL
+  // --------------------------------------------------
 
   const {
     data: { publicUrl },
-  } = supabase.storage.from(BUCKET).getPublicUrl(filename);
+  } = supabase.storage
+    .from(BUCKET)
+    .getPublicUrl(storagePath);
+
+  if (!publicUrl) {
+    throw new Error(
+      "The image uploaded successfully, but Supabase did not return a public URL."
+    );
+  }
+
+  // --------------------------------------------------
+  // 6. Return information needed by the vehicle record
+  // --------------------------------------------------
 
   return {
     publicUrl,
-    storagePath: filename,
+    storagePath,
   };
 }

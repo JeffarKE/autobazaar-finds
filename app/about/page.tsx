@@ -40,7 +40,7 @@ export default function AboutPage() {
           </h2>
 
           <p className="mt-3 text-slate-600 dark:text-slate-400">
-            Buying a vehicle shouldn't be complicated.
+            Buying a vehicle shouldn&apos;t be complicated.
           </p>
         </div>
 
@@ -102,7 +102,7 @@ export default function AboutPage() {
         </h2>
 
         <p className="mx-auto mt-4 max-w-2xl text-slate-300">
-          Browse our latest listings or get in touch on WhatsApp if you're
+          Browse our latest listings or get in touch on WhatsApp if you&apos;re
           looking for something specific.
         </p>
 

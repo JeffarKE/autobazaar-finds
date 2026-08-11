@@ -28,7 +28,7 @@ export default function VehicleDescription() {
         </h3>
 
         <ul className="mt-3 space-y-2 text-sm text-gray-700">
-          <li>• Be honest about the vehicle's condition.</li>
+          <li>• Be honest about the vehicle&apos;s condition.</li>
           <li>• Mention service history.</li>
           <li>• Mention any upgrades.</li>
           <li>• Mention spare keys and manuals.</li>

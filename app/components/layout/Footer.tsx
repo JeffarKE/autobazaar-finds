@@ -40,7 +40,7 @@ export default function Footer() {
             </h2>
 
             <p className="mt-5 leading-7 text-neutral-400">
-              Kenya's modern vehicle marketplace built to connect buyers and
+              Kenya&apos;s modern vehicle marketplace built to connect buyers and
               sellers through trust, transparency and premium vehicle listings.
             </p>
 
