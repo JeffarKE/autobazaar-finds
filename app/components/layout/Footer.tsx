@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import {
   MapPin,
@@ -8,31 +6,24 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaLinkedinIn,
-  FaXTwitter,
-  FaTiktok,
-} from "react-icons/fa6";
-
 const browse = [
   { name: "Browse Cars", href: "/cars" },
   { name: "Sell Your Car", href: "/sell" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "Vehicle Sourcing", href: "/source" },
 ];
 
 const company = [
-  { name: "About", href: "#" },
-  { name: "Privacy Policy", href: "#" },
-  { name: "Terms of Service", href: "#" },
+  { name: "About", href: "/about" },
 ];
+
+const whatsappUrl =
+  "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I%20would%20like%20to%20make%20an%20enquiry.";
 
 export default function Footer() {
   return (
     <footer className="mt-24 bg-neutral-950 text-white">
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-12 lg:grid-cols-4">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
             <h2 className="text-3xl font-black tracking-tight">
@@ -40,8 +31,8 @@ export default function Footer() {
             </h2>
 
             <p className="mt-5 leading-7 text-neutral-400">
-              Kenya&apos;s modern vehicle marketplace built to connect buyers and
-              sellers through trust, transparency and premium vehicle listings.
+              An independent vehicle brokerage and sourcing platform. We sell
+              on behalf of owners and help buyers find the right vehicle.
             </p>
 
             <div className="mt-8 space-y-4 text-sm text-neutral-400">
@@ -50,15 +41,21 @@ export default function Footer() {
                 Nairobi, Kenya
               </div>
 
-              <div className="flex items-center gap-3">
+              <Link
+                href="tel:+254741056053"
+                className="flex items-center gap-3 transition hover:text-white"
+              >
                 <Phone size={18} />
                 +254 741 056 053
-              </div>
+              </Link>
 
-              <div className="flex items-center gap-3">
+              <Link
+                href="mailto:autobazaarfinds@gmail.com"
+                className="flex items-center gap-3 transition hover:text-white"
+              >
                 <Mail size={18} />
-                jeffersonndungu001@gmail.com
-              </div>
+                autobazaarfinds@gmail.com
+              </Link>
             </div>
           </div>
 
@@ -102,49 +99,26 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Newsletter */}
+          {/* Contact */}
           <div>
             <h3 className="text-lg font-semibold">
-              Stay Updated
+              Get in Touch
             </h3>
 
             <p className="mt-4 text-neutral-400">
-              Subscribe to receive notifications whenever new vehicles are added.
+              Ask about a listing, sell through us, or let us source a vehicle
+              for you. Auto Bazaar Finds is not a dealership.
             </p>
 
-            <div className="mt-6 flex">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="flex-1 rounded-l-xl border border-neutral-700 bg-neutral-900 px-4 py-3 outline-none"
-              />
-
-              <button className="rounded-r-xl bg-white px-5 text-black transition hover:bg-neutral-200">
-                Join
-              </button>
-            </div>
-
-            <div className="mt-8 flex gap-5 text-xl">
-              <a href="#" className="transition hover:text-blue-500">
-                <FaFacebookF />
-              </a>
-
-              <a href="#" className="transition hover:text-pink-500">
-                <FaInstagram />
-              </a>
-
-              <a href="#" className="transition hover:text-white">
-                <FaXTwitter />
-              </a>
-
-              <a href="#" className="transition hover:text-sky-500">
-                <FaLinkedinIn />
-              </a>
-
-              <a href="#" className="transition hover:text-white">
-                <FaTiktok />
-              </a>
-            </div>
+            <Link
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-green-600 px-5 py-3 font-semibold text-white transition hover:bg-green-700"
+            >
+              WhatsApp Us
+              <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
 

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { cache } from "react";
 import {
   ChevronRight,
   MapPin,
@@ -8,13 +10,19 @@ import {
   Star,
 } from "lucide-react";
 
-import { cars } from "@/app/data/cars";
-
 import VehicleGallery from "../components/VehicleGallery";
 import VehicleSpecs from "../components/VehicleSpecs";
 import ContactCard from "../components/ContactCard";
 import DescriptionCard from "../components/DescriptionCard";
 import RelatedCars from "../components/RelatedCars";
+import {
+  getPublicVehicleById,
+  getPublicVehicles,
+} from "../services/getPublicVehicles";
+
+export const dynamic = "force-dynamic";
+
+const getVehicle = cache(getPublicVehicleById);
 
 type PageProps = {
   params: Promise<{
@@ -24,10 +32,10 @@ type PageProps = {
 
 export async function generateMetadata({
   params,
-}: PageProps) {
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
 
-  const vehicle = cars.find((v) => v.id === id);
+  const vehicle = await getVehicle(id);
 
   if (!vehicle) {
     return {
@@ -36,8 +44,14 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${vehicle.year} ${vehicle.make} ${vehicle.model} | Auto Bazaar Finds`,
+    title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
     description: vehicle.description,
+    alternates: { canonical: `/cars/${vehicle.id}` },
+    openGraph: {
+      title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+      description: vehicle.description,
+      images: vehicle.images[0] ? [vehicle.images[0]] : [],
+    },
   };
 }
 
@@ -46,7 +60,10 @@ export default async function VehicleDetailsPage({
 }: PageProps) {
   const { id } = await params;
 
-  const vehicle = cars.find((v) => v.id === id);
+  const [vehicle, cars] = await Promise.all([
+    getVehicle(id),
+    getPublicVehicles(),
+  ]);
 
   if (!vehicle) {
     notFound();
@@ -55,9 +72,40 @@ export default async function VehicleDetailsPage({
   const formattedPrice = new Intl.NumberFormat("en-KE").format(
     vehicle.price
   );
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const vehicleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: vehicle.title,
+    description: vehicle.description,
+    image: vehicle.images,
+    sku: vehicle.id,
+    brand: { "@type": "Brand", name: vehicle.make },
+    offers: {
+      "@type": "Offer",
+      url: `${siteUrl}/cars/${vehicle.id}`,
+      priceCurrency: "KES",
+      price: vehicle.price,
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/UsedCondition",
+      seller: { "@id": `${siteUrl}/#organization` },
+    },
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Year", value: vehicle.year },
+      { "@type": "PropertyValue", name: "Mileage", value: `${vehicle.mileage} km` },
+      { "@type": "PropertyValue", name: "Fuel", value: vehicle.fuel },
+      { "@type": "PropertyValue", name: "Transmission", value: vehicle.transmission },
+    ],
+  };
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(vehicleJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* Breadcrumb */}
       <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500">
         <Link href="/" className="hover:text-green-600">
@@ -123,7 +171,7 @@ export default async function VehicleDetailsPage({
                 </p>
 
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Premium Vehicle Listing
+                  Selling on behalf of the owner
                 </p>
               </div>
             </div>

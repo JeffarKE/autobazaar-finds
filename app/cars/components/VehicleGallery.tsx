@@ -16,7 +16,7 @@ export default function VehicleGallery({
   const gallery =
     images.length > 0
       ? images
-      : ["/images/placeholder-car.jpg"];
+      : ["/cars/forester.jpg"];
 
   const [selectedImage, setSelectedImage] = useState(0);
 
@@ -43,6 +43,7 @@ export default function VehicleGallery({
               alt={title}
               fill
               priority
+              sizes="(max-width: 1024px) 100vw, 66vw"
               className="object-cover transition duration-700 group-hover:scale-105"
             />
           ) : (
@@ -61,6 +62,8 @@ export default function VehicleGallery({
           {/* Previous */}
           {gallery.length > 1 && (
             <button
+              type="button"
+              aria-label="Show previous vehicle photo"
               onClick={previousImage}
               className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow-lg transition hover:scale-110 dark:bg-black/60"
             >
@@ -71,6 +74,8 @@ export default function VehicleGallery({
           {/* Next */}
           {gallery.length > 1 && (
             <button
+              type="button"
+              aria-label="Show next vehicle photo"
               onClick={nextImage}
               className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow-lg transition hover:scale-110 dark:bg-black/60"
             >
@@ -86,6 +91,8 @@ export default function VehicleGallery({
           {gallery.map((image, index) => (
             <button
               key={index}
+              type="button"
+              aria-label={`Show photo ${index + 1} of ${gallery.length}`}
               onClick={() => setSelectedImage(index)}
               className={`relative overflow-hidden rounded-2xl border transition-all ${
                 selectedImage === index
@@ -98,6 +105,7 @@ export default function VehicleGallery({
                   src={image}
                   alt={`${title} ${index + 1}`}
                   fill
+                  sizes="(max-width: 640px) 25vw, 140px"
                   className="object-cover"
                 />
               </div>

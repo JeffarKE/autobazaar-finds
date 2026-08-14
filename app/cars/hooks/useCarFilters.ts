@@ -71,12 +71,18 @@ export function useCarFilters(cars: Vehicle[]) {
         break;
 
       case "oldest":
-        results.sort((a, b) => a.year - b.year);
+        results.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
         break;
 
       case "newest":
       default:
-        results.sort((a, b) => b.year - a.year);
+        results.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         break;
     }
 

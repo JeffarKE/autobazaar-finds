@@ -1,4 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sell Your Car | Auto Bazaar Finds",
+  description: "Let Auto Bazaar Finds professionally market your vehicle and connect you with serious buyers.",
+};
 
 const whatsappMessage = encodeURIComponent(`Hi Auto Bazaar Finds,
 
@@ -28,13 +34,13 @@ export default function SellPage() {
     <main className="bg-white">
       {/* Hero */}
       <section className="border-b">
-        <div className="mx-auto max-w-7xl px-6 py-24 lg:flex lg:items-center lg:justify-between">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:flex lg:items-center lg:justify-between">
           <div className="max-w-2xl">
             <span className="rounded-full bg-green-100 px-4 py-1 text-sm font-semibold text-green-700">
               SELL YOUR CAR
             </span>
 
-            <h1 className="mt-6 text-5xl font-black tracking-tight text-gray-900">
+            <h1 className="mt-6 text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
               Sell Your Car Faster.
             </h1>
 
@@ -91,7 +97,7 @@ export default function SellPage() {
       </section>
 
       {/* Why */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
         <h2 className="text-4xl font-bold text-center">
           Why Sell With Auto Bazaar Finds?
         </h2>
@@ -166,7 +172,7 @@ export default function SellPage() {
 
       {/* CTA */}
       <section className="py-24">
-        <div className="mx-auto max-w-5xl rounded-3xl bg-green-600 px-8 py-16 text-center text-white">
+        <div className="mx-auto max-w-5xl rounded-3xl bg-green-600 px-5 py-12 text-center text-white sm:px-8 sm:py-16">
           <h2 className="text-4xl font-bold">
             Ready to Sell Your Car?
           </h2>

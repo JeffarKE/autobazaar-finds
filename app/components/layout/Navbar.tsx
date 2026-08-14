@@ -9,6 +9,7 @@ import {
   Home,
   CarFront,
   CircleDollarSign,
+  SearchCheck,
   Info,
   MessageCircle,
 } from "lucide-react";
@@ -44,6 +45,11 @@ export default function Navbar() {
       href: "/about",
       label: "About",
       icon: Info,
+    },
+    {
+      href: "/source",
+      label: "Source a Car",
+      icon: SearchCheck,
     },
   ];
 

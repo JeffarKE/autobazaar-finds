@@ -76,6 +76,9 @@ export default function LivePreview({ vehicle }: Props) {
       <section className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
         <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-gray-950 via-gray-800 to-gray-700">
           {coverImage ? (
+            // Blob URLs from newly selected files are not compatible with
+            // Next.js image optimization before the listing is saved.
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={coverImage} alt={title} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-gray-300">

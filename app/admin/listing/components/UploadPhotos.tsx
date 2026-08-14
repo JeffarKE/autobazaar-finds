@@ -76,6 +76,9 @@ export default function UploadPhotos({
           uploadedImages.push({
             publicUrl: uploaded.publicUrl,
             storagePath: uploaded.storagePath,
+
+            // Only create a cover automatically when this
+            // listing has no photos yet.
             isCover:
               vehicle.images.length === 0 &&
               uploadedImages.length === 0,
@@ -93,10 +96,25 @@ export default function UploadPhotos({
         }
       }
 
-      setVehicleAction((current) => ({
-        ...current,
-        images: [...current.images, ...uploadedImages],
-      }));
+      setVehicleAction((current) => {
+        const combined = [...current.images, ...uploadedImages];
+
+        // Guarantee exactly one cover.
+        const existingCoverIndex = combined.findIndex(
+          (image) => image.isCover === true
+        );
+
+        const coverIndex =
+          existingCoverIndex >= 0 ? existingCoverIndex : 0;
+
+        return {
+          ...current,
+          images: combined.map((image, index) => ({
+            ...image,
+            isCover: index === coverIndex,
+          })),
+        };
+      });
 
       setMessage(
         files.length > selectedFiles.length
@@ -132,13 +150,35 @@ export default function UploadPhotos({
   }
 
   function setCover(index: number) {
-    setVehicleAction((current) => ({
-      ...current,
-      images: current.images.map((image, imageIndex) => ({
-        ...image,
-        isCover: imageIndex === index,
-      })),
-    }));
+    setVehicleAction((current) => {
+      if (index < 0 || index >= current.images.length) {
+        return current;
+      }
+
+      const selected = current.images[index];
+      const others = current.images.filter(
+        (_, imageIndex) => imageIndex !== index
+      );
+
+      // Put the selected cover first.
+      return {
+        ...current,
+        images: [
+          {
+            ...selected,
+            isCover: true,
+          },
+          ...others.map((image) => ({
+            ...image,
+            isCover: false,
+          })),
+        ],
+      };
+    });
+
+    setMessage(
+      "Cover photo changed. Save Changes to apply it."
+    );
   }
 
   function removeImage(index: number) {
@@ -156,14 +196,33 @@ export default function UploadPhotos({
         (_, imageIndex) => imageIndex !== index
       );
 
+      if (remaining.length === 0) {
+        return {
+          ...current,
+          images: [],
+        };
+      }
+
+      // Determine whether the deleted image was the cover.
+      const removedWasCover = Boolean(removedImage?.isCover);
+
+      // Preserve the existing cover if it wasn't deleted.
+      const existingCoverIndex = remaining.findIndex(
+        (image) => image.isCover === true
+      );
+
+      // If the cover was deleted, the first remaining image
+      // becomes the new cover.
+      const coverIndex =
+        removedWasCover || existingCoverIndex === -1
+          ? 0
+          : existingCoverIndex;
+
       return {
         ...current,
-        images: remaining.map((item, imageIndex) => ({
-          ...item,
-          isCover:
-            item.isCover ||
-            (imageIndex === 0 &&
-              !remaining.some((entry) => entry.isCover)),
+        images: remaining.map((image, imageIndex) => ({
+          ...image,
+          isCover: imageIndex === coverIndex,
         })),
       };
     });
@@ -176,6 +235,7 @@ export default function UploadPhotos({
   return (
     <Card className="rounded-3xl shadow-sm">
       <CardContent className="space-y-8 p-8">
+
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="rounded-xl bg-gray-100 p-3">
@@ -292,6 +352,8 @@ export default function UploadPhotos({
                   className="overflow-hidden rounded-2xl border bg-white"
                 >
                   <div className="relative aspect-[4/3] bg-gray-100">
+                    {/* Blob URLs need a native preview before they are saved. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={image.publicUrl}
                       alt={`Vehicle photo ${index + 1}`}

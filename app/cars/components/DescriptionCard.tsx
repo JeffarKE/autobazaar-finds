@@ -20,7 +20,7 @@ export default function DescriptionCard({
           </h2>
 
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Details provided by the seller.
+            Listing information supplied by the owner and presented by Auto Bazaar Finds.
           </p>
         </div>
       </div>

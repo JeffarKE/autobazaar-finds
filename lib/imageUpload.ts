@@ -76,7 +76,7 @@ export async function uploadVehicleImage(file: File) {
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)
     .upload(storagePath, compressedFile, {
-      cacheControl: "3600",
+      cacheControl: "31536000",
       upsert: false,
       contentType: compressedFile.type || "image/jpeg",
     });
@@ -88,18 +88,16 @@ export async function uploadVehicleImage(file: File) {
   }
 
   // --------------------------------------------------
-  // 5. Generate the public URL
+  // 5. Generate a temporary preview URL for the private bucket
   // --------------------------------------------------
 
-  const {
-    data: { publicUrl },
-  } = supabase.storage
+  const { data: signedData, error: signedUrlError } = await supabase.storage
     .from(BUCKET)
-    .getPublicUrl(storagePath);
+    .createSignedUrl(storagePath, 3600);
 
-  if (!publicUrl) {
+  if (signedUrlError || !signedData?.signedUrl) {
     throw new Error(
-      "The image uploaded successfully, but Supabase did not return a public URL."
+      "The image uploaded successfully, but a secure preview could not be created."
     );
   }
 
@@ -108,7 +106,7 @@ export async function uploadVehicleImage(file: File) {
   // --------------------------------------------------
 
   return {
-    publicUrl,
+    publicUrl: signedData.signedUrl,
     storagePath,
   };
 }

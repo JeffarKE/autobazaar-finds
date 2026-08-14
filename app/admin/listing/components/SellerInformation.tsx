@@ -30,30 +30,30 @@ export default function SellerInformation({
 
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
-            Seller Information
+            Vehicle Owner Information
           </h2>
 
           <p className="text-gray-500">
-            Contact information displayed to interested buyers.
+            Keep the owner&apos;s details for your records. Public enquiries always
+            go through Auto Bazaar Finds.
           </p>
         </div>
       </div>
 
-      {/* Dealer Card */}
+      {/* Brokerage contact card */}
       <div className="mt-8 rounded-2xl border bg-gradient-to-r from-black to-gray-800 p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-300">
-              Default Seller
+              Public Listing Contact
             </p>
 
             <h3 className="mt-1 text-2xl font-bold">
-              Auto Baazar Finds
+              Auto Bazaar Finds
             </h3>
 
             <p className="mt-2 text-gray-300">
-              Your dealership information will automatically appear unless
-              changed below.
+              Buyers will always see Auto Bazaar Finds as the brokerage contact.
             </p>
           </div>
 
@@ -66,8 +66,8 @@ export default function SellerInformation({
       {/* Form */}
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <InputField
-          label="Seller Name"
-          placeholder="Auto Baazar Finds"
+          label="Vehicle Owner Name"
+          placeholder="Owner name"
           icon={<Building2 className="h-5 w-5" />}
           value={vehicle.sellerName}
           onChange={(value) =>
@@ -93,7 +93,7 @@ export default function SellerInformation({
 
         <InputField
           label="Email Address"
-          placeholder="sales@autobaazarfinds.co.ke"
+          placeholder="autobazaarfinds@gmail.com"
           icon={<Mail className="h-5 w-5" />}
           value={vehicle.email}
           onChange={(value) =>

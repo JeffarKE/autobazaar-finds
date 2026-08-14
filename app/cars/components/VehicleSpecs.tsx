@@ -14,6 +14,12 @@ interface VehicleSpecsProps {
   vehicle: Vehicle;
 }
 
+function formatEngine(value: string) {
+  const trimmed = value.trim();
+  if (/^\d{3,5}$/.test(trimmed)) return `${trimmed} cc`;
+  return trimmed;
+}
+
 const specs = (vehicle: Vehicle) => [
   {
     icon: Calendar,
@@ -38,7 +44,7 @@ const specs = (vehicle: Vehicle) => [
   {
     icon: Cog,
     label: "Engine",
-    value: vehicle.engine,
+    value: formatEngine(vehicle.engine),
   },
   {
     icon: CarFront,

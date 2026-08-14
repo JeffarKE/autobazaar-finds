@@ -270,7 +270,11 @@ export default function InventoryPage() {
   }, []);
 
   useEffect(() => {
-    void loadInventory();
+    const timeoutId = window.setTimeout(() => {
+      void loadInventory();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadInventory]);
 
   function refreshInventory() {
@@ -516,7 +520,7 @@ export default function InventoryPage() {
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
       <section className="border-b bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">
@@ -559,7 +563,7 @@ export default function InventoryPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl space-y-6 px-6 py-8">
+      <section className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
         {/* Statistics */}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
@@ -827,6 +831,9 @@ function VehicleCard({
       <article className="overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
         <div className="relative bg-gray-100">
           {!imageError && vehicle.image ? (
+            // This admin preview accepts arbitrary uploaded URLs and keeps a
+            // fixed layout, so native image loading is intentional here.
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={vehicle.image}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
@@ -877,6 +884,9 @@ function VehicleCard({
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center">
         <div className="relative shrink-0">
           {!imageError && vehicle.image ? (
+            // This admin preview accepts arbitrary uploaded URLs and keeps a
+            // fixed layout, so native image loading is intentional here.
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={vehicle.image}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}

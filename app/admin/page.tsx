@@ -206,7 +206,11 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    void loadDashboard();
+    const timeoutId = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadDashboard]);
 
   function refreshDashboard() {
@@ -229,7 +233,7 @@ export default function AdminDashboard() {
 
           <p className="mt-3 max-w-2xl text-gray-600">
             Manage your inventory, publish vehicles and monitor your
-            dealership from one place.
+            brokerage and sourcing platform from one place.
           </p>
         </div>
 
@@ -403,10 +407,10 @@ export default function AdminDashboard() {
             />
 
             <QuickAction
-              href="/admin/settings"
+              href="/cars"
               icon={<TrendingUp className="h-5 w-5" />}
-              title="Settings"
-              description="Manage your dealership"
+              title="View Live Website"
+              description="Review the public inventory"
             />
           </div>
         </div>

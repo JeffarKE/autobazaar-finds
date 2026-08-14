@@ -1,7 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
-import { FileText, Sparkles, RotateCcw } from "lucide-react";
+import { FileText, RotateCcw } from "lucide-react";
 
 import { Vehicle } from "@/lib/vehicle";
 
@@ -26,6 +26,12 @@ export default function Description({
   setVehicle,
 }: Props) {
   const addTemplate = (text: string) => {
+    const existingLines = vehicle.description
+      .split("\n")
+      .map((line) => line.replace(/^\s*•\s*/, "").trim().toLowerCase());
+
+    if (existingLines.includes(text.toLowerCase())) return;
+
     setVehicle((prev) => ({
       ...prev,
       description: prev.description
@@ -108,18 +114,10 @@ export default function Description({
           className="w-full resize-none rounded-2xl border bg-gray-50 p-5 outline-none transition focus:border-black focus:bg-white"
         />
 
-        <div className="mt-3 flex items-center justify-between text-sm text-gray-500">
+        <div className="mt-3 text-sm text-gray-500">
           <span>
             {vehicle.description.length} / 2,000 characters
           </span>
-
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-xl border px-4 py-2 transition hover:bg-gray-100"
-          >
-            <Sparkles className="h-4 w-4" />
-            AI Writer (Coming Soon)
-          </button>
         </div>
       </div>
 

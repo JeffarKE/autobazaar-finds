@@ -18,6 +18,7 @@ export default function ContactCard({
   vehicle,
 }: ContactCardProps) {
   const phone = vehicle.seller.phone.replace(/\D/g, "");
+  const hasPhone = phone.length > 0;
 
   const whatsappMessage = encodeURIComponent(
     `Hello, I'm interested in your ${vehicle.year} ${vehicle.make} ${vehicle.model} listed on Auto Bazaar Finds. Is it still available?`
@@ -31,11 +32,11 @@ export default function ContactCard({
         {/* Header */}
         <div className="bg-gradient-to-r from-green-600 to-emerald-500 p-6 text-white">
           <h2 className="text-2xl font-bold">
-            Contact Seller
+            Contact Auto Bazaar Finds
           </h2>
 
           <p className="mt-2 text-sm text-green-100">
-            Ready to own this vehicle? Get in touch today.
+            Enquire through us about this vehicle or request a similar one.
           </p>
         </div>
 
@@ -79,24 +80,31 @@ export default function ContactCard({
             </div>
           </div>
 
-          {/* Call */}
-          <Link
-            href={`tel:${phone}`}
-            className="flex items-center justify-center gap-3 rounded-2xl bg-green-600 px-6 py-4 font-semibold text-white transition hover:bg-green-700"
-          >
-            <Phone className="h-5 w-5" />
-            Call Seller
-          </Link>
+          {hasPhone ? (
+            <>
+              <Link
+                href={`tel:${phone}`}
+                className="flex items-center justify-center gap-3 rounded-2xl bg-green-600 px-6 py-4 font-semibold text-white transition hover:bg-green-700"
+              >
+                <Phone className="h-5 w-5" />
+                Call Auto Bazaar Finds
+              </Link>
 
-          {/* WhatsApp */}
-          <Link
-            href={whatsappLink}
-            target="_blank"
-            className="flex items-center justify-center gap-3 rounded-2xl border border-green-600 px-6 py-4 font-semibold text-green-600 transition hover:bg-green-50 dark:hover:bg-green-900/20"
-          >
-            <MessageCircle className="h-5 w-5" />
-            WhatsApp Seller
-          </Link>
+              <Link
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 rounded-2xl border border-green-600 px-6 py-4 font-semibold text-green-600 transition hover:bg-green-50 dark:hover:bg-green-900/20"
+              >
+                <MessageCircle className="h-5 w-5" />
+                WhatsApp Auto Bazaar Finds
+              </Link>
+            </>
+          ) : (
+            <p className="rounded-2xl bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+              Please use our main contact details to enquire about this vehicle.
+            </p>
+          )}
 
           {/* Safety Tips */}
           <div className="rounded-2xl border border-green-200 bg-green-50 p-5 dark:border-green-800 dark:bg-green-900/20">
@@ -116,7 +124,7 @@ export default function ContactCard({
             </ul>
           </div>
 
-          {/* Seller */}
+          {/* Brokerage identity */}
           <div className="rounded-2xl bg-slate-100 p-4 dark:bg-neutral-800">
             <div className="flex items-center justify-between">
               <div>
@@ -125,9 +133,7 @@ export default function ContactCard({
                 </p>
 
                 <p className="text-sm text-slate-500">
-                  {vehicle.seller.verified
-                    ? "Verified Seller"
-                    : "Seller"}
+                  Independent vehicle brokerage
                 </p>
               </div>
 
@@ -136,6 +142,11 @@ export default function ContactCard({
               )}
             </div>
           </div>
+
+          <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
+            We are not a dealership. Vehicles are marketed on behalf of their
+            owners, and we also help buyers source suitable vehicles.
+          </p>
         </div>
       </div>
     </aside>

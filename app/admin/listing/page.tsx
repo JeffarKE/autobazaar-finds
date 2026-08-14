@@ -10,8 +10,10 @@ import SellerInformation from "./components/SellerInformation";
 import UploadPhotos from "./components/UploadPhotos";
 import VehicleInformation from "./components/VehicleInformation";
 import VehicleSpecifications from "./components/VehicleSpecifications";
+
 import { publishVehicle } from "./services/publishVehicle";
 import { updateVehicle } from "./services/updateVehicle";
+
 import { emptyVehicle, Vehicle } from "@/lib/vehicle";
 import { supabase } from "@/lib/supabase";
 
@@ -85,6 +87,9 @@ export default function ListingPage() {
       const params = new URLSearchParams(window.location.search);
       const editId = params.get("edit");
 
+      /*
+       * No ?edit=... means this is a new listing.
+       */
       if (!editId) {
         setVehicle(getInitialVehicle());
         return;
@@ -95,6 +100,9 @@ export default function ListingPage() {
       setNotice("Loading vehicle...");
 
       try {
+        /*
+         * Load vehicle itself.
+         */
         const { data, error } = await supabase
           .from("vehicles")
           .select("*")
@@ -111,6 +119,12 @@ export default function ListingPage() {
 
         const vehicleRow = data as VehicleRow;
 
+        /*
+         * Load all photos belonging to this vehicle.
+         *
+         * They are already ordered by display_order so the order
+         * stored in Supabase is preserved.
+         */
         const { data: imageData, error: imageError } = await supabase
           .from("vehicle_images")
           .select(
@@ -123,15 +137,101 @@ export default function ListingPage() {
           throw new Error(imageError.message);
         }
 
-        const imageRows = (imageData as VehicleImageRow[] | null) ?? [];
+        const imageRows =
+          (imageData as VehicleImageRow[] | null) ?? [];
 
+        /*
+         * ---------------------------------------------------------
+         * IMPORTANT IMAGE/COVER NORMALIZATION
+         * ---------------------------------------------------------
+         *
+         * Supabase should contain only one is_cover = true.
+         *
+         * However, if an older listing already has:
+         *
+         * photo 1 -> is_cover = true
+         * photo 2 -> is_cover = true
+         *
+         * we don't want both photos to appear as covers in the editor.
+         *
+         * We therefore:
+         *
+         * 1. Find the FIRST database image marked as cover.
+         * 2. If none exists, use the first image.
+         * 3. Force every other image to isCover = false.
+         *
+         * The updateVehicle service will perform the same
+         * normalization when Save Changes is clicked.
+         * ---------------------------------------------------------
+         */
+
+        const validImages = imageRows.filter(
+          (image) => Boolean(image.image_url)
+        );
+
+        const storedPaths = validImages
+          .map((image) => image.storage_path)
+          .filter((path): path is string => Boolean(path));
+
+        const signedImageUrls = new Map<string, string>();
+
+        if (storedPaths.length > 0) {
+          const { data: signedData, error: signedError } =
+            await supabase.storage
+              .from("vehicle-images")
+              .createSignedUrls(storedPaths, 3600);
+
+          if (signedError) {
+            throw new Error(signedError.message);
+          }
+
+          (signedData ?? []).forEach((item) => {
+            if (item.path && item.signedUrl) {
+              signedImageUrls.set(item.path, item.signedUrl);
+            }
+          });
+        }
+
+        const databaseCoverIndex = validImages.findIndex(
+          (image) => image.is_cover === true
+        );
+
+        const coverIndex =
+          databaseCoverIndex >= 0
+            ? databaseCoverIndex
+            : validImages.length > 0
+              ? 0
+              : -1;
+
+        const normalizedImages = validImages.map(
+          (image, index) => ({
+            publicUrl:
+              (image.storage_path
+                ? signedImageUrls.get(image.storage_path)
+                : undefined) ?? (image.image_url as string),
+            storagePath: image.storage_path ?? "",
+
+            /*
+             * Exactly ONE image can be true.
+             */
+            isCover: index === coverIndex,
+          })
+        );
+
+        /*
+         * Build the complete vehicle object.
+         */
         const loadedVehicle: Vehicle = {
           ...emptyVehicle,
 
           make: stringValue(vehicleRow.make),
           model: stringValue(vehicleRow.model),
           year: stringValue(vehicleRow.year),
-          registrationNumber: stringValue(vehicleRow.registrationNumber),
+
+          registrationNumber: stringValue(
+            vehicleRow.registrationNumber
+          ),
+
           vin: stringValue(vehicleRow.vin),
 
           bodyType: stringValue(vehicleRow.bodyType),
@@ -140,17 +240,27 @@ export default function ListingPage() {
           driveType: stringValue(vehicleRow.driveType),
           engineSize: stringValue(vehicleRow.engineSize),
           mileage: stringValue(vehicleRow.mileage),
-          exteriorColor: stringValue(vehicleRow.exteriorColor),
-          interiorColor: stringValue(vehicleRow.interiorColor),
+
+          exteriorColor: stringValue(
+            vehicleRow.exteriorColor
+          ),
+
+          interiorColor: stringValue(
+            vehicleRow.interiorColor
+          ),
+
           condition: stringValue(vehicleRow.condition),
           seats: stringValue(vehicleRow.seats),
           doors: stringValue(vehicleRow.doors),
           horsepower: stringValue(vehicleRow.horsepower),
           torque: stringValue(vehicleRow.torque),
-          groundClearance: stringValue(vehicleRow.groundClearance),
+          groundClearance: stringValue(
+            vehicleRow.groundClearance
+          ),
 
           price: stringValue(vehicleRow.price),
           location: stringValue(vehicleRow.location),
+
           status:
             vehicleRow.status === "Live" ||
             vehicleRow.status === "Reserved" ||
@@ -158,26 +268,28 @@ export default function ListingPage() {
             vehicleRow.status === "Archived"
               ? vehicleRow.status
               : "Draft",
+
           negotiable: Boolean(vehicleRow.negotiable),
           featured: Boolean(vehicleRow.featured),
           verified: Boolean(vehicleRow.verified),
-          publishImmediately: Boolean(vehicleRow.publishImmediately),
+          publishImmediately: Boolean(
+            vehicleRow.publishImmediately
+          ),
 
           description: stringValue(vehicleRow.description),
 
           sellerName: stringValue(vehicleRow.sellerName),
           phone: stringValue(vehicleRow.phone),
           email: stringValue(vehicleRow.email),
-          preferredContact: stringValue(vehicleRow.preferredContact),
+          preferredContact: stringValue(
+            vehicleRow.preferredContact
+          ),
           bestTime: stringValue(vehicleRow.bestTime),
 
-          images: imageRows
-            .filter((image) => Boolean(image.image_url))
-            .map((image, index) => ({
-              publicUrl: image.image_url as string,
-              storagePath: image.storage_path ?? "",
-              isCover: image.is_cover ?? index === 0,
-            })),
+          /*
+           * Use the normalized image array here.
+           */
+          images: normalizedImages,
         };
 
         if (!cancelled) {
@@ -187,6 +299,7 @@ export default function ListingPage() {
       } catch (error) {
         if (!cancelled) {
           setVehicle(emptyVehicle);
+
           setNotice(
             error instanceof Error
               ? error.message
@@ -237,12 +350,16 @@ export default function ListingPage() {
     }
 
     vehicle.images.forEach((image) => {
-      if (image.file && image.publicUrl.startsWith("blob:")) {
+      if (
+        image.file &&
+        image.publicUrl.startsWith("blob:")
+      ) {
         URL.revokeObjectURL(image.publicUrl);
       }
     });
 
     window.localStorage.removeItem(DRAFT_KEY);
+
     setVehicle(emptyVehicle);
     setNotice("Listing cleared.");
   }
@@ -252,6 +369,9 @@ export default function ListingPage() {
     setNotice("");
 
     try {
+      /*
+       * EDIT EXISTING VEHICLE
+       */
       if (editVehicleId) {
         await updateVehicle(editVehicleId, vehicle);
 
@@ -260,7 +380,12 @@ export default function ListingPage() {
         setNotice(
           "Vehicle updated successfully. The changes have been saved to Supabase."
         );
-      } else {
+      }
+
+      /*
+       * CREATE NEW VEHICLE
+       */
+      else {
         await publishVehicle(vehicle);
 
         window.localStorage.removeItem(DRAFT_KEY);
@@ -294,8 +419,8 @@ export default function ListingPage() {
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
       <section className="border-b bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-8">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             {pageTitle}
           </h1>
 
@@ -315,12 +440,13 @@ export default function ListingPage() {
       </section>
 
       {/* Content */}
-      <section className="mx-auto max-w-7xl px-6 py-8">
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
         {editVehicleId && isLoadingEdit ? (
           <div className="rounded-2xl border bg-white p-10 text-center shadow-sm">
             <p className="text-lg font-semibold text-gray-900">
               Loading vehicle...
             </p>
+
             <p className="mt-2 text-sm text-gray-500">
               Getting the listing details and photos from Supabase.
             </p>
@@ -330,7 +456,9 @@ export default function ListingPage() {
             {/* Listing Form */}
             <form
               className="space-y-8"
-              onSubmit={(event) => event.preventDefault()}
+              onSubmit={(event) =>
+                event.preventDefault()
+              }
             >
               <UploadPhotos
                 vehicle={vehicle}

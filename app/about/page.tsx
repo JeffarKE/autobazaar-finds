@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   ArrowRight,
   CarFront,
@@ -9,6 +10,11 @@ import {
 
 const whatsappUrl =
   "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I'm%20interested%20in%20one%20of%20your%20vehicles.";
+
+export const metadata: Metadata = {
+  title: "About | Auto Bazaar Finds",
+  description: "Learn how Auto Bazaar Finds markets vehicles for owners and sources suitable vehicles for buyers in Kenya.",
+};
 
 export default function AboutPage() {
   return (
@@ -24,11 +30,10 @@ export default function AboutPage() {
         </h1>
 
         <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
-          Auto Bazaar Finds is an independent Kenyan vehicle brokerage
-          built from a genuine passion for cars. Combining vehicle sales
-          experience with technical knowledge, our goal is simple:
-          connect genuine buyers with quality vehicles while helping
-          sellers reach the right audience.
+          Auto Bazaar Finds is an independent Kenyan vehicle brokerage and
+          sourcing platform—not a dealership. We market vehicles on behalf of
+          their owners, connect them with genuine buyers, and help buyers source
+          suitable vehicles based on their needs and budget.
         </p>
       </section>
 
@@ -40,7 +45,7 @@ export default function AboutPage() {
           </h2>
 
           <p className="mt-3 text-slate-600 dark:text-slate-400">
-            Buying a vehicle shouldn&apos;t be complicated.
+            Whether you are buying, sourcing, or selling, we guide the process.
           </p>
         </div>
 
@@ -77,7 +82,7 @@ export default function AboutPage() {
             </h3>
 
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              Reach out directly on WhatsApp for quick responses.
+              Enquire through Auto Bazaar Finds for quick, coordinated support.
             </p>
           </div>
 
@@ -103,7 +108,7 @@ export default function AboutPage() {
 
         <p className="mx-auto mt-4 max-w-2xl text-slate-300">
           Browse our latest listings or get in touch on WhatsApp if you&apos;re
-          looking for something specific.
+          looking for something specific and would like us to source it.
         </p>
 
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">

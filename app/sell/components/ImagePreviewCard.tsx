@@ -49,6 +49,8 @@ export default function ImagePreviewCard({
           : "hover:-translate-y-1 hover:shadow-lg"
       }`}
     >
+      {/* Local blob previews must use the browser's native image element. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={photo.preview}
         alt="Vehicle photo"

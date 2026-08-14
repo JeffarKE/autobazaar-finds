@@ -1,7 +1,9 @@
 import Hero from "./components/Hero";
-import CarCard from "./components/CarCard";
 import Link from "next/link";
-import { cars } from "./data/cars";
+import VehicleCard from "./cars/components/VehicleCard";
+import { getPublicVehicles } from "./cars/services/getPublicVehicles";
+
+export const dynamic = "force-dynamic";
 
 const whatsappMessage = encodeURIComponent(`Hi Auto Bazaar Finds,
 
@@ -26,25 +28,26 @@ I'll send the photos next.
 
 const whatsappUrl = `https://wa.me/254741056053?text=${whatsappMessage}`;
 
-// Featured vehicles only (maximum of 4)
-const featuredCars = cars
-  .filter((car) => car.featured)
-  .slice(0, 4);
-
-export default function Home() {
+export default async function Home() {
+  const vehicles = await getPublicVehicles();
+  const featuredVehicles = vehicles.filter((vehicle) => vehicle.featured);
+  const displayedVehicles = (featuredVehicles.length > 0
+    ? featuredVehicles
+    : vehicles
+  ).slice(0, 4);
   return (
     <main className="min-h-screen bg-slate-50">
       <Hero />
 
       {/* Featured Vehicles */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="mb-12 flex items-center justify-between">
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="mb-9 flex items-center justify-between sm:mb-12">
           <div>
             <p className="font-semibold uppercase tracking-widest text-green-600">
               Featured Listings
             </p>
 
-            <h2 className="mt-2 text-4xl font-black text-slate-900">
+            <h2 className="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">
               Hand Picked Vehicles
             </h2>
 
@@ -63,17 +66,16 @@ export default function Home() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {featuredCars.map((car) => (
-            <CarCard
-              key={car.id}
-              id={car.id}
-              image={car.images[0]}
-              title={`${car.year} ${car.make} ${car.model}`}
-              details={`${car.engine} • ${car.transmission} • ${car.fuel}`}
-              price={`KSh ${car.price.toLocaleString()}`}
-            />
+          {displayedVehicles.map((vehicle) => (
+            <VehicleCard key={vehicle.id} vehicle={vehicle} />
           ))}
         </div>
+
+        {displayedVehicles.length === 0 && (
+          <div className="rounded-3xl border border-dashed bg-white px-6 py-12 text-center text-slate-600">
+            New vehicles will appear here as soon as they are published.
+          </div>
+        )}
 
         <div className="mt-12 text-center md:hidden">
           <Link
@@ -86,14 +88,14 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-white py-24">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="bg-white py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
             <p className="font-semibold uppercase tracking-widest text-green-600">
               Why Choose Us
             </p>
 
-            <h2 className="mt-3 text-4xl font-black">
+            <h2 className="mt-3 text-3xl font-black sm:text-4xl">
               Auto Bazaar Finds
             </h2>
           </div>
@@ -142,17 +144,17 @@ export default function Home() {
       </section>
 
       {/* Sell Banner */}
-      <section className="py-24">
-        <div className="mx-auto max-w-6xl rounded-[32px] bg-green-600 px-8 py-16 text-center text-white shadow-xl">
+      <section className="px-4 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl rounded-[32px] bg-green-600 px-5 py-12 text-center text-white shadow-xl sm:px-8 sm:py-16">
           <p className="font-semibold uppercase tracking-widest text-green-100">
             SELL YOUR CAR
           </p>
 
-          <h2 className="mt-4 text-5xl font-black">
+          <h2 className="mt-4 text-3xl font-black sm:text-5xl">
             Ready to Sell Your Vehicle?
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl text-xl text-green-100">
+          <p className="mx-auto mt-6 max-w-3xl text-base text-green-100 sm:text-xl">
             No upfront listing fee. We professionally market your vehicle and
             only earn a 3% commission after a successful sale.
           </p>
@@ -160,7 +162,7 @@ export default function Home() {
           <Link
             href={whatsappUrl}
             target="_blank"
-            className="mt-10 inline-flex rounded-xl bg-white px-10 py-4 text-lg font-bold text-green-700 transition hover:scale-105"
+            className="mt-10 inline-flex rounded-xl bg-white px-6 py-4 text-base font-bold text-green-700 transition hover:scale-105 sm:px-10 sm:text-lg"
           >
             🚗 Start Selling Your Car
           </Link>

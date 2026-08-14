@@ -1,65 +1,73 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 
-export default function AdminLayout({
+import { isAdminUser } from "@/lib/admin-auth";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { logout } from "../admin-login/actions";
+
+export default async function AdminLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const supabase = await createServerSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!isAdminUser(user)) redirect("/admin-login");
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="border-b bg-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-          <h1 className="text-xl font-bold text-gray-900">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <h1 className="text-lg font-bold text-gray-900 sm:text-xl">
             Auto Bazaar Finds Admin
           </h1>
 
-          <Link
-            href="/"
-            className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-100"
-          >
-            View Website
-          </Link>
+          <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+            <Link href="/" className="flex-1 rounded-lg border px-3 py-2 text-center text-sm font-medium hover:bg-gray-100 sm:flex-none sm:px-4">
+              View Website
+            </Link>
+            <form action={logout}>
+              <button className="rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 sm:px-4">
+                Sign out
+              </button>
+            </form>
+          </div>
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-7xl">
+      <div className="mx-auto flex max-w-7xl flex-col lg:flex-row">
         {/* Sidebar */}
-        <aside className="w-64 border-r bg-white">
-          <nav className="flex flex-col gap-2 p-4">
+        <aside className="w-full border-b bg-white lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
+          <nav className="grid grid-cols-3 gap-2 p-3 lg:flex lg:flex-col lg:p-4">
             <Link
               href="/admin"
-              className="rounded-lg px-4 py-3 hover:bg-gray-100"
+              className="rounded-lg px-2 py-3 text-center text-sm hover:bg-gray-100 lg:px-4 lg:text-left lg:text-base"
             >
               Dashboard
             </Link>
 
             <Link
               href="/admin/inventory"
-              className="rounded-lg px-4 py-3 hover:bg-gray-100"
+              className="rounded-lg px-2 py-3 text-center text-sm hover:bg-gray-100 lg:px-4 lg:text-left lg:text-base"
             >
               Inventory
             </Link>
 
             <Link
               href="/admin/listing"
-              className="rounded-lg px-4 py-3 hover:bg-gray-100"
+              className="rounded-lg px-2 py-3 text-center text-sm hover:bg-gray-100 lg:px-4 lg:text-left lg:text-base"
             >
               New Listing
             </Link>
 
-            <Link
-              href="/admin/settings"
-              className="rounded-lg px-4 py-3 hover:bg-gray-100"
-            >
-              Settings
-            </Link>
           </nav>
         </aside>
 
         {/* Page Content */}
-        <main className="flex-1 p-8">{children}</main>
+        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

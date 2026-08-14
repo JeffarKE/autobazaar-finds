@@ -1,9 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Heart,
   Gauge,
   Fuel,
   MapPin,
@@ -32,7 +29,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
-          src={vehicle.images[0]}
+          src={vehicle.images[0] ?? "/cars/forester.jpg"}
           alt={vehicle.title}
           fill
           sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
@@ -48,14 +45,6 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           </div>
         )}
 
-        {/* Favourite */}
-        <button
-          type="button"
-          onClick={(e) => e.preventDefault()}
-          className="absolute right-4 top-4 rounded-full bg-white/90 p-2 backdrop-blur transition hover:scale-110 dark:bg-gray-900/90"
-        >
-          <Heart className="h-5 w-5 text-gray-700 dark:text-gray-200" />
-        </button>
       </div>
 
       {/* Content */}
@@ -118,9 +107,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
               <p className="text-sm font-semibold">{vehicle.seller.name}</p>
 
               <p className="text-xs text-gray-500">
-                {vehicle.seller.verified
-                  ? "Verified Seller"
-                  : "Seller"}
+                Brokerage &amp; sourcing
               </p>
             </div>
           </div>

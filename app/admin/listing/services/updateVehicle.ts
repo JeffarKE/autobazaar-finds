@@ -38,7 +38,9 @@ function validateVehicle(vehicle: Vehicle) {
     !Number.isFinite(Number(vehicle.price)) ||
     !Number.isFinite(Number(vehicle.mileage))
   ) {
-    throw new Error("Year, price, and mileage must be valid numbers.");
+    throw new Error(
+      "Year, price, and mileage must be valid numbers."
+    );
   }
 }
 
@@ -50,14 +52,6 @@ type ExistingImage = {
   is_cover: boolean;
 };
 
-/**
- * Updates the vehicle and synchronizes its images.
- *
- * Existing images that remain on the listing are kept.
- * New images are added.
- * Removed images are removed from vehicle_images and Storage.
- * Cover/order values are synchronized.
- */
 export async function updateVehicle(
   vehicleId: string,
   vehicle: Vehicle
@@ -68,33 +62,90 @@ export async function updateVehicle(
 
   validateVehicle(vehicle);
 
-  const { data: updatedVehicle, error: vehicleError } = await supabase
-    .from("vehicles")
-    .update({
-      make: vehicle.make,
-      model: vehicle.model,
-      year: Number(vehicle.year),
-      price: Number(vehicle.price),
-      mileage: Number(vehicle.mileage),
-      fuelType: vehicle.fuelType,
-      transmission: vehicle.transmission,
-      driveType: vehicle.driveType,
-      engineSize: vehicle.engineSize,
-      bodyType: vehicle.bodyType,
-      description: vehicle.description,
-      sellerName: vehicle.sellerName,
-      phone: vehicle.phone,
-      email: vehicle.email || null,
-      location: vehicle.location,
-      preferredContact: vehicle.preferredContact || null,
-      bestTime: vehicle.bestTime || null,
-    })
-    .eq("id", vehicleId)
-    .select()
-    .single();
+  /*
+   * ------------------------------------------------------------
+   * 1. NORMALIZE IMAGE STATE
+   * ------------------------------------------------------------
+   *
+   * There must only ever be ONE cover photo.
+   */
+  const images = [...vehicle.images];
+
+  let coverIndex = images.findIndex(
+    (image) => image.isCover === true
+  );
+
+  if (coverIndex === -1 && images.length > 0) {
+    coverIndex = 0;
+  }
+
+  const normalizedImages = images.map((image, index) => ({
+    ...image,
+    isCover: index === coverIndex,
+  }));
+
+  /*
+   * ------------------------------------------------------------
+   * 2. UPDATE VEHICLE
+   * ------------------------------------------------------------
+   */
+  const { data: updatedVehicle, error: vehicleError } =
+    await supabase
+      .from("vehicles")
+      .update({
+        make: vehicle.make,
+        model: vehicle.model,
+        year: Number(vehicle.year),
+        registrationNumber:
+          vehicle.registrationNumber || null,
+        vin: vehicle.vin || null,
+        price: Number(vehicle.price),
+        mileage: Number(vehicle.mileage),
+
+        fuelType: vehicle.fuelType,
+        transmission: vehicle.transmission,
+        driveType: vehicle.driveType,
+        engineSize: vehicle.engineSize,
+        bodyType: vehicle.bodyType,
+        exteriorColor:
+          vehicle.exteriorColor || null,
+        interiorColor:
+          vehicle.interiorColor || null,
+        condition: vehicle.condition || null,
+        seats: vehicle.seats || null,
+        doors: vehicle.doors || null,
+        horsepower: vehicle.horsepower || null,
+        torque: vehicle.torque || null,
+        groundClearance:
+          vehicle.groundClearance || null,
+
+        description: vehicle.description,
+
+        sellerName: vehicle.sellerName,
+        phone: vehicle.phone,
+        email: vehicle.email || null,
+
+        location: vehicle.location,
+        preferredContact:
+          vehicle.preferredContact || null,
+        bestTime: vehicle.bestTime || null,
+        status: vehicle.publishImmediately
+          ? "Live"
+          : vehicle.status,
+        negotiable: vehicle.negotiable,
+        featured: vehicle.featured,
+        verified: vehicle.verified,
+        publishImmediately:
+          vehicle.publishImmediately,
+      })
+      .eq("id", vehicleId)
+      .select()
+      .single();
 
   if (vehicleError) {
-    throw new Error(vehicleError.message);
+    throw new Error(
+      `Vehicle update failed: ${vehicleError.message}`
+    );
   }
 
   if (!updatedVehicle?.id) {
@@ -103,96 +154,267 @@ export async function updateVehicle(
     );
   }
 
-  const { data: existingRows, error: existingError } = await supabase
+  /*
+   * ------------------------------------------------------------
+   * 3. LOAD CURRENT DATABASE IMAGES
+   * ------------------------------------------------------------
+   */
+  const {
+    data: existingRows,
+    error: existingError,
+  } = await supabase
     .from("vehicle_images")
-    .select("id, image_url, storage_path, display_order, is_cover")
+    .select(
+      "id, image_url, storage_path, display_order, is_cover"
+    )
     .eq("vehicle_id", vehicleId)
-    .order("display_order", { ascending: true });
+    .order("display_order", {
+      ascending: true,
+    });
 
   if (existingError) {
-    throw new Error(existingError.message);
+    throw new Error(
+      `Unable to load existing vehicle photos: ${existingError.message}`
+    );
   }
 
-  const existingImages = (existingRows as ExistingImage[] | null) ?? [];
+  const existingImages =
+    (existingRows as ExistingImage[] | null) ?? [];
 
+  /*
+   * ------------------------------------------------------------
+   * 4. FIND IMAGES THAT WERE REMOVED IN THE EDITOR
+   * ------------------------------------------------------------
+   *
+   * Existing database image:
+   *
+   *     storage_path = vehicles/abc.jpg
+   *
+   * Current editor:
+   *
+   *     vehicles/abc.jpg  -> still exists
+   *
+   * If the path isn't present anymore, the user deleted it.
+   */
   const currentStoragePaths = new Set(
-    vehicle.images
+    normalizedImages
       .map((image) => image.storagePath)
       .filter(Boolean)
   );
 
   const removedImages = existingImages.filter(
-    (image) => !currentStoragePaths.has(image.storage_path)
+    (existingImage) =>
+      !currentStoragePaths.has(
+        existingImage.storage_path
+      )
   );
 
-  // Remove database records for images that were removed in the editor.
+  /*
+   * ------------------------------------------------------------
+   * 5. DELETE REMOVED DATABASE RECORDS
+   * ------------------------------------------------------------
+   *
+   * We explicitly SELECT the deleted rows back.
+   *
+   * This lets us detect the exact situation where Supabase
+   * silently deletes ZERO rows because of an RLS policy.
+   */
   if (removedImages.length > 0) {
-    const removedIds = removedImages.map((image) => image.id);
+    const removedIds = removedImages.map(
+      (image) => image.id
+    );
 
-    const { error: deleteError } = await supabase
+    const {
+      data: deletedRows,
+      error: deleteError,
+    } = await supabase
       .from("vehicle_images")
       .delete()
-      .in("id", removedIds);
+      .in("id", removedIds)
+      .select("id");
 
     if (deleteError) {
-      throw new Error(deleteError.message);
+      throw new Error(
+        `Unable to delete vehicle photo records: ${deleteError.message}`
+      );
+    }
+
+    const deletedCount = deletedRows?.length ?? 0;
+
+    if (deletedCount !== removedIds.length) {
+      throw new Error(
+        `Photo deletion was blocked. Expected to delete ${removedIds.length} photo record(s), but Supabase deleted ${deletedCount}. Check the vehicle_images DELETE policy.`
+      );
     }
   }
 
-  // Synchronize each image's order and cover state.
-  for (let index = 0; index < vehicle.images.length; index++) {
-    const image = vehicle.images[index];
+  /*
+   * ------------------------------------------------------------
+   * 6. SYNCHRONIZE REMAINING + NEW IMAGES
+   * ------------------------------------------------------------
+   */
+  for (
+    let index = 0;
+    index < normalizedImages.length;
+    index++
+  ) {
+    const image = normalizedImages[index];
 
     const existingImage = existingImages.find(
-      (item) => item.storage_path === image.storagePath
+      (item) =>
+        item.storage_path === image.storagePath
     );
 
+    /*
+     * EXISTING IMAGE
+     */
     if (existingImage) {
-      const { error: imageUpdateError } = await supabase
+      const {
+        error: imageUpdateError,
+      } = await supabase
         .from("vehicle_images")
         .update({
           image_url: image.publicUrl,
           display_order: index,
-          is_cover: image.isCover ?? index === 0,
+          is_cover: image.isCover,
         })
         .eq("id", existingImage.id);
 
       if (imageUpdateError) {
-        throw new Error(imageUpdateError.message);
+        throw new Error(
+          `Unable to update vehicle photo: ${imageUpdateError.message}`
+        );
       }
-    } else {
-      const { error: imageInsertError } = await supabase
+    }
+
+    /*
+     * NEW IMAGE
+     */
+    else {
+      const {
+        error: imageInsertError,
+      } = await supabase
         .from("vehicle_images")
         .insert({
           vehicle_id: vehicleId,
           image_url: image.publicUrl,
           storage_path: image.storagePath,
           display_order: index,
-          is_cover: image.isCover ?? index === 0,
+          is_cover: image.isCover,
         });
 
       if (imageInsertError) {
-        throw new Error(imageInsertError.message);
+        throw new Error(
+          `Unable to save new vehicle photo: ${imageInsertError.message}`
+        );
       }
     }
   }
 
-  // Storage cleanup is deliberately last. If this fails, the listing/database
-  // remain usable and only an orphaned storage file needs cleanup.
+  /*
+   * ------------------------------------------------------------
+   * 7. DELETE REMOVED FILES FROM SUPABASE STORAGE
+   * ------------------------------------------------------------
+   */
   const removedStoragePaths = removedImages
     .map((image) => image.storage_path)
     .filter(Boolean);
 
   if (removedStoragePaths.length > 0) {
-    const { error: storageError } = await supabase.storage
+    const {
+      data: removedStorageFiles,
+      error: storageError,
+    } = await supabase.storage
       .from("vehicle-images")
       .remove(removedStoragePaths);
 
     if (storageError) {
       throw new Error(
-        `Vehicle was saved, but one or more removed photos could not be deleted from Storage: ${storageError.message}`
+        `Vehicle was saved, but the removed photo could not be deleted from Storage: ${storageError.message}`
       );
     }
+
+    /*
+     * Supabase Storage normally returns the removed objects.
+     * We don't treat an empty response as a hard failure because
+     * Storage behavior can vary depending on the policy/API
+     * response, but the database record has already been removed.
+     */
+    void removedStorageFiles;
+  }
+
+  /*
+   * ------------------------------------------------------------
+   * 8. FINAL VERIFICATION
+   * ------------------------------------------------------------
+   *
+   * Read the image records again and make sure:
+   *
+   * - deleted images are actually gone
+   * - exactly one cover exists
+   */
+  const {
+    data: finalImages,
+    error: verificationError,
+  } = await supabase
+    .from("vehicle_images")
+    .select(
+      "id, storage_path, display_order, is_cover"
+    )
+    .eq("vehicle_id", vehicleId)
+    .order("display_order", {
+      ascending: true,
+    });
+
+  if (verificationError) {
+    throw new Error(
+      `Vehicle was saved, but image verification failed: ${verificationError.message}`
+    );
+  }
+
+  const finalImageRows =
+    (finalImages as Array<{
+      id: string;
+      storage_path: string;
+      display_order: number;
+      is_cover: boolean;
+    }> | null) ?? [];
+
+  /*
+   * Make sure every editor image exists in the DB.
+   */
+  const finalStoragePaths = new Set(
+    finalImageRows.map(
+      (image) => image.storage_path
+    )
+  );
+
+  const missingPersistedImages =
+    normalizedImages.filter(
+      (image) =>
+        !finalStoragePaths.has(image.storagePath)
+    );
+
+  if (missingPersistedImages.length > 0) {
+    throw new Error(
+      "Vehicle was saved, but one or more photos were not persisted correctly."
+    );
+  }
+
+  /*
+   * Make sure exactly one cover exists.
+   */
+  const finalCoverCount = finalImageRows.filter(
+    (image) => image.is_cover === true
+  ).length;
+
+  if (
+    normalizedImages.length > 0 &&
+    finalCoverCount !== 1
+  ) {
+    throw new Error(
+      `Vehicle was saved, but the image records contain ${finalCoverCount} cover photos instead of exactly one.`
+    );
   }
 
   return updatedVehicle;
