@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 
 import { createPublicSupabaseClient } from "@/lib/supabase-public";
 import type { FuelType, Transmission, Vehicle } from "../types";
+import { mockVehicles } from "../mockVehicles";
 
 type VehicleRow = {
   id: string | number;
@@ -203,6 +204,11 @@ export async function getPublicVehicles(): Promise<Vehicle[]> {
 
 async function fetchPublicVehicleById(id: string): Promise<Vehicle | null> {
   if (!UUID_PATTERN.test(id)) return null;
+
+  if (process.env.NODE_ENV === "development") {
+    const previewVehicle = mockVehicles.find((vehicle) => vehicle.id === id);
+    if (previewVehicle) return previewVehicle;
+  }
 
   const supabase = createPublicSupabaseClient();
   let [vehicleResult, imagesResult] = await Promise.all([

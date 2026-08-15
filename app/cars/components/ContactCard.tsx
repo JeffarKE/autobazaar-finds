@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   MessageCircle,
@@ -5,9 +7,12 @@ import {
   ShieldCheck,
   BadgeCheck,
   Star,
+  Share2,
 } from "lucide-react";
 
 import type { Vehicle } from "../types";
+import { trackListingEvent } from "../analytics";
+import { getShortListingUrl, getWhatsAppListingMessage } from "../listingLinks";
 
 interface ContactCardProps {
   vehicle: Vehicle;
@@ -19,11 +24,23 @@ export default function ContactCard({
   const phone = vehicle.seller.phone.replace(/\D/g, "");
   const hasPhone = phone.length > 0;
 
-  const whatsappMessage = encodeURIComponent(
-    `Hi Auto Bazaar Finds, I'd like to arrange a viewing for the ${vehicle.year} ${vehicle.make} ${vehicle.model}. When can I see it?`
-  );
+  const whatsappMessage = encodeURIComponent(getWhatsAppListingMessage(vehicle));
 
   const whatsappLink = `https://wa.me/${phone}?text=${whatsappMessage}`;
+
+  async function shareVehicle() {
+    void trackListingEvent(vehicle.id, "share");
+    const shareData = {
+      title: vehicle.title,
+      text: `${vehicle.title} — KSh ${new Intl.NumberFormat("en-KE").format(vehicle.price)} on Auto Bazaar Finds.`,
+      url: getShortListingUrl(vehicle.id),
+    };
+    if (navigator.share) {
+      await navigator.share(shareData).catch(() => undefined);
+      return;
+    }
+    await navigator.clipboard.writeText(getShortListingUrl(vehicle.id));
+  }
 
   return (
     <aside className="sticky top-24 space-y-6">
@@ -85,11 +102,16 @@ export default function ContactCard({
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => void trackListingEvent(vehicle.id, "whatsapp_click")}
                 className="flex items-center justify-center gap-3 rounded-2xl bg-green-600 px-6 py-4 font-semibold text-white transition hover:bg-green-700"
               >
                 <MessageCircle className="h-5 w-5" />
                 Arrange a viewing
               </Link>
+
+              <button type="button" onClick={shareVehicle} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-300 px-6 py-4 font-semibold transition hover:bg-slate-50 dark:border-neutral-700 dark:hover:bg-neutral-800">
+                <Share2 className="h-5 w-5" /> Share this car
+              </button>
 
               <Link
                 href="/source"

@@ -15,6 +15,7 @@ import VehicleSpecs from "../components/VehicleSpecs";
 import ContactCard from "../components/ContactCard";
 import DescriptionCard from "../components/DescriptionCard";
 import RelatedCars from "../components/RelatedCars";
+import ListingViewTracker from "../components/ListingViewTracker";
 import {
   getPublicVehicleById,
   getPublicVehicles,
@@ -43,13 +44,22 @@ export async function generateMetadata({
     };
   }
 
+  const formattedPrice = new Intl.NumberFormat("en-KE").format(vehicle.price);
+  const shareDescription = `KSh ${formattedPrice} · ${new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km · ${vehicle.location}. Arrange a viewing with Auto Bazaar Finds.`;
+
   return {
     title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
-    description: vehicle.description,
+    description: shareDescription,
     alternates: { canonical: `/cars/${vehicle.id}` },
     openGraph: {
       title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
-      description: vehicle.description,
+      description: shareDescription,
+      images: vehicle.images[0] ? [vehicle.images[0]] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: vehicle.title,
+      description: shareDescription,
       images: vehicle.images[0] ? [vehicle.images[0]] : [],
     },
   };
@@ -107,6 +117,7 @@ export default async function VehicleDetailsPage({
           __html: JSON.stringify(vehicleJsonLd).replace(/</g, "\\u003c"),
         }}
       />
+      <ListingViewTracker vehicleId={vehicle.id} />
       {/* Breadcrumb */}
       <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500">
         <Link href="/" className="hover:text-green-600">

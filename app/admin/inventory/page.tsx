@@ -38,6 +38,8 @@ type InventoryVehicle = {
   status: VehicleStatus;
   views: number;
   leads: number;
+  views7d: number;
+  shares: number;
   featured: boolean;
 };
 
@@ -59,6 +61,14 @@ type VehicleImageRow = {
   display_order: number | null;
   is_cover: boolean | null;
   storage_path?: string | null;
+};
+
+type AnalyticsRow = {
+  vehicle_id: string;
+  total_views: number | string | null;
+  views_7d: number | string | null;
+  whatsapp_clicks: number | string | null;
+  shares: number | string | null;
 };
 
 const filters = [
@@ -188,7 +198,7 @@ export default function InventoryPage() {
     setErrorMessage("");
 
     try {
-      const [vehiclesResult, imagesResult] = await Promise.all([
+      const [vehiclesResult, imagesResult, analyticsResult] = await Promise.all([
         supabase
           .from("vehicles")
           .select("*")
@@ -200,6 +210,9 @@ export default function InventoryPage() {
             "vehicle_id, image_url, display_order, is_cover, storage_path"
           )
           .order("display_order", { ascending: true }),
+        supabase
+          .from("vehicle_analytics_summary")
+          .select("vehicle_id, total_views, views_7d, whatsapp_clicks, shares"),
       ]);
 
       if (vehiclesResult.error) {
@@ -209,6 +222,11 @@ export default function InventoryPage() {
       if (imagesResult.error) {
         throw new Error(imagesResult.error.message);
       }
+
+      const analyticsRows = analyticsResult.error
+        ? []
+        : ((analyticsResult.data as AnalyticsRow[] | null) ?? []);
+      const analyticsMap = new Map(analyticsRows.map((row) => [String(row.vehicle_id), row]));
 
       const vehicleRows =
         (vehiclesResult.data as VehicleRow[] | null) ?? [];
@@ -237,6 +255,7 @@ export default function InventoryPage() {
       const mappedVehicles: InventoryVehicle[] = vehicleRows.map(
         (vehicle) => {
           const id = String(vehicle.id);
+          const analytics = analyticsMap.get(id);
 
           return {
             id,
@@ -248,8 +267,10 @@ export default function InventoryPage() {
             location: vehicle.location ?? "",
             image: imageMap.get(id) ?? "",
             status: normalizeStatus(vehicle.status),
-            views: 0,
-            leads: 0,
+            views: Number(analytics?.total_views) || 0,
+            leads: Number(analytics?.whatsapp_clicks) || 0,
+            views7d: Number(analytics?.views_7d) || 0,
+            shares: Number(analytics?.shares) || 0,
             featured: Boolean(vehicle.featured),
           };
         }
@@ -515,6 +536,10 @@ export default function InventoryPage() {
   const soldVehicles = vehicles.filter(
     (vehicle) => vehicle.status === "Sold"
   ).length;
+  const totalViews = vehicles.reduce((sum, vehicle) => sum + vehicle.views, 0);
+  const totalLeads = vehicles.reduce((sum, vehicle) => sum + vehicle.leads, 0);
+  const recentViews = vehicles.reduce((sum, vehicle) => sum + vehicle.views7d, 0);
+  const totalShares = vehicles.reduce((sum, vehicle) => sum + vehicle.shares, 0);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -588,6 +613,13 @@ export default function InventoryPage() {
             value={soldVehicles}
             valueClassName="text-red-600"
           />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="Total listing views" value={totalViews} valueClassName="text-blue-600" />
+          <StatCard label="Views in 7 days" value={recentViews} valueClassName="text-violet-600" />
+          <StatCard label="WhatsApp enquiries" value={totalLeads} valueClassName="text-green-600" />
+          <StatCard label="Listing shares" value={totalShares} valueClassName="text-orange-600" />
         </div>
 
         {/* Error */}
@@ -967,6 +999,10 @@ function VehicleMeta({
           <Phone className="h-4 w-4" />
           {vehicle.leads} Leads
         </span>
+
+        <span>{vehicle.views7d} this week</span>
+
+        <span>{vehicle.shares} Shares</span>
       </div>
     </>
   );

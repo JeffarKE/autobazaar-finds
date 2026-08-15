@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChevronDown, Loader2, Send, Sparkles } from "lucide-react";
+import { ArrowLeft, BarChart3, ChevronDown, Eye, Loader2, MessageCircle, Send, Share2, Sparkles } from "lucide-react";
 
 import Description from "./components/Description";
 import LivePreview from "./components/LivePreview";
@@ -32,6 +32,15 @@ type VehicleImageRow = {
   is_cover: boolean | null;
   display_order: number | null;
 };
+
+type ListingAnalytics = {
+  totalViews: number;
+  views7d: number;
+  whatsappClicks: number;
+  shares: number;
+};
+
+const emptyAnalytics: ListingAnalytics = { totalViews: 0, views7d: 0, whatsappClicks: 0, shares: 0 };
 
 function getInitialVehicle(): Vehicle {
   if (typeof window === "undefined") {
@@ -83,6 +92,7 @@ export default function ListingPage() {
   const [notice, setNotice] = useState("");
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const [editVehicleId, setEditVehicleId] = useState<string | null>(null);
+  const [analytics, setAnalytics] = useState<ListingAnalytics>(emptyAnalytics);
 
   useEffect(() => {
     let cancelled = false;
@@ -122,6 +132,21 @@ export default function ListingPage() {
         }
 
         const vehicleRow = data as VehicleRow;
+
+        const { data: analyticsData } = await supabase
+          .from("vehicle_analytics_summary")
+          .select("total_views, views_7d, whatsapp_clicks, shares")
+          .eq("vehicle_id", editId)
+          .maybeSingle();
+
+        if (!cancelled && analyticsData) {
+          setAnalytics({
+            totalViews: Number(analyticsData.total_views) || 0,
+            views7d: Number(analyticsData.views_7d) || 0,
+            whatsappClicks: Number(analyticsData.whatsapp_clicks) || 0,
+            shares: Number(analyticsData.shares) || 0,
+          });
+        }
 
         /*
          * Load all photos belonging to this vehicle.
@@ -519,6 +544,25 @@ export default function ListingPage() {
               id="listing-live-preview"
               className="space-y-5 xl:sticky xl:top-28 xl:self-start"
             >
+              {editVehicleId && (
+                <section className="rounded-3xl border bg-white p-6 shadow-sm">
+                  <div className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-green-600" /><h2 className="font-black text-gray-950">Listing performance</h2></div>
+                  <p className="mt-1 text-sm text-gray-500">How buyers are responding to this car.</p>
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <AnalyticsMetric icon={Eye} label="Total views" value={analytics.totalViews} />
+                    <AnalyticsMetric icon={Eye} label="Last 7 days" value={analytics.views7d} />
+                    <AnalyticsMetric icon={MessageCircle} label="WhatsApp" value={analytics.whatsappClicks} />
+                    <AnalyticsMetric icon={Share2} label="Shares" value={analytics.shares} />
+                  </div>
+                  {analytics.totalViews > 0 && (
+                    <p className="mt-4 rounded-xl bg-green-50 px-3 py-2 text-xs font-semibold text-green-800">
+                      {analytics.whatsappClicks > 0
+                        ? `${Math.round((analytics.whatsappClicks / analytics.totalViews) * 100)}% of views led to a WhatsApp enquiry.`
+                        : "No WhatsApp enquiries yet. Review the price, cover photo and description if views keep rising."}
+                    </p>
+                  )}
+                </section>
+              )}
               <div className="rounded-3xl bg-gradient-to-br from-gray-950 to-green-950 p-6 text-white shadow-xl">
                 <div className="flex items-center gap-2 text-green-300"><Sparkles className="h-4 w-4" /><span className="text-xs font-bold uppercase tracking-[0.18em]">Fast flow</span></div>
                 <p className="mt-3 text-xl font-bold">Add photos, fill the essentials, publish.</p>
@@ -553,5 +597,15 @@ export default function ListingPage() {
         </div>
       )}
     </main>
+  );
+}
+
+function AnalyticsMetric({ icon: Icon, label, value }: { icon: typeof Eye; label: string; value: number }) {
+  return (
+    <div className="rounded-2xl bg-gray-50 p-3">
+      <Icon className="h-4 w-4 text-gray-500" />
+      <p className="mt-2 text-2xl font-black text-gray-950">{value.toLocaleString("en-KE")}</p>
+      <p className="text-xs text-gray-500">{label}</p>
+    </div>
   );
 }

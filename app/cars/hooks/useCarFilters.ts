@@ -7,8 +7,8 @@ export type SortOption = "newest" | "oldest" | "price-low" | "price-high";
 
 const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort();
 
-export function useCarFilters(cars: Vehicle[]) {
-  const [search, setSearch] = useState("");
+export function useCarFilters(cars: Vehicle[], initialSearch = "") {
+  const [search, setSearch] = useState(initialSearch);
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [minPrice, setMinPrice] = useState("");

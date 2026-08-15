@@ -10,9 +10,10 @@ import type { Vehicle } from "../types";
 
 type CarsBrowserProps = {
   cars: Vehicle[];
+  initialSearch?: string;
 };
 
-export default function CarsBrowser({ cars }: CarsBrowserProps) {
+export default function CarsBrowser({ cars, initialSearch = "" }: CarsBrowserProps) {
   const [visibleCount, setVisibleCount] = useState(24);
   const {
     filteredCars,
@@ -57,7 +58,7 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
     setSortBy,
 
     clearFilters,
-  } = useCarFilters(cars);
+  } = useCarFilters(cars, initialSearch);
 
   const visibleCars = filteredCars.slice(0, visibleCount);
 
