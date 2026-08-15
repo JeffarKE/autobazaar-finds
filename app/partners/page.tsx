@@ -29,7 +29,7 @@ export default function PartnersPage() {
             <h1 className="mt-7 text-4xl font-black tracking-[-0.04em] sm:text-6xl">Know someone buying or selling?</h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Make the introduction. If their vehicle deal is completed through Auto Bazaar Finds, you earn <strong className="text-white">KSh 10,000</strong>.</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href={`https://wa.me/254741056053?text=${referralMessage}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-400 px-6 py-4 font-black text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-300">Send a referral <ArrowRight size={19} /></Link>
+              <Link href={`https://wa.me/254741056053?text=${referralMessage}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-400 px-6 py-4 font-black text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-300">Send referral on WhatsApp <ArrowRight size={19} /></Link>
               <Link href={contact.whatsappChannel} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[0.07] px-6 py-4 font-bold text-white transition hover:-translate-y-0.5 hover:bg-white/10"><Radio size={19} /> Daily drops</Link>
             </div>
           </div>

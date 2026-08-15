@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Mail, MapPin, Phone, Radio } from "lucide-react";
+import { ArrowRight, Mail, MapPin, MessageCircle, Radio } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaThreads, FaTiktok } from "react-icons/fa6";
 import { contact, socialLinks } from "@/lib/site";
 import ThemeToggle from "../theme/ThemeToggle";
@@ -39,7 +39,7 @@ export default function Footer() {
             </div>
             <div className="mt-8 space-y-4 text-sm text-neutral-400">
               <div className="flex items-center gap-3"><MapPin size={18} /> Nairobi, Kenya</div>
-              <Link href="tel:+254741056053" className="flex items-center gap-3 transition hover:text-white"><Phone size={18} /> +254 741 056 053</Link>
+              <Link href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 transition hover:text-white"><MessageCircle size={18} /> WhatsApp: +254 741 056 053</Link>
               <Link href={`mailto:${contact.email}`} className="flex items-center gap-3 transition hover:text-white"><Mail size={18} /> {contact.email}</Link>
             </div>
           </div>

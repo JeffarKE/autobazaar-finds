@@ -67,7 +67,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
             <span className="truncate">{vehicle.location}</span>
           </div>
           <span className="shrink-0 text-xs font-bold text-green-700 dark:text-green-300">
-            View →
+            View car →
           </span>
         </div>
       </div>

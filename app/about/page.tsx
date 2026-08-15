@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 const whatsappUrl =
-  "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I'm%20interested%20in%20one%20of%20your%20vehicles.";
+  "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I%20saw%20your%20website%20and%20I%20need%20help%20with%20a%20car.";
 
 export const metadata: Metadata = {
   title: "About | Auto Bazaar Finds",
@@ -125,7 +125,7 @@ export default function AboutPage() {
             className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3 font-semibold transition hover:bg-white/10"
           >
             <MessageCircle className="h-5 w-5" />
-            Chat on WhatsApp
+            Ask us on WhatsApp
           </Link>
         </div>
       </section>

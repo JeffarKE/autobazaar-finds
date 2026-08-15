@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Phone,
   MessageCircle,
   MapPin,
   ShieldCheck,
@@ -21,7 +20,7 @@ export default function ContactCard({
   const hasPhone = phone.length > 0;
 
   const whatsappMessage = encodeURIComponent(
-    `Hello, I'm interested in your ${vehicle.year} ${vehicle.make} ${vehicle.model} listed on Auto Bazaar Finds. Is it still available?`
+    `Hi Auto Bazaar Finds, I'd like to arrange a viewing for the ${vehicle.year} ${vehicle.make} ${vehicle.model}. When can I see it?`
   );
 
   const whatsappLink = `https://wa.me/${phone}?text=${whatsappMessage}`;
@@ -83,26 +82,25 @@ export default function ContactCard({
           {hasPhone ? (
             <>
               <Link
-                href={`tel:${phone}`}
-                className="flex items-center justify-center gap-3 rounded-2xl bg-green-600 px-6 py-4 font-semibold text-white transition hover:bg-green-700"
-              >
-                <Phone className="h-5 w-5" />
-                Call Auto Bazaar Finds
-              </Link>
-
-              <Link
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 rounded-2xl border border-green-600 px-6 py-4 font-semibold text-green-600 transition hover:bg-green-50 dark:hover:bg-green-900/20"
+                className="flex items-center justify-center gap-3 rounded-2xl bg-green-600 px-6 py-4 font-semibold text-white transition hover:bg-green-700"
               >
                 <MessageCircle className="h-5 w-5" />
-                WhatsApp Auto Bazaar Finds
+                Arrange a viewing
+              </Link>
+
+              <Link
+                href="/source"
+                className="flex items-center justify-center gap-3 rounded-2xl border border-green-600 px-6 py-4 font-semibold text-green-600 transition hover:bg-green-50 dark:hover:bg-green-900/20"
+              >
+                Find me a similar car
               </Link>
             </>
           ) : (
             <p className="rounded-2xl bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
-              Please use our main contact details to enquire about this vehicle.
+              Message us on WhatsApp to ask about this vehicle.
             </p>
           )}
 

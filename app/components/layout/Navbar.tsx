@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const whatsappUrl =
-  "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I'm%20interested%20in%20one%20of%20your%20vehicles.";
+  "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I%20saw%20your%20website%20and%20I%20need%20help%20with%20a%20car.";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -98,7 +98,7 @@ export default function Navbar() {
             className="hidden items-center gap-2 rounded-full bg-green-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-600 lg:flex"
           >
             <MessageCircle size={18} />
-            WhatsApp Us
+            Chat on WhatsApp
           </Link>
 
           <button
@@ -144,7 +144,7 @@ export default function Navbar() {
               className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-3 font-semibold text-white transition hover:bg-green-600"
             >
               <MessageCircle size={20} />
-              WhatsApp Us
+              Chat on WhatsApp
             </Link>
           </div>
         </div>

@@ -40,7 +40,7 @@ export default function SellPage() {
                 target="_blank"
                 className="rounded-xl bg-green-600 px-8 py-4 text-lg font-semibold text-white transition hover:bg-green-700"
               >
-                <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us
+                <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us on WhatsApp
               </Link>
 
               <Link
@@ -168,7 +168,7 @@ export default function SellPage() {
             target="_blank"
             className="mt-10 inline-flex rounded-xl bg-white px-10 py-4 text-lg font-bold text-green-700 transition hover:scale-105"
           >
-            <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us
+            <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us on WhatsApp
           </Link>
         </div>
       </section>
