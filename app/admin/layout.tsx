@@ -18,7 +18,7 @@ export default async function AdminLayout({
   if (!isAdminUser(user)) redirect("/admin-login");
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 dark:text-gray-100">
+    <div className="admin-surface min-h-screen bg-gray-100 dark:bg-gray-950 dark:text-gray-100">
       {/* Header */}
       <header className="border-b bg-white dark:border-gray-800 dark:bg-gray-900">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">

@@ -42,7 +42,7 @@ export default function VehicleGallery({
               src={gallery[selectedImage]}
               alt={title}
               fill
-              priority
+              loading="eager"
               sizes="(max-width: 1024px) 100vw, 66vw"
               className="object-cover transition duration-700 group-hover:scale-105"
             />

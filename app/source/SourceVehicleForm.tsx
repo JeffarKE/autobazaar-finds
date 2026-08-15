@@ -47,7 +47,7 @@ export default function SourceVehicleForm() {
         Ask us on WhatsApp
       </Link>
 
-      <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+      <p className="mt-4 text-center text-xs leading-5 text-slate-500 dark:text-slate-400">
         You can edit the message before sending it on WhatsApp.
       </p>
     </div>

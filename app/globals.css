@@ -135,8 +135,11 @@
   input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
   textarea,
   select {
+    background-color: var(--card);
     color: var(--foreground);
     caret-color: var(--foreground);
+    -webkit-text-fill-color: var(--foreground);
+    color-scheme: light;
   }
   input::placeholder,
   textarea::placeholder {
@@ -147,4 +150,38 @@
     background: var(--popover);
     color: var(--popover-foreground);
   }
+
+  .dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  .dark textarea,
+  .dark select {
+    color-scheme: dark;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    box-shadow: 0 0 0 1000px var(--card) inset;
+    transition: background-color 9999s ease-out 0s;
+  }
+}
+
+/* The admin editor predates the shared colour tokens. Keep every legacy card,
+   label and control readable when the site follows a dark device theme. */
+@layer utilities {
+  .dark .admin-surface .bg-white { background-color: var(--card); }
+  .dark .admin-surface .bg-gray-50 { background-color: var(--background); }
+  .dark .admin-surface .bg-gray-100 { background-color: var(--muted); }
+  .dark .admin-surface .text-gray-950,
+  .dark .admin-surface .text-gray-900,
+  .dark .admin-surface .text-gray-800,
+  .dark .admin-surface .text-gray-700 { color: var(--foreground); }
+  .dark .admin-surface .text-gray-600,
+  .dark .admin-surface .text-gray-500,
+  .dark .admin-surface .text-gray-400 { color: var(--muted-foreground); }
+  .dark .admin-surface .border-gray-200,
+  .dark .admin-surface .border-gray-300 { border-color: var(--border); }
+  .dark .admin-surface .focus-within\:bg-white:focus-within { background-color: var(--card); }
+  .dark .admin-surface .focus-within\:border-black:focus-within { border-color: var(--ring); }
 }

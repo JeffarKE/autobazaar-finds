@@ -10,7 +10,7 @@ const themes = [
 ] as const;
 
 export default function ThemeToggle({ darkSurface = false }: { darkSurface?: boolean }) {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <label
@@ -24,7 +24,7 @@ export default function ThemeToggle({ darkSurface = false }: { darkSurface?: boo
       <Monitor className="h-4 w-4 shrink-0" />
       <span className="hidden text-xs font-semibold sm:inline">Theme</span>
       <select
-        defaultValue="system"
+        value={theme ?? "system"}
         onChange={(event) => setTheme(event.target.value)}
         className="absolute inset-0 cursor-pointer opacity-0"
         aria-label="Appearance: System, Light or Dark"

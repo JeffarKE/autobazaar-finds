@@ -60,21 +60,21 @@ export default function HomeMarketplace({ vehicles }: Props) {
           </div>
 
           <article className="relative overflow-hidden rounded-2xl bg-black shadow-2xl">
-            <Link href={`/cars/${vehicle.id}`} className="grid h-[28rem] grid-cols-1 gap-0 sm:h-[34rem] lg:grid-cols-[1.7fr_0.8fr_0.65fr]">
-              <div className="relative min-h-0 overflow-hidden">
-                <Image src={photo(0)} alt={vehicle.title} fill priority sizes="(max-width:1024px) 100vw, 55vw" className="object-cover" />
+            <Link href={`/cars/${vehicle.id}`} className="grid h-[25rem] grid-cols-[minmax(0,1.55fr)_minmax(6.5rem,0.72fr)] grid-rows-2 gap-0.5 sm:h-[34rem] sm:grid-cols-[minmax(0,1.75fr)_minmax(10rem,0.72fr)] lg:grid-cols-[1.7fr_0.8fr_0.65fr]">
+              <div className="relative row-span-2 min-h-0 overflow-hidden">
+                <Image src={photo(0)} alt={vehicle.title} fill loading="eager" sizes="(max-width:640px) 70vw, (max-width:1024px) 72vw, 55vw" className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/10" />
               </div>
-              <div className="hidden grid-rows-2 gap-0.5 lg:grid">
-                {[1, 2].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt={`${vehicle.title} photo ${index + 1}`} fill sizes="25vw" className="object-cover" /></div>)}
+              <div className="row-span-2 grid grid-rows-2 gap-0.5">
+                {[1, 2].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt={`${vehicle.title} photo ${index + 1}`} fill sizes="(max-width:1024px) 30vw, 25vw" className="object-cover" /></div>)}
               </div>
-              <div className="hidden grid-rows-2 gap-0.5 lg:grid">
+              <div className="row-span-2 hidden grid-rows-2 gap-0.5 lg:grid">
                 {[3, 4].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt={`${vehicle.title} photo ${index + 1}`} fill sizes="20vw" className="object-cover" /></div>)}
               </div>
             </Link>
 
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-7">
-              <div className="max-w-3xl">
+              <div className="w-[68%] max-w-3xl sm:w-auto">
                 <span className="inline-flex rounded-full bg-emerald-400 px-3 py-1 text-xs font-black uppercase tracking-wider text-emerald-950">Featured listing</span>
                 <h1 className="mt-3 text-2xl font-black tracking-tight sm:text-4xl">{vehicle.title}</h1>
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-200">
@@ -101,7 +101,7 @@ export default function HomeMarketplace({ vehicles }: Props) {
         <section aria-label="Featured cars" className="border-b border-slate-200 bg-white py-4 dark:border-white/10 dark:bg-[#0b100d] lg:hidden">
           <div className="mb-3 flex items-center justify-between px-4">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">Featured cars</p>
-            <span className="text-xs text-slate-500">Swipe to explore</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Swipe to explore</span>
           </div>
           <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
             {featured.map((item) => (

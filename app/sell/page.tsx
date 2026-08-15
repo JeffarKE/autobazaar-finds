@@ -45,7 +45,7 @@ export default function SellPage() {
 
               <Link
                 href="/cars"
-                className="rounded-xl border border-gray-300 px-8 py-4 text-lg font-semibold hover:bg-gray-100"
+                className="rounded-xl border border-gray-300 px-8 py-4 text-lg font-semibold hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-900"
               >
                 Browse Cars
               </Link>
@@ -58,12 +58,12 @@ export default function SellPage() {
                 No Upfront Listing Fee
               </h2>
 
-              <p className="mt-4 text-gray-600">
+              <p className="mt-4 text-gray-600 dark:text-gray-300">
                 You only pay when we successfully sell your vehicle.
               </p>
 
               <div className="mt-8 rounded-2xl bg-white p-8 shadow dark:bg-gray-950">
-                <p className="text-sm uppercase tracking-wider text-gray-500">
+                <p className="text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400">
                   Commission
                 </p>
 
@@ -71,7 +71,7 @@ export default function SellPage() {
                   3%
                 </h3>
 
-                <p className="mt-2 text-gray-600">
+                <p className="mt-2 text-gray-600 dark:text-gray-300">
                   Payable only after a successful sale through Auto Bazaar Finds.
                 </p>
               </div>
@@ -92,7 +92,7 @@ export default function SellPage() {
               Better advertising
             </h3>
 
-            <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
               We present your car clearly on our website and social pages.
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function SellPage() {
               Serious Buyers
             </h3>
 
-            <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
               We speak to interested buyers and help cut down time-wasters.
             </p>
           </div>
@@ -112,7 +112,7 @@ export default function SellPage() {
               No Risk
             </h3>
 
-            <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
               No upfront listing fee. We only earn when your vehicle sells.
             </p>
           </div>

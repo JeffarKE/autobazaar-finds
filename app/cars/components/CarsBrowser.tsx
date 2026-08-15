@@ -200,13 +200,13 @@ export default function CarsBrowser({ cars, initialSearch = "" }: CarsBrowserPro
 
         {visibleCount < filteredCars.length && (
           <div className="flex flex-col items-center gap-3 pt-4">
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Showing {visibleCars.length} of {filteredCars.length} vehicles
             </p>
             <button
               type="button"
               onClick={() => setVisibleCount((count) => count + 24)}
-              className="rounded-xl border border-green-200 bg-white px-8 py-3 text-sm font-bold text-green-700 shadow-sm transition hover:border-green-600 hover:bg-green-50"
+              className="rounded-xl border border-green-200 bg-white px-8 py-3 text-sm font-bold text-green-700 shadow-sm transition hover:border-green-600 hover:bg-green-50 dark:border-green-900 dark:bg-neutral-900 dark:text-green-300 dark:hover:bg-green-950"
             >
               Load 24 more
             </button>
