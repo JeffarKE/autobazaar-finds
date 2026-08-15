@@ -3,122 +3,86 @@
 import { useMemo, useState } from "react";
 import type { Vehicle } from "../types";
 
-export type SortOption =
-  | "newest"
-  | "oldest"
-  | "price-low"
-  | "price-high";
+export type SortOption = "newest" | "oldest" | "price-low" | "price-high";
+
+const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort();
 
 export function useCarFilters(cars: Vehicle[]) {
   const [search, setSearch] = useState("");
-
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minYear, setMinYear] = useState("");
+  const [maxYear, setMaxYear] = useState("");
   const [fuel, setFuel] = useState("");
   const [transmission, setTransmission] = useState("");
   const [bodyType, setBodyType] = useState("");
   const [location, setLocation] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
 
-  const [sortBy, setSortBy] =
-    useState<SortOption>("newest");
+  const makeOptions = useMemo(() => unique(cars.map((car) => car.make)), [cars]);
+  const modelOptions = useMemo(
+    () => unique(cars.filter((car) => !make || car.make === make).map((car) => car.model)),
+    [cars, make]
+  );
+  const fuelOptions = useMemo(() => unique(cars.map((car) => car.fuel)), [cars]);
+  const transmissionOptions = useMemo(() => unique(cars.map((car) => car.transmission)), [cars]);
+  const bodyTypeOptions = useMemo(() => unique(cars.map((car) => car.bodyType)), [cars]);
+  const locationOptions = useMemo(() => unique(cars.map((car) => car.location)), [cars]);
+  const yearOptions = useMemo(
+    () => [...new Set(cars.map((car) => car.year))].sort((a, b) => b - a),
+    [cars]
+  );
 
   const filteredCars = useMemo(() => {
-    let results = [...cars];
+    const query = search.trim().toLowerCase();
+    const lowPrice = Number(minPrice) || 0;
+    const highPrice = Number(maxPrice) || Number.POSITIVE_INFINITY;
+    const lowYear = Number(minYear) || 0;
+    const highYear = Number(maxYear) || Number.POSITIVE_INFINITY;
 
-    if (search.trim()) {
-      const query = search.trim().toLowerCase();
+    const results = cars.filter((car) => {
+      const matchesSearch = !query || [car.title, car.make, car.model, car.engine, car.location]
+        .join(" ").toLowerCase().includes(query);
 
-      results = results.filter((car) =>
-        [
-          car.make,
-          car.model,
-          car.engine,
-          car.description,
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(query)
-      );
-    }
+      return matchesSearch
+        && (!make || car.make === make)
+        && (!model || car.model === model)
+        && car.price >= lowPrice
+        && car.price <= highPrice
+        && car.year >= lowYear
+        && car.year <= highYear
+        && (!fuel || car.fuel === fuel)
+        && (!transmission || car.transmission === transmission)
+        && (!bodyType || car.bodyType === bodyType)
+        && (!location || car.location === location);
+    });
 
-    if (fuel) {
-      results = results.filter((car) => car.fuel === fuel);
-    }
+    return results.sort((a, b) => {
+      if (sortBy === "price-low") return a.price - b.price;
+      if (sortBy === "price-high") return b.price - a.price;
+      if (sortBy === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [cars, search, make, model, minPrice, maxPrice, minYear, maxYear, fuel, transmission, bodyType, location, sortBy]);
 
-    if (transmission) {
-      results = results.filter(
-        (car) => car.transmission === transmission
-      );
-    }
+  const activeFilterCount = [make, model, minPrice, maxPrice, minYear, maxYear, fuel, transmission, bodyType, location]
+    .filter(Boolean).length;
 
-    if (bodyType) {
-      results = results.filter(
-        (car) => car.bodyType === bodyType
-      );
-    }
-
-    if (location) {
-      results = results.filter(
-        (car) => car.location === location
-      );
-    }
-
-    switch (sortBy) {
-      case "price-low":
-        results.sort((a, b) => a.price - b.price);
-        break;
-
-      case "price-high":
-        results.sort((a, b) => b.price - a.price);
-        break;
-
-      case "oldest":
-        results.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-        break;
-
-      case "newest":
-      default:
-        results.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        break;
-    }
-
-    return results;
-  }, [
-    cars,
-    search,
-    fuel,
-    transmission,
-    bodyType,
-    location,
-    sortBy,
-  ]);
-
-  const fuelOptions = useMemo(
-    () => [...new Set(cars.map((car) => car.fuel))].sort(),
-    [cars]
-  );
-
-  const transmissionOptions = useMemo(
-    () => [...new Set(cars.map((car) => car.transmission))].sort(),
-    [cars]
-  );
-
-  const bodyTypeOptions = useMemo(
-    () => [...new Set(cars.map((car) => car.bodyType))].sort(),
-    [cars]
-  );
-
-  const locationOptions = useMemo(
-    () => [...new Set(cars.map((car) => car.location))].sort(),
-    [cars]
-  );
+  function changeMake(value: string) {
+    setMake(value);
+    setModel("");
+  }
 
   function clearFilters() {
     setSearch("");
+    setMake("");
+    setModel("");
+    setMinPrice("");
+    setMaxPrice("");
+    setMinYear("");
+    setMaxYear("");
     setFuel("");
     setTransmission("");
     setBodyType("");
@@ -127,31 +91,11 @@ export function useCarFilters(cars: Vehicle[]) {
   }
 
   return {
-    filteredCars,
-
-    fuelOptions,
-    transmissionOptions,
-    bodyTypeOptions,
-    locationOptions,
-
-    search,
-    setSearch,
-
-    fuel,
-    setFuel,
-
-    transmission,
-    setTransmission,
-
-    bodyType,
-    setBodyType,
-
-    location,
-    setLocation,
-
-    sortBy,
-    setSortBy,
-
-    clearFilters,
+    filteredCars, activeFilterCount, makeOptions, modelOptions, fuelOptions,
+    transmissionOptions, bodyTypeOptions, locationOptions, yearOptions,
+    search, setSearch, make, setMake: changeMake, model, setModel,
+    minPrice, setMinPrice, maxPrice, setMaxPrice, minYear, setMinYear,
+    maxYear, setMaxYear, fuel, setFuel, transmission, setTransmission,
+    bodyType, setBodyType, location, setLocation, sortBy, setSortBy, clearFilters,
   };
 }

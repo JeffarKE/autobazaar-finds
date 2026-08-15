@@ -22,6 +22,23 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
     search,
     setSearch,
 
+    activeFilterCount,
+    make,
+    setMake,
+    makeOptions,
+    model,
+    setModel,
+    modelOptions,
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    minYear,
+    setMinYear,
+    maxYear,
+    setMaxYear,
+    yearOptions,
+
     fuel,
     setFuel,
     fuelOptions,
@@ -110,6 +127,22 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
         </div>
 
         <FilterBar
+          activeFilterCount={activeFilterCount}
+          make={make}
+          setMake={setMake}
+          makeOptions={makeOptions}
+          model={model}
+          setModel={setModel}
+          modelOptions={modelOptions}
+          minPrice={minPrice}
+          setMinPrice={setMinPrice}
+          maxPrice={maxPrice}
+          setMaxPrice={setMaxPrice}
+          minYear={minYear}
+          setMinYear={setMinYear}
+          maxYear={maxYear}
+          setMaxYear={setMaxYear}
+          yearOptions={yearOptions}
           fuel={fuel}
           setFuel={setFuel}
           fuelOptions={fuelOptions}
