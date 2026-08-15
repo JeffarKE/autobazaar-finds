@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import { ChevronDown, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import SearchBar from "./SearchBar";
+import SortDropdown from "./SortDropdown";
+import type { SortOption } from "../hooks/useCarFilters";
 
 type Props = {
+  search: string; setSearch: (value: string) => void;
+  sortBy: SortOption; setSortBy: (value: SortOption) => void;
   activeFilterCount: number;
   make: string; setMake: (value: string) => void; makeOptions: string[];
   model: string; setModel: (value: string) => void; modelOptions: string[];
@@ -28,7 +33,7 @@ const optionPairs = (values: string[]): Array<[string, string]> =>
   values.map((value) => [value, value]);
 
 export default function FilterBar(props: Props) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const selectClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15 dark:border-white/10 dark:bg-neutral-950 dark:text-white";
 
   const select = (label: string, value: string, onChange: (value: string) => void, options: Array<[string, string]>, disabled = false) => (
@@ -68,23 +73,29 @@ export default function FilterBar(props: Props) {
   );
 
   return (
-    <div>
-      <button type="button" onClick={() => setMobileOpen(true)} className="flex h-12 w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 font-bold shadow-sm lg:hidden dark:border-white/10 dark:bg-neutral-900">
-        <span className="inline-flex items-center gap-2"><SlidersHorizontal className="h-5 w-5" /> Filter cars</span>
-        {props.activeFilterCount > 0 && <span className="rounded-full bg-emerald-500 px-2.5 py-1 text-xs text-emerald-950">{props.activeFilterCount}</span>}
-      </button>
+    <div className="rounded-3xl border border-slate-200 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-neutral-900 sm:p-4">
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_15rem_auto]">
+        <SearchBar value={props.search} onChange={props.setSearch} />
+        <SortDropdown value={props.sortBy} onChange={props.setSortBy} />
+        <button type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 font-bold text-white transition hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400">
+          <SlidersHorizontal className="h-5 w-5" />
+          Filters
+          {props.activeFilterCount > 0 && <span className="rounded-full bg-emerald-400 px-2 py-0.5 text-xs text-emerald-950 dark:bg-emerald-950 dark:text-emerald-300">{props.activeFilterCount}</span>}
+          <ChevronDown className={`h-4 w-4 transition ${open ? "rotate-180" : ""}`} />
+        </button>
+      </div>
 
-      <div className="hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:block dark:border-white/10 dark:bg-neutral-900">{fields}</div>
+      {open && <div className="mt-4 hidden border-t border-slate-200 pt-5 lg:block dark:border-white/10">{fields}</div>}
 
-      {mobileOpen && (
+      {open && (
         <div className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-neutral-950 lg:hidden">
           <div className="flex items-center justify-between border-b px-4 py-4 dark:border-white/10">
             <div><p className="text-lg font-black">Filter cars</p><p className="text-xs text-slate-500">Narrow down the listings</p></div>
-            <button type="button" aria-label="Close filters" onClick={() => setMobileOpen(false)} className="rounded-full border p-2 dark:border-white/10"><X className="h-5 w-5" /></button>
+            <button type="button" aria-label="Close filters" onClick={() => setOpen(false)} className="rounded-full border p-2 dark:border-white/10"><X className="h-5 w-5" /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4">{fields}</div>
           <div className="border-t bg-white p-4 dark:border-white/10 dark:bg-neutral-950">
-            <button type="button" onClick={() => setMobileOpen(false)} className="h-12 w-full rounded-xl bg-emerald-500 font-black text-emerald-950">Show matching cars</button>
+            <button type="button" onClick={() => setOpen(false)} className="h-12 w-full rounded-xl bg-emerald-500 font-black text-emerald-950">Show matching cars</button>
           </div>
         </div>
       )}

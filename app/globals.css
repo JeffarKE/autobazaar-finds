@@ -132,4 +132,19 @@
   html {
     @apply font-sans;
   }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  textarea,
+  select {
+    color: var(--foreground);
+    caret-color: var(--foreground);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1;
+  }
+  select option {
+    background: var(--popover);
+    color: var(--popover-foreground);
+  }
 }

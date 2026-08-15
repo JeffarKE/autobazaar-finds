@@ -25,9 +25,9 @@ export default async function Home() {
         <div className="mb-9 flex items-end justify-between gap-6">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">Fresh on the market</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-white sm:text-5xl">Vehicles worth a closer look.</h2>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-white sm:text-5xl">Listings worth a closer look.</h2>
           </div>
-          <Link href="/cars" className="hidden items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-400 dark:border-white/10 dark:bg-white/5 md:flex">See everything <ArrowRight size={17} /></Link>
+          <Link href="/cars" className="hidden items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-400 dark:border-white/10 dark:bg-white/5 md:flex">See all listings <ArrowRight size={17} /></Link>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

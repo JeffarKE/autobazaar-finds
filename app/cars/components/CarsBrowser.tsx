@@ -3,8 +3,6 @@
 import { useState } from "react";
 
 import VehicleCard from "./VehicleCard";
-import SearchBar from "./SearchBar";
-import SortDropdown from "./SortDropdown";
 import FilterBar from "./FilterBar";
 
 import { useCarFilters } from "../hooks/useCarFilters";
@@ -110,23 +108,11 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
 
       {/* VEHICLE LISTINGS */}
       <section className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 sm:py-14">
-        <div className="flex flex-col gap-4 lg:flex-row">
-          <div className="flex-1">
-            <SearchBar
-              value={search}
-              onChange={setSearch}
-            />
-          </div>
-
-          <div className="lg:w-72">
-            <SortDropdown
-              value={sortBy}
-              onChange={setSortBy}
-            />
-          </div>
-        </div>
-
         <FilterBar
+          search={search}
+          setSearch={setSearch}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
           activeFilterCount={activeFilterCount}
           make={make}
           setMake={setMake}

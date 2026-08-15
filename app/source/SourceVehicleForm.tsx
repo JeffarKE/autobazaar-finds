@@ -26,7 +26,7 @@ export default function SourceVehicleForm() {
   }, [budget, location, name, vehicle, year]);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-slate-900 shadow-xl shadow-slate-200/60 dark:border-white/10 dark:bg-neutral-900 dark:text-white dark:shadow-black/20 sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Your name" value={name} onChange={setName} placeholder="Your name" />
         <Field label="Vehicle" value={vehicle} onChange={setVehicle} placeholder="e.g. Mazda CX-5" />
@@ -67,12 +67,12 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-semibold text-slate-800">{label}</span>
+      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{label}</span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-green-600 focus:bg-white focus:ring-4 focus:ring-green-100"
+        className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 caret-slate-950 outline-none transition placeholder:text-slate-400 focus:border-green-600 focus:bg-white focus:ring-4 focus:ring-green-100 dark:border-white/10 dark:bg-neutral-950 dark:text-white dark:caret-white dark:placeholder:text-slate-500 dark:focus:border-emerald-400 dark:focus:bg-neutral-950 dark:focus:ring-emerald-900/40"
       />
     </label>
   );
