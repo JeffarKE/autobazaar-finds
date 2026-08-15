@@ -36,7 +36,7 @@ export default function ContactCard({
           </h2>
 
           <p className="mt-2 text-sm text-green-100">
-            Enquire through us about this vehicle or request a similar one.
+            Ask us about this car or tell us to find a similar one.
           </p>
         </div>
 
@@ -124,7 +124,7 @@ export default function ContactCard({
             </ul>
           </div>
 
-          {/* Brokerage identity */}
+          {/* Auto Bazaar Finds identity */}
           <div className="rounded-2xl bg-slate-100 p-4 dark:bg-neutral-800">
             <div className="flex items-center justify-between">
               <div>
@@ -133,7 +133,7 @@ export default function ContactCard({
                 </p>
 
                 <p className="text-sm text-slate-500">
-                  Independent vehicle brokerage
+                  Helping Kenyans buy and sell cars
                 </p>
               </div>
 
@@ -143,10 +143,6 @@ export default function ContactCard({
             </div>
           </div>
 
-          <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
-            We are not a dealership. Vehicles are marketed on behalf of their
-            owners, and we also help buyers source suitable vehicles.
-          </p>
         </div>
       </div>
     </aside>

@@ -1,96 +1,38 @@
 import Link from "next/link";
-
-const whatsappMessage = encodeURIComponent(`Hi Auto Bazaar Finds,
-
-I'd like to sell my vehicle.
-
-Name:
-Phone:
-Location:
-
-Vehicle Make:
-Model:
-Year:
-Mileage:
-Engine:
-Transmission:
-Fuel Type:
-Colour:
-Asking Price:
-
-I'll send the photos next.
-`);
-
-const whatsappUrl = `https://wa.me/254741056053?text=${whatsappMessage}`;
+import { ArrowRight, Bike, CarFront, Plane, Sailboat, Sparkles } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-slate-950 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.18),transparent_42%)]" />
-
-      <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-24 lg:py-32">
-        <span className="rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1 text-sm font-semibold text-green-400">
-          VEHICLE BROKERAGE &amp; SOURCING · KENYA
+    <section className="relative overflow-hidden bg-[#06110b] text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_10%,rgba(52,211,153,0.22),transparent_38%),radial-gradient(circle_at_15%_90%,rgba(16,185,129,0.1),transparent_34%)]" />
+      <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-24 lg:py-28">
+        <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-xs font-bold tracking-[0.14em] text-emerald-300">
+          <Sparkles size={14} /> CARS FOR KENYAN ROADS
         </span>
 
-        <h1 className="mt-8 max-w-4xl text-4xl font-black leading-tight sm:text-5xl md:text-7xl">
-          Find Your Next Car.
+        <h1 className="mt-8 max-w-5xl text-5xl font-black leading-[0.96] tracking-[-0.055em] sm:text-6xl md:text-8xl">
+          Your next ride,
           <br />
-          Sell Yours With Confidence.
+          <span className="text-emerald-400">found differently.</span>
         </h1>
 
         <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
-          Curated vehicles. Professional selling. Personal sourcing.
+          Browse good cars, sell yours with less hassle, or let us find what you need.
         </p>
 
-        <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
-          <Link
-            href="/cars"
-            className="rounded-xl bg-green-500 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-green-950/30 transition duration-200 hover:-translate-y-0.5 hover:bg-green-400"
-          >
-            Browse Vehicles
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+          <Link href="/cars" className="rounded-2xl bg-emerald-400 px-7 py-4 text-lg font-black text-emerald-950 shadow-xl shadow-emerald-950/30 transition hover:-translate-y-0.5 hover:bg-emerald-300">
+            Explore cars <ArrowRight className="ml-2 inline" size={20} />
           </Link>
-
-          <Link
-            href={whatsappUrl}
-            target="_blank"
-            className="rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-lg font-semibold transition duration-200 hover:-translate-y-0.5 hover:bg-white/10"
-          >
-            Sell Your Car
-          </Link>
-
-          <Link
-            href="/source"
-            className="rounded-xl border border-green-400/40 px-8 py-4 text-lg font-semibold text-green-300 transition duration-200 hover:-translate-y-0.5 hover:bg-green-400/10"
-          >
-            Source a Car
-          </Link>
+          <Link href="/sell" className="rounded-2xl border border-white/15 bg-white/[0.06] px-7 py-4 text-lg font-bold transition hover:-translate-y-0.5 hover:bg-white/10">Sell your car</Link>
+          <Link href="/source" className="rounded-2xl border border-white/15 px-7 py-4 text-lg font-bold text-slate-200 transition hover:-translate-y-0.5 hover:bg-white/5">Find one for me</Link>
         </div>
 
-        <div className="mt-16 grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8">
-            <h3 className="text-3xl font-black text-green-400">✓</h3>
-
-            <p className="mt-3 text-lg font-semibold">
-              Professionally Presented Listings
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8">
-            <h3 className="text-3xl font-black text-green-400">3%</h3>
-
-            <p className="mt-3 text-lg font-semibold">
-              Commission Only After a Successful Sale
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8">
-            <h3 className="text-3xl font-black text-green-400">Direct</h3>
-
-            <p className="mt-3 text-lg font-semibold">
-              Personal WhatsApp Support
-            </p>
-          </div>
+        <div className="mt-14 flex w-full max-w-4xl items-center gap-2 overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.045] p-2 text-left backdrop-blur sm:justify-center">
+          <Link href="/cars" className="flex min-w-max items-center gap-3 rounded-xl bg-white px-4 py-3 font-bold text-slate-950"><CarFront size={20} className="text-emerald-600" /> Cars</Link>
+          {[{ icon: Bike, label: "Bikes" }, { icon: Sailboat, label: "Boats" }, { icon: Plane, label: "Planes" }].map(({ icon: Icon, label }) => (
+            <span key={label} className="flex min-w-max items-center gap-2 px-4 py-3 text-sm font-semibold text-slate-400"><Icon size={19} /> {label} <small className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider">Soon</small></span>
+          ))}
         </div>
       </div>
     </section>

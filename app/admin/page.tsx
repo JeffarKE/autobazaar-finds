@@ -233,7 +233,7 @@ export default function AdminDashboard() {
 
           <p className="mt-3 max-w-2xl text-gray-600">
             Manage your inventory, publish vehicles and monitor your
-            brokerage and sourcing platform from one place.
+            vehicle marketing and sourcing platform from one place.
           </p>
         </div>
 

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Vehicles for Sale | Auto Bazaar Finds",
-  description: "Browse vehicles professionally marketed by Auto Bazaar Finds on behalf of owners in Kenya.",
+  description: "Browse cars for sale from private owners and showroom partners in Kenya.",
 };
 
 export default async function CarsPage() {

@@ -10,7 +10,6 @@ import {
   CarFront,
   CircleDollarSign,
   SearchCheck,
-  Info,
   MessageCircle,
 } from "lucide-react";
 
@@ -42,13 +41,8 @@ export default function Navbar() {
       icon: CircleDollarSign,
     },
     {
-      href: "/about",
-      label: "About",
-      icon: Info,
-    },
-    {
       href: "/source",
-      label: "Source a Car",
+      label: "Find Me a Car",
       icon: SearchCheck,
     },
   ];

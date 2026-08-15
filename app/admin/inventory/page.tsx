@@ -157,8 +157,8 @@ function getStatusAction(status: VehicleStatus) {
 
     case "Archived":
       return {
-        label: "Unarchive",
-        nextStatus: "Draft" as VehicleStatus,
+        label: "Re-list",
+        nextStatus: "Live" as VehicleStatus,
       };
 
     default:
@@ -349,7 +349,7 @@ export default function InventoryPage() {
         break;
 
       case "Archived":
-        message = `Unarchive ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        message = `Re-list ${vehicle.year} ${vehicle.make} ${vehicle.model} now?`;
         break;
     }
 
@@ -374,7 +374,7 @@ export default function InventoryPage() {
 
   async function archiveVehicle(vehicle: InventoryVehicle) {
     const confirmed = window.confirm(
-      `Archive ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nThe vehicle will remain in Supabase and can be unarchived later.`
+      `Delist ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nIt will disappear from the public site but remain ready to re-list later.`
     );
 
     if (!confirmed) {
@@ -1077,7 +1077,7 @@ function VehicleActions({
           className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Archive className="h-4 w-4" />
-          Archive
+          Delist
         </button>
       )}
 

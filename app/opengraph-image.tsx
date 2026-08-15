@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Auto Bazaar Finds — vehicle brokerage and sourcing in Kenya";
+export const alt = "Auto Bazaar Finds — buy and sell cars in Kenya";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,7 +20,7 @@ export default function OpenGraphImage() {
     >
       <div style={{ display: "flex", flexDirection: "column", maxWidth: "1000px" }}>
         <div style={{ color: "#86efac", display: "flex", fontSize: 26, fontWeight: 700, letterSpacing: 5 }}>
-          VEHICLE BROKERAGE &amp; SOURCING · KENYA
+          BUY · SELL · FIND A CAR · KENYA
         </div>
         <div style={{ display: "flex", fontSize: 82, fontWeight: 900, lineHeight: 1.05, marginTop: 28 }}>
           Auto Bazaar Finds

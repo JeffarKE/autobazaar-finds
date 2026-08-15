@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import VehicleCard from "./VehicleCard";
 import SearchBar from "./SearchBar";
 import SortDropdown from "./SortDropdown";
@@ -13,6 +15,7 @@ type CarsBrowserProps = {
 };
 
 export default function CarsBrowser({ cars }: CarsBrowserProps) {
+  const [visibleCount, setVisibleCount] = useState(24);
   const {
     filteredCars,
 
@@ -41,6 +44,8 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
     clearFilters,
   } = useCarFilters(cars);
 
+  const visibleCars = filteredCars.slice(0, visibleCount);
+
   return (
     <>
       {/* HERO */}
@@ -48,7 +53,7 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
         <div className="mx-auto max-w-7xl px-4 pb-12 pt-20 sm:px-6 sm:pb-16 sm:pt-28">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center rounded-full border border-green-200 bg-green-50 px-4 py-1 text-sm font-semibold text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-400">
-              🇰🇪 Premium Vehicle Brokerage
+              Cars Available in Kenya
             </span>
 
             <h1 className="mt-6 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-white">
@@ -57,9 +62,8 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-400">
-              Discover quality vehicles professionally presented by Auto Bazaar
-              Finds. Browse vehicles we market for owners, or contact us to
-              source the right car for you.
+              Browse cars from private owners and showroom partners. If you do
+              not see what you need, tell us and we&apos;ll help you find it.
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -147,7 +151,7 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
 
         {filteredCars.length > 0 ? (
           <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredCars.map((vehicle) => (
+            {visibleCars.map((vehicle) => (
               <VehicleCard
                 key={vehicle.id}
                 vehicle={vehicle}
@@ -170,6 +174,21 @@ export default function CarsBrowser({ cars }: CarsBrowserProps) {
               className="mt-6 rounded-xl bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700"
             >
               Reset Filters
+            </button>
+          </div>
+        )}
+
+        {visibleCount < filteredCars.length && (
+          <div className="flex flex-col items-center gap-3 pt-4">
+            <p className="text-sm text-slate-500">
+              Showing {visibleCars.length} of {filteredCars.length} vehicles
+            </p>
+            <button
+              type="button"
+              onClick={() => setVisibleCount((count) => count + 24)}
+              className="rounded-xl border border-green-200 bg-white px-8 py-3 text-sm font-bold text-green-700 shadow-sm transition hover:border-green-600 hover:bg-green-50"
+            >
+              Load 24 more
             </button>
           </div>
         )}

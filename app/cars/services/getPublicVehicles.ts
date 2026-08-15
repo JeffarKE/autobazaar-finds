@@ -186,11 +186,20 @@ async function fetchPublicVehicles(): Promise<Vehicle[]> {
   return vehicles.map((vehicle) => mapVehicle(vehicle, imageMap.get(String(vehicle.id)) ?? []));
 }
 
-export const getPublicVehicles = unstable_cache(
+const getCachedPublicVehicles = unstable_cache(
   fetchPublicVehicles,
   ["public-vehicles"],
   { revalidate: 60, tags: ["public-vehicles"] }
 );
+
+export async function getPublicVehicles(): Promise<Vehicle[]> {
+  try {
+    return await getCachedPublicVehicles();
+  } catch (error) {
+    console.error("Unable to refresh public inventory", error);
+    return [];
+  }
+}
 
 async function fetchPublicVehicleById(id: string): Promise<Vehicle | null> {
   if (!UUID_PATTERN.test(id)) return null;

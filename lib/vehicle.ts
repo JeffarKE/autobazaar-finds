@@ -74,19 +74,19 @@ export const emptyVehicle: Vehicle = {
 
   price: "",
   location: "",
-  status: "Draft",
+  status: "Live",
   negotiable: true,
   featured: false,
-  verified: false,
-  publishImmediately: false,
+  verified: true,
+  publishImmediately: true,
 
   description: "",
 
-  sellerName: "",
-  phone: "",
-  email: "",
-  preferredContact: "",
-  bestTime: "",
+  sellerName: "Auto Bazaar Finds",
+  phone: "+254741056053",
+  email: "autobazaarfinds@gmail.com",
+  preferredContact: "WhatsApp",
+  bestTime: "Any time",
 
   images: [],
 };

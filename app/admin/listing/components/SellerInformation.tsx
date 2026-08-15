@@ -30,17 +30,17 @@ export default function SellerInformation({
 
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
-            Vehicle Owner Information
+            Listing Partner Information
           </h2>
 
           <p className="text-gray-500">
-            Keep the owner&apos;s details for your records. Public enquiries always
-            go through Auto Bazaar Finds.
+            Keep the private owner or showroom contact for internal records.
+            Public enquiries always go through Auto Bazaar Finds.
           </p>
         </div>
       </div>
 
-      {/* Brokerage contact card */}
+      {/* Public contact card */}
       <div className="mt-8 rounded-2xl border bg-gradient-to-r from-black to-gray-800 p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
@@ -53,7 +53,7 @@ export default function SellerInformation({
             </h3>
 
             <p className="mt-2 text-gray-300">
-              Buyers will always see Auto Bazaar Finds as the brokerage contact.
+              Buyers will always contact Auto Bazaar Finds about this listing.
             </p>
           </div>
 
@@ -66,8 +66,8 @@ export default function SellerInformation({
       {/* Form */}
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <InputField
-          label="Vehicle Owner Name"
-          placeholder="Owner name"
+          label="Owner or Showroom Name"
+          placeholder="Private owner or showroom"
           icon={<Building2 className="h-5 w-5" />}
           value={vehicle.sellerName}
           onChange={(value) =>

@@ -4,30 +4,30 @@ import { BadgeCheck, Search, ShieldCheck } from "lucide-react";
 import SourceVehicleForm from "./SourceVehicleForm";
 
 export const metadata: Metadata = {
-  title: "Vehicle Sourcing | Auto Bazaar Finds",
-  description: "Tell Auto Bazaar Finds what vehicle you need and let our independent brokerage help source suitable options in Kenya.",
+  title: "Find Me a Car | Auto Bazaar Finds",
+  description: "Tell us the car and budget you have in mind. We will help you find a good option in Kenya.",
 };
 
 export default function SourceVehiclePage() {
   return (
-    <main className="bg-slate-50">
+    <main className="bg-slate-50 dark:bg-gray-950">
       <section className="border-b bg-slate-950 text-white">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,1fr)_480px] lg:items-center">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-green-400">
-              Personal Vehicle Sourcing
+              Find Me a Car
             </p>
             <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
               Tell us what you need. We&apos;ll help you find it.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              Share your preferences and budget. Auto Bazaar Finds will help identify suitable vehicles and coordinate the next steps with you.
+              Tell us the car and budget you have in mind. We&apos;ll look for good options and guide you through the next steps.
             </p>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              <Benefit icon={<Search />} text="Focused search" />
-              <Benefit icon={<BadgeCheck />} text="Suitable options" />
-              <Benefit icon={<ShieldCheck />} text="Guided process" />
+              <Benefit icon={<Search />} text="We do the search" />
+              <Benefit icon={<BadgeCheck />} text="Good options" />
+              <Benefit icon={<ShieldCheck />} text="Help all the way" />
             </div>
           </div>
 

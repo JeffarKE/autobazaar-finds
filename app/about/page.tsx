@@ -13,7 +13,7 @@ const whatsappUrl =
 
 export const metadata: Metadata = {
   title: "About | Auto Bazaar Finds",
-  description: "Learn how Auto Bazaar Finds markets vehicles for owners and sources suitable vehicles for buyers in Kenya.",
+  description: "See how Auto Bazaar Finds helps private owners and showrooms sell cars, and helps buyers find cars in Kenya.",
 };
 
 export default function AboutPage() {
@@ -30,10 +30,9 @@ export default function AboutPage() {
         </h1>
 
         <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
-          Auto Bazaar Finds is an independent Kenyan vehicle brokerage and
-          sourcing platform—not a dealership. We market vehicles on behalf of
-          their owners, connect them with genuine buyers, and help buyers source
-          suitable vehicles based on their needs and budget.
+          Auto Bazaar Finds helps private owners and showrooms advertise their
+          cars and reach serious buyers. We also help buyers find a car that
+          suits their needs and budget.
         </p>
       </section>
 
@@ -45,7 +44,7 @@ export default function AboutPage() {
           </h2>
 
           <p className="mt-3 text-slate-600 dark:text-slate-400">
-            Whether you are buying, sourcing, or selling, we guide the process.
+            Whether you are buying or selling, we help you through each step.
           </p>
         </div>
 
@@ -70,7 +69,7 @@ export default function AboutPage() {
             </h3>
 
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              View detailed information and photos before making an enquiry.
+              Check the details and photos, then ask us about the car.
             </p>
           </div>
 
@@ -82,7 +81,7 @@ export default function AboutPage() {
             </h3>
 
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              Enquire through Auto Bazaar Finds for quick, coordinated support.
+              Talk to us on WhatsApp and get a clear, helpful response.
             </p>
           </div>
 
@@ -107,8 +106,7 @@ export default function AboutPage() {
         </h2>
 
         <p className="mx-auto mt-4 max-w-2xl text-slate-300">
-          Browse our latest listings or get in touch on WhatsApp if you&apos;re
-          looking for something specific and would like us to source it.
+          Browse the latest cars or tell us on WhatsApp what you are looking for.
         </p>
 
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">

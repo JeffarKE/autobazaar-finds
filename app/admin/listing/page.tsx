@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, ChevronDown, Loader2, Send, Sparkles } from "lucide-react";
 
 import Description from "./components/Description";
 import LivePreview from "./components/LivePreview";
@@ -74,6 +77,7 @@ function stringValue(value: unknown): string {
 }
 
 export default function ListingPage() {
+  const router = useRouter();
   const [vehicle, setVehicle] = useState<Vehicle>(emptyVehicle);
   const [isPublishing, setIsPublishing] = useState(false);
   const [notice, setNotice] = useState("");
@@ -389,10 +393,7 @@ export default function ListingPage() {
         await publishVehicle(vehicle);
 
         window.localStorage.removeItem(DRAFT_KEY);
-
-        setNotice(
-          "Vehicle published successfully. You can now add another listing or view it in Supabase."
-        );
+        router.push("/admin/inventory");
       }
     } catch (error) {
       setNotice(
@@ -411,26 +412,45 @@ export default function ListingPage() {
     ? "Edit Vehicle Listing"
     : "Create Vehicle Listing";
 
-  const pageDescription = editVehicleId
-    ? "Update the vehicle information below. Your existing photos and listing details have been loaded from Supabase."
-    : "Add a new vehicle to your inventory. Complete the information below and publish when you are ready.";
+  const essentials = [
+    vehicle.images.length > 0,
+    vehicle.make,
+    vehicle.model,
+    vehicle.year,
+    vehicle.mileage,
+    vehicle.price,
+    vehicle.location,
+    vehicle.bodyType,
+    vehicle.fuelType,
+    vehicle.transmission,
+    vehicle.driveType,
+    vehicle.engineSize,
+    vehicle.description,
+  ];
+  const completedEssentials = essentials.filter(Boolean).length;
+  const completion = Math.round((completedEssentials / essentials.length) * 100);
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <section className="border-b bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            {pageTitle}
-          </h1>
-
-          <p className="mt-2 text-gray-500">
-            {pageDescription}
-          </p>
+      <section className="sticky top-0 z-30 border-b bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <Link href="/admin/inventory" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border bg-white transition hover:bg-gray-50" aria-label="Back to inventory">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-green-600">Quick listing</p>
+              <h1 className="truncate text-xl font-black tracking-tight text-gray-950 sm:text-2xl">{pageTitle}</h1>
+            </div>
+          </div>
+          <div className="hidden min-w-48 sm:block">
+            <div className="flex justify-between text-xs font-semibold text-gray-500"><span>Ready to publish</span><span>{completion}%</span></div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100"><div className="h-full rounded-full bg-green-500 transition-all" style={{ width: `${completion}%` }} /></div>
+          </div>
 
           {notice && (
             <p
-              className="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700"
+              className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 rounded-2xl border border-gray-800 bg-gray-950 px-5 py-4 text-sm text-white shadow-2xl"
               role="status"
             >
               {notice}
@@ -439,8 +459,7 @@ export default function ListingPage() {
         </div>
       </section>
 
-      {/* Content */}
-      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+      <section className="mx-auto max-w-7xl px-4 py-6 pb-28 sm:px-6 sm:py-8">
         {editVehicleId && isLoadingEdit ? (
           <div className="rounded-2xl border bg-white p-10 text-center shadow-sm">
             <p className="text-lg font-semibold text-gray-900">
@@ -452,10 +471,9 @@ export default function ListingPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_420px]">
-            {/* Listing Form */}
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
             <form
-              className="space-y-8"
+              className="space-y-5"
               onSubmit={(event) =>
                 event.preventDefault()
               }
@@ -470,11 +488,6 @@ export default function ListingPage() {
                 setVehicle={setVehicle}
               />
 
-              <VehicleSpecifications
-                vehicle={vehicle}
-                setVehicle={setVehicle}
-              />
-
               <Pricing
                 vehicle={vehicle}
                 setVehicleAction={setVehicle}
@@ -485,17 +498,32 @@ export default function ListingPage() {
                 setVehicle={setVehicle}
               />
 
-              <SellerInformation
-                vehicle={vehicle}
-                setVehicle={setVehicle}
-              />
+              <details open className="group overflow-hidden rounded-3xl border bg-white shadow-sm">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 sm:p-8">
+                  <div><p className="font-bold text-gray-950">More vehicle details</p><p className="mt-1 text-sm text-gray-500">Body, transmission, fuel, drivetrain and optional specifications</p></div>
+                  <ChevronDown className="h-5 w-5 shrink-0 transition group-open:rotate-180" />
+                </summary>
+                <div className="border-t"><VehicleSpecifications vehicle={vehicle} setVehicle={setVehicle} /></div>
+              </details>
+
+              <details className="group overflow-hidden rounded-3xl border bg-white shadow-sm">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 sm:p-8">
+                  <div><p className="font-bold text-gray-950">Owner or showroom record</p><p className="mt-1 text-sm text-gray-500">Optional internal details. Buyers always contact Auto Bazaar Finds.</p></div>
+                  <ChevronDown className="h-5 w-5 shrink-0 transition group-open:rotate-180" />
+                </summary>
+                <div className="border-t"><SellerInformation vehicle={vehicle} setVehicle={setVehicle} /></div>
+              </details>
             </form>
 
-            {/* Sidebar */}
             <aside
               id="listing-live-preview"
-              className="space-y-6"
+              className="space-y-5 xl:sticky xl:top-28 xl:self-start"
             >
+              <div className="rounded-3xl bg-gradient-to-br from-gray-950 to-green-950 p-6 text-white shadow-xl">
+                <div className="flex items-center gap-2 text-green-300"><Sparkles className="h-4 w-4" /><span className="text-xs font-bold uppercase tracking-[0.18em]">Fast flow</span></div>
+                <p className="mt-3 text-xl font-bold">Add photos, fill the essentials, publish.</p>
+                <p className="mt-2 text-sm leading-6 text-gray-300">Auto Bazaar Finds contact details and the safest listing defaults are already applied.</p>
+              </div>
               <PublishBar
                 isEditing={Boolean(editVehicleId)}
                 isPublishing={isPublishing}
@@ -510,6 +538,20 @@ export default function ListingPage() {
           </div>
         )}
       </section>
+
+      {!isLoadingEdit && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 shadow-[0_-12px_30px_rgba(0,0,0,0.08)] backdrop-blur xl:hidden">
+          <div className="mx-auto flex max-w-7xl gap-3">
+            <button type="button" onClick={saveDraft} disabled={isPublishing} className="rounded-xl border px-5 py-3 text-sm font-bold disabled:opacity-50">
+              Save draft
+            </button>
+            <button type="button" onClick={publishListing} disabled={isPublishing} className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-green-600/20 disabled:bg-gray-400">
+              {isPublishing ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+              {isPublishing ? "Publishing..." : editVehicleId ? "Save changes" : "Publish vehicle"}
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

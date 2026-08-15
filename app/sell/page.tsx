@@ -1,37 +1,21 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Sell Your Car | Auto Bazaar Finds",
-  description: "Let Auto Bazaar Finds professionally market your vehicle and connect you with serious buyers.",
+  description: "Let Auto Bazaar Finds advertise your car and connect you with serious buyers in Kenya.",
 };
 
-const whatsappMessage = encodeURIComponent(`Hi Auto Bazaar Finds,
-
-I'd like to sell my vehicle.
-
-Name:
-Phone:
-Location:
-
-Vehicle Make:
-Model:
-Year:
-Mileage:
-Engine:
-Transmission:
-Fuel Type:
-Colour:
-Asking Price:
-
-I'll send the photos next.
-`);
+const whatsappMessage = encodeURIComponent(
+  "Hi Auto Bazaar Finds, I'd like your help selling my car. I'll send the car details and photos here."
+);
 
 const whatsappUrl = `https://wa.me/254741056053?text=${whatsappMessage}`;
 
 export default function SellPage() {
   return (
-    <main className="bg-white">
+    <main className="bg-white dark:bg-gray-950">
       {/* Hero */}
       <section className="border-b">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:flex lg:items-center lg:justify-between">
@@ -40,14 +24,14 @@ export default function SellPage() {
               SELL YOUR CAR
             </span>
 
-            <h1 className="mt-6 text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
+            <h1 className="mt-6 text-4xl font-black tracking-tight text-gray-900 dark:text-white sm:text-5xl">
               Sell Your Car Faster.
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Auto Bazaar Finds markets your vehicle across our website and
-              social media, connects you with genuine buyers and supports you
-              throughout the selling process.
+            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+              Whether it is your own car or showroom stock, we advertise it on
+              our website and social pages, speak to interested buyers and help
+              you through the sale.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
@@ -56,7 +40,7 @@ export default function SellPage() {
                 target="_blank"
                 className="rounded-xl bg-green-600 px-8 py-4 text-lg font-semibold text-white transition hover:bg-green-700"
               >
-                🚗 Start Selling Your Car
+                <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us
               </Link>
 
               <Link
@@ -69,7 +53,7 @@ export default function SellPage() {
           </div>
 
           <div className="mt-16 lg:mt-0">
-            <div className="rounded-3xl bg-gray-100 p-10 shadow-lg">
+            <div className="rounded-3xl bg-gray-100 p-10 shadow-lg dark:bg-gray-900">
               <h2 className="text-2xl font-bold">
                 No Upfront Listing Fee
               </h2>
@@ -78,7 +62,7 @@ export default function SellPage() {
                 You only pay when we successfully sell your vehicle.
               </p>
 
-              <div className="mt-8 rounded-2xl bg-white p-8 shadow">
+              <div className="mt-8 rounded-2xl bg-white p-8 shadow dark:bg-gray-950">
                 <p className="text-sm uppercase tracking-wider text-gray-500">
                   Commission
                 </p>
@@ -105,12 +89,11 @@ export default function SellPage() {
         <div className="mt-14 grid gap-8 md:grid-cols-3">
           <div className="rounded-2xl border p-8">
             <h3 className="text-xl font-bold">
-              Professional Marketing
+              Better advertising
             </h3>
 
             <p className="mt-4 text-gray-600">
-              Your vehicle is showcased professionally across our website and
-              social media channels.
+              We present your car clearly on our website and social pages.
             </p>
           </div>
 
@@ -120,8 +103,7 @@ export default function SellPage() {
             </h3>
 
             <p className="mt-4 text-gray-600">
-              We connect you with genuine buyers and filter unnecessary
-              enquiries.
+              We speak to interested buyers and help cut down time-wasters.
             </p>
           </div>
 
@@ -138,7 +120,7 @@ export default function SellPage() {
       </section>
 
       {/* Process */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-20 dark:bg-gray-900">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-center text-4xl font-bold">
             How It Works
@@ -155,7 +137,7 @@ export default function SellPage() {
             ].map((step, index) => (
               <div
                 key={step}
-                className="rounded-2xl bg-white p-8 shadow-sm"
+                className="rounded-2xl bg-white p-8 shadow-sm dark:bg-gray-950"
               >
                 <div className="text-3xl font-black text-green-600">
                   0{index + 1}
@@ -178,8 +160,7 @@ export default function SellPage() {
           </h2>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-green-50">
-            Let Auto Bazaar Finds professionally market your vehicle and connect
-            you with serious buyers.
+            Send us the details and photos. We&apos;ll help you take it from there.
           </p>
 
           <Link
@@ -187,7 +168,7 @@ export default function SellPage() {
             target="_blank"
             className="mt-10 inline-flex rounded-xl bg-white px-10 py-4 text-lg font-bold text-green-700 transition hover:scale-105"
           >
-            🚗 Start Selling Your Car
+            <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us
           </Link>
         </div>
       </section>

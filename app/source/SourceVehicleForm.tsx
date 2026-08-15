@@ -12,15 +12,15 @@ export default function SourceVehicleForm() {
   const [location, setLocation] = useState("");
 
   const whatsappUrl = useMemo(() => {
-    const message = `Hi Auto Bazaar Finds,
+    const details = [
+      vehicle && `I'm looking for a ${vehicle}`,
+      budget && `My budget is ${budget}`,
+      year && `I'd prefer ${year}`,
+      location && `I'm in ${location}`,
+    ].filter(Boolean).join(". ");
 
-I'd like help sourcing a vehicle.
-
-Name: ${name}
-Preferred vehicle: ${vehicle}
-Budget: ${budget}
-Preferred year: ${year}
-Location: ${location}`;
+    const introduction = name ? `I'm ${name}` : "I'm looking to buy a car";
+    const message = `Hi Auto Bazaar Finds, ${introduction}. ${details || "Please help me find a good vehicle"}. Kindly let me know what you have.`;
 
     return `https://wa.me/254741056053?text=${encodeURIComponent(message)}`;
   }, [budget, location, name, vehicle, year]);
@@ -44,11 +44,11 @@ Location: ${location}`;
         className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-4 font-bold text-white transition hover:bg-green-700"
       >
         <MessageCircle className="h-5 w-5" />
-        Send Sourcing Request
+        Ask us to find it
       </Link>
 
       <p className="mt-4 text-center text-xs leading-5 text-slate-500">
-        This opens WhatsApp with your request ready to review before sending.
+        You can edit the message before sending it on WhatsApp.
       </p>
     </div>
   );

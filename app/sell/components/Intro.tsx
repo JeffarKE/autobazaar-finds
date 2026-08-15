@@ -9,7 +9,7 @@ export default function Intro() {
 
       <p className="mt-3 leading-relaxed text-gray-700">
         Fill in a few details below and our team will review your submission
-        before professionally marketing your vehicle on Auto Bazaar Finds.
+        before advertising your vehicle on Auto Bazaar Finds.
       </p>
 
       <div className="mt-5 inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-800">

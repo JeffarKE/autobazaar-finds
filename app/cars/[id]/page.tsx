@@ -99,7 +99,8 @@ export default async function VehicleDetailsPage({
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+    <main className="relative mx-auto max-w-7xl px-4 py-10 lg:px-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.12),transparent_55%)]" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -126,7 +127,7 @@ export default async function VehicleDetailsPage({
       </nav>
 
       {/* Header */}
-      <section className="mb-10">
+      <section className="mb-10 overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-xl shadow-slate-200/50 backdrop-blur dark:border-white/10 dark:bg-gray-900/80 dark:shadow-black/20 sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -171,7 +172,7 @@ export default async function VehicleDetailsPage({
                 </p>
 
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Selling on behalf of the owner
+                  Listed by Auto Bazaar Finds
                 </p>
               </div>
             </div>
@@ -180,7 +181,7 @@ export default async function VehicleDetailsPage({
       </section>
 
       {/* Main Layout */}
-      <section className="grid gap-10 lg:grid-cols-[2fr_1fr]">
+      <section className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_380px]">
         <div className="space-y-10">
           <VehicleGallery
             images={vehicle.images}
