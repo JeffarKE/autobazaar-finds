@@ -39,7 +39,7 @@ export async function generateMetadata({
 
   if (!vehicle) {
     return {
-      title: "Vehicle Not Found | Auto Bazaar Finds",
+      title: "Vehicle Not Found",
     };
   }
 

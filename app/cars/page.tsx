@@ -6,7 +6,7 @@ import { getPublicVehicles } from "./services/getPublicVehicles";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Vehicles for Sale | Auto Bazaar Finds",
+  title: "Vehicles for Sale",
   description: "Browse cars for sale from private owners and showroom partners in Kenya.",
 };
 

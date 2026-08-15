@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sell Your Car | Auto Bazaar Finds",
+  title: "Sell Your Car",
   description: "Let Auto Bazaar Finds advertise your car and connect you with serious buyers in Kenya.",
 };
 

@@ -4,7 +4,7 @@ import { isAdminUser } from "@/lib/admin-auth";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import LoginForm from "./LoginForm";
 
-export const metadata = { title: "Admin Login | Auto Bazaar Finds" };
+export const metadata = { title: "Admin Login" };
 
 export default async function AdminLoginPage() {
   const supabase = await createServerSupabaseClient();

@@ -12,7 +12,7 @@ const whatsappUrl =
   "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I%20saw%20your%20website%20and%20I%20need%20help%20with%20a%20car.";
 
 export const metadata: Metadata = {
-  title: "About | Auto Bazaar Finds",
+  title: "About",
   description: "See how Auto Bazaar Finds helps private owners and showrooms sell cars, and helps buyers find cars in Kenya.",
 };
 

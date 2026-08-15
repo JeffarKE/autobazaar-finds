@@ -4,7 +4,7 @@ import { BadgeCheck, Search, ShieldCheck } from "lucide-react";
 import SourceVehicleForm from "./SourceVehicleForm";
 
 export const metadata: Metadata = {
-  title: "Find Me a Car | Auto Bazaar Finds",
+  title: "Find Me a Car",
   description: "Tell us the car and budget you have in mind. We will help you find a good option in Kenya.",
 };
 
