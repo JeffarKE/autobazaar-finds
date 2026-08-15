@@ -18,11 +18,14 @@ type Props = {
   clearFilters: () => void;
 };
 
-const priceOptions = [
+const priceOptions: Array<[string, string]> = [
   ["500000", "KSh 500K"], ["1000000", "KSh 1M"], ["1500000", "KSh 1.5M"],
   ["2000000", "KSh 2M"], ["3000000", "KSh 3M"], ["5000000", "KSh 5M"],
   ["10000000", "KSh 10M"],
 ];
+
+const optionPairs = (values: string[]): Array<[string, string]> =>
+  values.map((value) => [value, value]);
 
 export default function FilterBar(props: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -44,16 +47,16 @@ export default function FilterBar(props: Props) {
   const fields = (
     <>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {select("Make", props.make, props.setMake, props.makeOptions.map((x) => [x, x]))}
-        {select("Model", props.model, props.setModel, props.modelOptions.map((x) => [x, x]), !props.make)}
+        {select("Make", props.make, props.setMake, optionPairs(props.makeOptions))}
+        {select("Model", props.model, props.setModel, optionPairs(props.modelOptions), !props.make)}
         {select("Minimum price", props.minPrice, props.setMinPrice, priceOptions)}
         {select("Maximum price", props.maxPrice, props.setMaxPrice, priceOptions)}
-        {select("From year", props.minYear, props.setMinYear, props.yearOptions.map((x) => [String(x), String(x)]))}
-        {select("To year", props.maxYear, props.setMaxYear, props.yearOptions.map((x) => [String(x), String(x)]))}
-        {select("Transmission", props.transmission, props.setTransmission, props.transmissionOptions.map((x) => [x, x]))}
-        {select("Fuel", props.fuel, props.setFuel, props.fuelOptions.map((x) => [x, x]))}
-        {select("Body style", props.bodyType, props.setBodyType, props.bodyTypeOptions.map((x) => [x, x]))}
-        {select("Location", props.location, props.setLocation, props.locationOptions.map((x) => [x, x]))}
+        {select("From year", props.minYear, props.setMinYear, optionPairs(props.yearOptions.map(String)))}
+        {select("To year", props.maxYear, props.setMaxYear, optionPairs(props.yearOptions.map(String)))}
+        {select("Transmission", props.transmission, props.setTransmission, optionPairs(props.transmissionOptions))}
+        {select("Fuel", props.fuel, props.setFuel, optionPairs(props.fuelOptions))}
+        {select("Body style", props.bodyType, props.setBodyType, optionPairs(props.bodyTypeOptions))}
+        {select("Location", props.location, props.setLocation, optionPairs(props.locationOptions))}
       </div>
       <div className="mt-5 flex items-center justify-between border-t border-slate-200 pt-4 dark:border-white/10">
         <p className="text-sm text-slate-500 dark:text-slate-400">Choose only what matters to you.</p>
