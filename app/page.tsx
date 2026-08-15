@@ -7,9 +7,9 @@ import { getPublicVehicles } from "./cars/services/getPublicVehicles";
 export const dynamic = "force-dynamic";
 
 const benefits = [
-  { icon: ScanSearch, title: "Worth your scroll", copy: "Clear details, quality photos and vehicles selected to make browsing feel effortless." },
-  { icon: MessageCircle, title: "Human, not complicated", copy: "Ask a question on WhatsApp and speak directly with someone who knows the listing." },
-  { icon: BadgeCheck, title: "Support through the deal", copy: "Whether you are buying, selling or sourcing, we stay involved from interest to handover." },
+  { icon: ScanSearch, title: "Easy to browse", copy: "Clear details and quality photos help you find the right car faster." },
+  { icon: MessageCircle, title: "Talk to a real person", copy: "Message us on WhatsApp and get clear answers about any car." },
+  { icon: BadgeCheck, title: "Help from start to finish", copy: "We support you through the viewing, agreement and handover." },
 ];
 
 export default async function Home() {
@@ -55,10 +55,10 @@ export default async function Home() {
         <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-emerald-400 px-6 py-12 text-emerald-950 shadow-xl shadow-emerald-950/10 sm:px-12 sm:py-16">
           <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full border-[50px] border-emerald-300/60" />
           <div className="relative max-w-3xl">
-            <p className="text-xs font-black uppercase tracking-[0.18em]">Your car could be next</p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] sm:text-6xl">We make selling feel lighter.</h2>
-            <p className="mt-5 max-w-2xl text-lg font-medium leading-8 text-emerald-950/75">Send the details once. We help present the vehicle, handle interest and support you through a successful sale.</p>
-            <Link href="/sell" className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-emerald-950 px-6 py-4 font-black text-white transition hover:-translate-y-0.5">Start your listing <ArrowRight size={19} /></Link>
+            <p className="text-xs font-black uppercase tracking-[0.18em]">Sell your car with us</p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] sm:text-6xl">Ready to sell your car?</h2>
+            <p className="mt-5 max-w-2xl text-lg font-medium leading-8 text-emerald-950/75">Send us a few details and photos. We&apos;ll advertise your car, speak to interested buyers and help you complete the sale.</p>
+            <Link href="/sell" className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-emerald-950 px-6 py-4 font-black text-white transition hover:-translate-y-0.5">Sell with us <ArrowRight size={19} /></Link>
           </div>
         </div>
       </section>
