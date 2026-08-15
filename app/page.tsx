@@ -7,9 +7,9 @@ import { getPublicVehicles } from "./cars/services/getPublicVehicles";
 export const dynamic = "force-dynamic";
 
 const benefits = [
-  { icon: ScanSearch, title: "Easy to browse", copy: "Clear details and quality photos help you find the right car faster." },
-  { icon: MessageCircle, title: "Talk to a real person", copy: "Message us on WhatsApp and get clear answers about any car." },
-  { icon: BadgeCheck, title: "Help from start to finish", copy: "We support you through the viewing, agreement and handover." },
+  { icon: ScanSearch, title: "Quality Listings", copy: "Clear vehicle details, fair information and quality photos." },
+  { icon: MessageCircle, title: "WhatsApp Support", copy: "Ask about any car and get a quick response from our team." },
+  { icon: BadgeCheck, title: "Buying & Selling Support", copy: "We help buyers and sellers from the first enquiry to handover." },
 ];
 
 export default async function Home() {
