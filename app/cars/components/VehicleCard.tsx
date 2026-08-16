@@ -11,15 +11,29 @@ interface VehicleCardProps {
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
   const formattedPrice = new Intl.NumberFormat("en-KE").format(vehicle.price);
   const formattedMileage = new Intl.NumberFormat("en-KE").format(vehicle.mileage);
+  const images = vehicle.images.length ? vehicle.images : ["/cars/forester.jpg"];
+  const photo = (index: number) => images[index % images.length];
 
   return (
     <Link
       href={`/cars/${vehicle.id}`}
-      className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-green-200 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
+      className="group relative block overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-green-200 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
+      {vehicle.featured && images.length > 1 && (
+        <div className="grid aspect-[5/4] grid-cols-[1.7fr_0.9fr] grid-rows-[1.45fr_1fr] gap-0.5 bg-gray-100 sm:hidden">
+          <div className="relative col-span-2 overflow-hidden">
+            <Image src={photo(0)} alt={vehicle.title} fill sizes="100vw" loading="lazy" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
+          </div>
+          <div className="relative overflow-hidden"><Image src={photo(1)} alt={`${vehicle.title} interior`} fill sizes="65vw" loading="lazy" className="object-cover" /></div>
+          <div className="grid grid-rows-2 gap-0.5">
+            {[2, 3].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt={`${vehicle.title} photo ${index + 1}`} fill sizes="35vw" loading="lazy" className="object-cover" /></div>)}
+          </div>
+        </div>
+      )}
+
+      <div className={`relative aspect-[16/10] overflow-hidden bg-gray-100 ${vehicle.featured && images.length > 1 ? "hidden sm:block" : "block"}`}>
         <Image
-          src={vehicle.images[0] ?? "/cars/forester.jpg"}
+          src={photo(0)}
           alt={vehicle.title}
           fill
           sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw"
@@ -27,12 +41,13 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           className="object-cover transition duration-300 group-hover:scale-[1.03]"
         />
 
-        {vehicle.featured && (
-          <span className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-green-600 px-2.5 py-1 text-xs font-semibold text-white shadow">
-            <Star className="h-3 w-3 fill-current" /> Featured
-          </span>
-        )}
       </div>
+
+      {vehicle.featured && (
+        <span className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-green-600 px-2.5 py-1 text-xs font-semibold text-white shadow">
+          <Star className="h-3 w-3 fill-current" /> Featured
+        </span>
+      )}
 
       <div className="p-4">
         <div className="flex min-w-0 items-center gap-1.5">

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BadgeCheck, MapPin, MessageCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, BadgeCheck, MapPin, MessageCircle, Search } from "lucide-react";
 import FilterBar from "../cars/components/FilterBar";
 import VehicleCard from "../cars/components/VehicleCard";
 import { useCarFilters } from "../cars/hooks/useCarFilters";
@@ -42,7 +42,7 @@ export default function HomeMarketplace({ vehicles }: Props) {
   const move = (direction: number) => setActive((current) => (current + direction + featured.length) % featured.length);
 
   if (!vehicle) {
-    return <div className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6">Fresh listings are being prepared.</div>;
+    return <div className="mx-auto max-w-[1360px] px-4 py-16 text-center sm:px-6">Fresh listings are being prepared.</div>;
   }
 
   const whatsapp = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(getWhatsAppListingMessage(vehicle))}`;
@@ -50,8 +50,13 @@ export default function HomeMarketplace({ vehicles }: Props) {
   return (
     <>
       <section className="bg-[#111311] text-white">
-        <div className="mx-auto max-w-7xl px-4 pb-7 pt-4 sm:px-6 sm:pt-6">
-          <div className="scrollbar-none mb-4 flex gap-2 overflow-x-auto pb-1">
+        <div className="mx-auto max-w-[1360px] pb-5 pt-4 sm:pb-7 sm:pt-6">
+          <label className="relative mx-4 mb-4 block lg:hidden">
+            <span className="sr-only">Search listings</span>
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search Toyota, Subaru, SUV..." className="h-14 w-full rounded-2xl border border-white/10 bg-white/10 pl-12 pr-4 text-base text-white outline-none placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20" />
+          </label>
+          <div className="scrollbar-none mb-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:px-6">
             {["Available now", "Newly listed", "Featured", "Toyota", "Subaru", "SUVs", "Under KSh 2M", "Showroom cars", "Private sellers"].map((item, index) => (
               <Link key={item} href={index < 3 ? "#listings" : "/cars"} className="min-w-max rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-400 hover:text-white">
                 {item}
@@ -59,8 +64,39 @@ export default function HomeMarketplace({ vehicles }: Props) {
             ))}
           </div>
 
-          <article className="relative overflow-hidden rounded-2xl bg-black shadow-2xl">
-            <Link href={`/cars/${vehicle.id}`} className="grid h-[25rem] grid-cols-[minmax(0,1.55fr)_minmax(6.5rem,0.72fr)] grid-rows-2 gap-0.5 sm:h-[34rem] sm:grid-cols-[minmax(0,1.75fr)_minmax(10rem,0.72fr)] lg:grid-cols-[1.7fr_0.8fr_0.65fr]">
+          <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:hidden">
+            {featured.map((item, itemIndex) => {
+              const itemImages = item.images.length ? item.images : ["/cars/forester.jpg"];
+              const itemPhoto = (photoIndex: number) => itemImages[photoIndex % itemImages.length];
+
+              return (
+                <Link key={item.id} href={`/cars/${item.id}`} className="relative grid h-[28rem] w-[88vw] max-w-md shrink-0 snap-center grid-cols-[1.7fr_0.9fr] grid-rows-[1.45fr_1fr] gap-0.5 overflow-hidden rounded-2xl bg-black shadow-xl">
+                  <div className="relative col-span-2 overflow-hidden">
+                    <Image src={itemPhoto(0)} alt={item.title} fill loading={itemIndex === 0 ? "eager" : "lazy"} sizes="88vw" className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/25" />
+                  </div>
+                  <div className="relative overflow-hidden"><Image src={itemPhoto(1)} alt={`${item.title} interior`} fill sizes="58vw" className="object-cover" /></div>
+                  <div className="grid grid-rows-2 gap-0.5">
+                    {[2, 3].map((photoIndex) => <div key={photoIndex} className="relative overflow-hidden"><Image src={itemPhoto(photoIndex)} alt={`${item.title} photo ${photoIndex + 1}`} fill sizes="30vw" className="object-cover" /></div>)}
+                  </div>
+                  <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
+                    <span className="rounded-full bg-emerald-400 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-emerald-950">Featured</span>
+                    <h1 className="max-w-[70%] text-right text-lg font-black leading-6 text-white drop-shadow-md">{item.title}</h1>
+                  </div>
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 pt-14">
+                    <div>
+                      <strong className="block text-xl font-black text-emerald-400">KSh {new Intl.NumberFormat("en-KE").format(item.price)}</strong>
+                      <span className="mt-1 flex items-center gap-1 text-xs text-slate-200"><MapPin size={13} /> {item.location} · {new Intl.NumberFormat("en-KE").format(item.mileage)} km</span>
+                    </div>
+                    {item.verified && <span className="inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs font-bold text-white backdrop-blur"><BadgeCheck size={14} /> Verified</span>}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <article className="relative mx-4 hidden overflow-hidden rounded-2xl bg-black shadow-2xl lg:block">
+            <Link href={`/cars/${vehicle.id}`} className="grid h-[25rem] grid-cols-[minmax(0,1.55fr)_minmax(6.5rem,0.72fr)] grid-rows-2 gap-0.5 sm:h-[34rem] sm:grid-cols-[minmax(0,1.75fr)_minmax(10rem,0.72fr)] lg:h-[21rem] lg:grid-cols-[1.7fr_0.8fr_0.65fr]">
               <div className="relative row-span-2 min-h-0 overflow-hidden">
                 <Image src={photo(0)} alt={vehicle.title} fill loading="eager" sizes="(max-width:640px) 70vw, (max-width:1024px) 72vw, 55vw" className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/10" />
@@ -93,34 +129,11 @@ export default function HomeMarketplace({ vehicles }: Props) {
             </div>}
           </article>
 
-          {featured.length > 1 && <div className="mt-3 flex justify-center gap-1.5">{featured.map((item, index) => <button key={item.id} onClick={() => setActive(index)} aria-label={`Show ${item.title}`} className={`h-1.5 rounded-full transition-all ${index === active ? "w-8 bg-emerald-400" : "w-3 bg-white/25"}`} />)}</div>}
+          {featured.length > 1 && <div className="mt-3 hidden justify-center gap-1.5 lg:flex">{featured.map((item, index) => <button key={item.id} onClick={() => setActive(index)} aria-label={`Show ${item.title}`} className={`h-1.5 rounded-full transition-all ${index === active ? "w-8 bg-emerald-400" : "w-3 bg-white/25"}`} />)}</div>}
         </div>
       </section>
 
-      {featured.length > 1 && (
-        <section aria-label="Featured cars" className="border-b border-slate-200 bg-white py-4 dark:border-white/10 dark:bg-[#0b100d] lg:hidden">
-          <div className="mb-3 flex items-center justify-between px-4">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">Featured cars</p>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Swipe to explore</span>
-          </div>
-          <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
-            {featured.map((item) => (
-              <Link key={item.id} href={`/cars/${item.id}`} className="grid w-[82vw] max-w-sm shrink-0 snap-start grid-cols-[8.5rem_1fr] overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm dark:border-white/10 dark:bg-white/5">
-                <div className="relative min-h-28 bg-slate-200 dark:bg-white/10">
-                  <Image src={item.images[0] ?? "/cars/forester.jpg"} alt={item.title} fill sizes="136px" className="object-cover" />
-                </div>
-                <div className="min-w-0 p-3">
-                  <p className="line-clamp-2 text-sm font-black leading-5">{item.title}</p>
-                  <p className="mt-2 text-base font-black text-emerald-600 dark:text-emerald-400">KSh {new Intl.NumberFormat("en-KE").format(item.price)}</p>
-                  <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{item.location} · {new Intl.NumberFormat("en-KE").format(item.mileage)} km</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section id="listings" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-10 sm:px-6 sm:py-14">
+      <section id="listings" className="mx-auto max-w-[1360px] scroll-mt-24 px-4 py-8 sm:px-6 sm:py-14">
         <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">The full marketplace</p>
