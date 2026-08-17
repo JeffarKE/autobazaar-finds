@@ -1,17 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 
 interface VehicleGalleryProps {
   images: string[];
   title: string;
+  children?: ReactNode;
 }
 
 export default function VehicleGallery({
   images,
   title,
+  children,
 }: VehicleGalleryProps) {
   const gallery =
     images.length > 0
@@ -33,14 +36,14 @@ export default function VehicleGallery({
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Hero Image */}
-      <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="group relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-neutral-900 sm:rounded-3xl">
         <div className="relative aspect-[16/10]">
           {gallery[selectedImage] ? (
             <Image
               src={gallery[selectedImage]}
-              alt={title}
+              alt={`${title} main vehicle photo`}
               fill
               loading="eager"
               sizes="(max-width: 1024px) 100vw, 66vw"
@@ -52,10 +55,10 @@ export default function VehicleGallery({
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
           {/* Image Counter */}
-          <div className="absolute bottom-5 right-5 rounded-full bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur">
+          <div aria-live="polite" className="absolute bottom-5 right-5 rounded-full bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur lg:bottom-auto lg:top-5">
             {selectedImage + 1} / {gallery.length}
           </div>
 
@@ -85,16 +88,18 @@ export default function VehicleGallery({
         </div>
       </div>
 
+      {children}
+
       {/* Thumbnails */}
       {gallery.length > 1 && (
-        <div className="grid grid-cols-4 gap-4 sm:grid-cols-5">
+        <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-4">
           {gallery.map((image, index) => (
             <button
               key={index}
               type="button"
               aria-label={`Show photo ${index + 1} of ${gallery.length}`}
               onClick={() => setSelectedImage(index)}
-              className={`relative overflow-hidden rounded-2xl border transition-all ${
+              className={`relative overflow-hidden rounded-xl border transition-all sm:rounded-2xl ${
                 selectedImage === index
                   ? "border-green-600 ring-2 ring-green-500"
                   : "border-slate-200 hover:border-green-400 dark:border-neutral-700"
@@ -103,7 +108,7 @@ export default function VehicleGallery({
               <div className="relative aspect-square">
                 <Image
                   src={image}
-                  alt={`${title} ${index + 1}`}
+                  alt=""
                   fill
                   sizes="(max-width: 640px) 25vw, 140px"
                   className="object-cover"

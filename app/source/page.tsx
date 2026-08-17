@@ -4,8 +4,16 @@ import { BadgeCheck, Search, ShieldCheck } from "lucide-react";
 import SourceVehicleForm from "./SourceVehicleForm";
 
 export const metadata: Metadata = {
-  title: "Find Me a Car",
-  description: "Tell us the car and budget you have in mind. We will help you find a good option in Kenya.",
+  title: "Car Sourcing in Kenya",
+  description:
+    "Tell Auto Bazaar Finds the vehicle, year, budget and location you have in mind. We will help you source suitable car options in Kenya.",
+  alternates: { canonical: "/source" },
+  openGraph: {
+    title: "Find Me a Car | Vehicle Sourcing in Kenya",
+    description:
+      "Share your preferred vehicle and budget and let Auto Bazaar Finds help with the search.",
+    url: "/source",
+  },
 };
 
 export default function SourceVehiclePage() {

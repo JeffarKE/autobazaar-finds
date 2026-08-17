@@ -19,8 +19,16 @@ export default function SiteChrome({
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-xl bg-emerald-400 px-4 py-3 font-bold text-emerald-950 shadow-xl transition focus:translate-y-0"
+      >
+        Skip to main content
+      </a>
       {navigation}
-      <div className="flex-1">{children}</div>
+      <div id="main-content" tabIndex={-1} className="flex-1 outline-none">
+        {children}
+      </div>
       {footer}
     </>
   );

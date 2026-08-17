@@ -3,8 +3,16 @@ import type { Metadata } from "next";
 import { MessageCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sell Your Car",
-  description: "Let Auto Bazaar Finds advertise your car and connect you with serious buyers in Kenya.",
+  title: "Sell Your Car in Kenya",
+  description:
+    "Advertise your car with Auto Bazaar Finds, reach serious buyers in Kenya and pay no upfront listing fee. Commission is payable only after a successful sale.",
+  alternates: { canonical: "/sell" },
+  openGraph: {
+    title: "Sell Your Car in Kenya | No Upfront Listing Fee",
+    description:
+      "We present your vehicle professionally, promote it and help connect you with serious buyers.",
+    url: "/sell",
+  },
 };
 
 const whatsappMessage = encodeURIComponent(
@@ -38,6 +46,7 @@ export default function SellPage() {
               <Link
                 href={whatsappUrl}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-xl bg-green-600 px-8 py-4 text-lg font-semibold text-white transition hover:bg-green-700"
               >
                 <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us on WhatsApp
@@ -166,6 +175,7 @@ export default function SellPage() {
           <Link
             href={whatsappUrl}
             target="_blank"
+            rel="noopener noreferrer"
             className="mt-10 inline-flex rounded-xl bg-white px-10 py-4 text-lg font-bold text-green-700 transition hover:scale-105"
           >
             <MessageCircle className="mr-2 inline h-5 w-5" /> Sell with us on WhatsApp

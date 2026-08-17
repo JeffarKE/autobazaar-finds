@@ -194,6 +194,10 @@ const getCachedPublicVehicles = unstable_cache(
 );
 
 export async function getPublicVehicles(): Promise<Vehicle[]> {
+  if (process.env.NODE_ENV === "development") {
+    return mockVehicles;
+  }
+
   try {
     return await getCachedPublicVehicles();
   } catch (error) {

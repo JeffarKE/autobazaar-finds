@@ -20,8 +20,16 @@ import {
   getPublicVehicleById,
   getPublicVehicles,
 } from "../services/getPublicVehicles";
+import {
+  absoluteUrl,
+  serializeJsonLd,
+  siteName,
+  siteUrl,
+  vehicleImageUrl,
+  vehicleMetaDescription,
+} from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const getVehicle = cache(getPublicVehicleById);
 
@@ -41,26 +49,38 @@ export async function generateMetadata({
   if (!vehicle) {
     return {
       title: "Vehicle Not Found",
+      robots: { index: false, follow: false },
     };
   }
 
-  const formattedPrice = new Intl.NumberFormat("en-KE").format(vehicle.price);
-  const shareDescription = `KSh ${formattedPrice} · ${new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km · ${vehicle.location}. Arrange a viewing with Auto Bazaar Finds.`;
+  const shareDescription = vehicleMetaDescription(vehicle);
+  const canonicalPath = `/cars/${vehicle.id}`;
+  const socialImage = vehicleImageUrl(vehicle.id);
 
   return {
-    title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+    title: `${vehicle.title} for Sale in ${vehicle.location}`,
     description: shareDescription,
-    alternates: { canonical: `/cars/${vehicle.id}` },
+    keywords: [
+      `${vehicle.title} for sale`,
+      `${vehicle.make} ${vehicle.model} Kenya`,
+      `cars for sale in ${vehicle.location}`,
+      `${vehicle.bodyType} for sale in Kenya`,
+    ],
+    alternates: { canonical: canonicalPath },
     openGraph: {
-      title: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+      title: `${vehicle.title} for Sale in ${vehicle.location}`,
       description: shareDescription,
-      images: vehicle.images[0] ? [vehicle.images[0]] : [],
+      url: canonicalPath,
+      siteName,
+      type: "website",
+      locale: "en_KE",
+      images: [socialImage],
     },
     twitter: {
       card: "summary_large_image",
-      title: vehicle.title,
+      title: `${vehicle.title} for Sale`,
       description: shareDescription,
-      images: vehicle.images[0] ? [vehicle.images[0]] : [],
+      images: [socialImage],
     },
   };
 }
@@ -82,44 +102,83 @@ export default async function VehicleDetailsPage({
   const formattedPrice = new Intl.NumberFormat("en-KE").format(
     vehicle.price
   );
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const canonicalUrl = absoluteUrl(`/cars/${vehicle.id}`);
+  const structuredImages = vehicle.images.map((_, index) =>
+    vehicleImageUrl(vehicle.id, index)
+  );
   const vehicleJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Vehicle",
+    "@id": `${canonicalUrl}#vehicle`,
+    url: canonicalUrl,
     name: vehicle.title,
     description: vehicle.description,
-    image: vehicle.images,
+    image: structuredImages,
     sku: vehicle.id,
     brand: { "@type": "Brand", name: vehicle.make },
+    model: vehicle.model,
+    vehicleModelDate: String(vehicle.year),
+    vehicleTransmission: vehicle.transmission,
+    fuelType: vehicle.fuel,
+    bodyType: vehicle.bodyType,
+    color: vehicle.color,
+    driveWheelConfiguration: vehicle.driveType,
+    mileageFromOdometer: {
+      "@type": "QuantitativeValue",
+      value: vehicle.mileage,
+      unitCode: "KMT",
+    },
+    vehicleEngine: {
+      "@type": "EngineSpecification",
+      name: vehicle.engine,
+    },
     offers: {
       "@type": "Offer",
-      url: `${siteUrl}/cars/${vehicle.id}`,
+      url: canonicalUrl,
       priceCurrency: "KES",
       price: vehicle.price,
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/UsedCondition",
-      seller: { "@id": `${siteUrl}/#organization` },
+      seller: { "@id": `${absoluteUrl("/")}#organization` },
     },
-    additionalProperty: [
-      { "@type": "PropertyValue", name: "Year", value: vehicle.year },
-      { "@type": "PropertyValue", name: "Mileage", value: `${vehicle.mileage} km` },
-      { "@type": "PropertyValue", name: "Fuel", value: vehicle.fuel },
-      { "@type": "PropertyValue", name: "Transmission", value: vehicle.transmission },
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl("/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Cars for Sale",
+        item: absoluteUrl("/cars"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: vehicle.title,
+        item: canonicalUrl,
+      },
     ],
   };
 
   return (
-    <main className="relative mx-auto max-w-7xl px-4 py-10 lg:px-8">
+    <main className="relative mx-auto max-w-7xl px-4 py-6 sm:py-10 lg:px-8">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.12),transparent_55%)]" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(vehicleJsonLd).replace(/</g, "\\u003c"),
+          __html: serializeJsonLd([vehicleJsonLd, breadcrumbJsonLd]),
         }}
       />
       <ListingViewTracker vehicleId={vehicle.id} />
       {/* Breadcrumb */}
-      <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500">
+      <nav className="mb-4 flex items-center gap-2 text-sm text-slate-500 sm:mb-6">
         <Link href="/" className="hover:text-green-600">
           Home
         </Link>
@@ -137,67 +196,53 @@ export default async function VehicleDetailsPage({
         </span>
       </nav>
 
-      {/* Header */}
-      <section className="mb-10 overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-xl shadow-slate-200/50 backdrop-blur dark:border-white/10 dark:bg-gray-900/80 dark:shadow-black/20 sm:p-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <div className="mb-4 flex flex-wrap items-center gap-3">
-              {vehicle.featured ? (
-                <span className="flex items-center gap-1 rounded-full bg-green-600 px-4 py-2 text-sm font-semibold text-white">
-                  <Star className="h-4 w-4 fill-current" />
-                  Featured
-                </span>
-              ) : (
-                <span className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
-                  Available
-                </span>
-              )}
-
-              <div className="flex items-center gap-2 text-slate-500">
-                <Calendar className="h-4 w-4" />
-                {vehicle.year}
-              </div>
-
-              <div className="flex items-center gap-2 text-slate-500">
-                <MapPin className="h-4 w-4" />
-                {vehicle.location}
-              </div>
-            </div>
-
-            <h1 className="text-4xl font-black text-slate-900 dark:text-white">
-              {vehicle.title}
-            </h1>
-
-            <p className="mt-4 text-4xl font-black text-green-600">
-              KSh {formattedPrice}
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-green-200 bg-green-50 px-6 py-5 dark:border-green-900 dark:bg-green-900/20">
-            <div className="flex items-center gap-3">
-              <BadgeCheck className="h-8 w-8 text-green-600" />
-
-              <div>
-                <p className="font-semibold">
-                  Auto Bazaar Finds
-                </p>
-
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Listed by Auto Bazaar Finds
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Main Layout */}
       <section className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_380px]">
         <div className="space-y-10">
           <VehicleGallery
             images={vehicle.images}
             title={vehicle.title}
-          />
+          >
+            <header className="relative z-10 px-1 pt-1 lg:-mt-40 lg:px-7 lg:pb-6">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500 lg:text-white/80">
+                {vehicle.featured ? (
+                  <span className="flex items-center gap-1 rounded-full bg-green-600 px-3 py-1.5 text-xs font-bold text-white">
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    Featured
+                  </span>
+                ) : (
+                  <span className="rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white">
+                    Available
+                  </span>
+                )}
+
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  {vehicle.year}
+                </span>
+
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4" />
+                  {vehicle.location}
+                </span>
+              </div>
+
+              <h1 className="mt-3 text-3xl font-black tracking-[-0.035em] text-slate-900 dark:text-white sm:text-4xl lg:text-white">
+                {vehicle.title}
+              </h1>
+
+              <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-3xl font-black tracking-tight text-green-600 sm:text-4xl">
+                  KSh {formattedPrice}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 lg:text-white/80">
+                  <BadgeCheck className="h-5 w-5 text-green-600" />
+                  <span>Listed by <strong className="text-slate-800 dark:text-slate-200 lg:text-white">Auto Bazaar Finds</strong></span>
+                </div>
+              </div>
+            </header>
+          </VehicleGallery>
 
           <VehicleSpecs vehicle={vehicle} />
 
@@ -207,7 +252,7 @@ export default async function VehicleDetailsPage({
         </div>
 
         <div>
-          <ContactCard vehicle={vehicle} />
+          <ContactCard vehicle={vehicle} siteUrl={siteUrl} />
         </div>
       </section>
 

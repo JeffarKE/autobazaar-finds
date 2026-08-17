@@ -11,11 +11,11 @@ import type { Vehicle } from "../cars/types";
 import { trackListingEvent } from "../cars/analytics";
 import { getWhatsAppListingMessage } from "../cars/listingLinks";
 
-type Props = { vehicles: Vehicle[] };
+type Props = { vehicles: Vehicle[]; siteUrl: string };
 
 const WA_NUMBER = "254741056053";
 
-export default function HomeMarketplace({ vehicles }: Props) {
+export default function HomeMarketplace({ vehicles, siteUrl }: Props) {
   const featured = useMemo(() => {
     const selected = vehicles.filter((vehicle) => vehicle.featured);
     return selected.length ? selected : vehicles.slice(0, 6);
@@ -24,7 +24,13 @@ export default function HomeMarketplace({ vehicles }: Props) {
 
   useEffect(() => {
     if (featured.length < 2) return;
-    const timer = window.setInterval(() => setActive((current) => (current + 1) % featured.length), 6500);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const timer = window.setInterval(() => {
+      if (!document.hidden) {
+        setActive((current) => (current + 1) % featured.length);
+      }
+    }, 6500);
     return () => window.clearInterval(timer);
   }, [featured.length]);
 
@@ -42,14 +48,33 @@ export default function HomeMarketplace({ vehicles }: Props) {
   const move = (direction: number) => setActive((current) => (current + direction + featured.length) % featured.length);
 
   if (!vehicle) {
-    return <div className="mx-auto max-w-[1360px] px-4 py-16 text-center sm:px-6">Fresh listings are being prepared.</div>;
+    return (
+      <section className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
+        <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-600">Auto Bazaar Finds</p>
+        <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+          Quality cars for sale in Kenya
+        </h1>
+        <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300">
+          Fresh listings are being prepared. Tell us what you need and we will help you find the right car.
+        </p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link href="/source" className="rounded-full bg-emerald-500 px-6 py-3 font-black text-emerald-950 transition hover:bg-emerald-400">
+            Source a car
+          </Link>
+          <Link href="/sell" className="rounded-full border border-slate-300 px-6 py-3 font-bold text-slate-800 transition hover:border-emerald-500 dark:border-white/20 dark:text-white">
+            Sell your car
+          </Link>
+        </div>
+      </section>
+    );
   }
 
-  const whatsapp = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(getWhatsAppListingMessage(vehicle))}`;
+  const whatsapp = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(getWhatsAppListingMessage(vehicle, siteUrl))}`;
 
   return (
     <>
       <section className="bg-[#111311] text-white">
+        <h1 className="sr-only">Cars for sale in Kenya</h1>
         <div className="mx-auto max-w-[1360px] pb-5 pt-4 sm:pb-7 sm:pt-6">
           <label className="relative mx-4 mb-4 block lg:hidden">
             <span className="sr-only">Search listings</span>
@@ -70,18 +95,18 @@ export default function HomeMarketplace({ vehicles }: Props) {
               const itemPhoto = (photoIndex: number) => itemImages[photoIndex % itemImages.length];
 
               return (
-                <Link key={item.id} href={`/cars/${item.id}`} className="relative grid h-[28rem] w-[88vw] max-w-md shrink-0 snap-center grid-cols-[1.7fr_0.9fr] grid-rows-[1.45fr_1fr] gap-0.5 overflow-hidden rounded-2xl bg-black shadow-xl">
+                <Link key={item.id} href={`/cars/${item.id}`} className="relative grid aspect-[7/6] w-[88vw] max-w-md shrink-0 snap-center grid-cols-[1.7fr_0.9fr] grid-rows-[1.45fr_1fr] gap-1 overflow-hidden rounded-2xl bg-black shadow-xl">
                   <div className="relative col-span-2 overflow-hidden">
                     <Image src={itemPhoto(0)} alt={item.title} fill loading={itemIndex === 0 ? "eager" : "lazy"} sizes="88vw" className="object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/25" />
                   </div>
-                  <div className="relative overflow-hidden"><Image src={itemPhoto(1)} alt={`${item.title} interior`} fill sizes="58vw" className="object-cover" /></div>
+                  <div className="relative overflow-hidden"><Image src={itemPhoto(1)} alt="" fill sizes="58vw" className="object-cover" /></div>
                   <div className="grid grid-rows-2 gap-0.5">
-                    {[2, 3].map((photoIndex) => <div key={photoIndex} className="relative overflow-hidden"><Image src={itemPhoto(photoIndex)} alt={`${item.title} photo ${photoIndex + 1}`} fill sizes="30vw" className="object-cover" /></div>)}
+                    {[2, 3].map((photoIndex) => <div key={photoIndex} className="relative overflow-hidden"><Image src={itemPhoto(photoIndex)} alt="" fill sizes="30vw" className="object-cover" /></div>)}
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
                     <span className="rounded-full bg-emerald-400 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-emerald-950">Featured</span>
-                    <h1 className="max-w-[70%] text-right text-lg font-black leading-6 text-white drop-shadow-md">{item.title}</h1>
+                    <p className="max-w-[70%] text-right text-lg font-black leading-6 text-white drop-shadow-md">{item.title}</p>
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 pt-14">
                     <div>
@@ -102,17 +127,17 @@ export default function HomeMarketplace({ vehicles }: Props) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/10" />
               </div>
               <div className="row-span-2 grid grid-rows-2 gap-0.5">
-                {[1, 2].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt={`${vehicle.title} photo ${index + 1}`} fill sizes="(max-width:1024px) 30vw, 25vw" className="object-cover" /></div>)}
+                {[1, 2].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt="" fill sizes="(max-width:1024px) 30vw, 25vw" className="object-cover" /></div>)}
               </div>
               <div className="row-span-2 hidden grid-rows-2 gap-0.5 lg:grid">
-                {[3, 4].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt={`${vehicle.title} photo ${index + 1}`} fill sizes="20vw" className="object-cover" /></div>)}
+                {[3, 4].map((index) => <div key={index} className="relative overflow-hidden"><Image src={photo(index)} alt="" fill sizes="20vw" className="object-cover" /></div>)}
               </div>
             </Link>
 
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-7">
               <div className="w-[68%] max-w-3xl sm:w-auto">
                 <span className="inline-flex rounded-full bg-emerald-400 px-3 py-1 text-xs font-black uppercase tracking-wider text-emerald-950">Featured listing</span>
-                <h1 className="mt-3 text-2xl font-black tracking-tight sm:text-4xl">{vehicle.title}</h1>
+                <p className="mt-3 text-2xl font-black tracking-tight sm:text-4xl">{vehicle.title}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-200">
                   <strong className="text-xl text-emerald-400 sm:text-2xl">KSh {new Intl.NumberFormat("en-KE").format(vehicle.price)}</strong>
                   <span>{new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km</span>
@@ -120,16 +145,16 @@ export default function HomeMarketplace({ vehicles }: Props) {
                   {vehicle.verified && <span className="inline-flex items-center gap-1"><BadgeCheck size={15} /> Verified</span>}
                 </div>
               </div>
-              <Link href={whatsapp} target="_blank" onClick={() => void trackListingEvent(vehicle.id, "whatsapp_click")} className="pointer-events-auto hidden items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 font-black text-emerald-950 transition hover:bg-emerald-400 sm:flex"><MessageCircle size={18} /> Arrange viewing</Link>
+              <Link href={whatsapp} target="_blank" rel="noopener noreferrer" onClick={() => void trackListingEvent(vehicle.id, "whatsapp_click")} className="pointer-events-auto hidden items-center gap-2 rounded-full bg-emerald-500 px-5 py-3 font-black text-emerald-950 transition hover:bg-emerald-400 sm:flex"><MessageCircle size={18} /> Arrange viewing</Link>
             </div>
 
             {featured.length > 1 && <div className="absolute bottom-5 right-5 flex gap-1 sm:bottom-auto sm:top-5">
-              <button onClick={() => move(-1)} aria-label="Previous featured car" className="rounded-full bg-black/70 p-2.5 text-white backdrop-blur hover:bg-emerald-500 hover:text-black"><ArrowLeft size={18} /></button>
-              <button onClick={() => move(1)} aria-label="Next featured car" className="rounded-full bg-black/70 p-2.5 text-white backdrop-blur hover:bg-emerald-500 hover:text-black"><ArrowRight size={18} /></button>
+              <button type="button" onClick={() => move(-1)} aria-label="Previous featured car" className="rounded-full bg-black/70 p-2.5 text-white backdrop-blur hover:bg-emerald-500 hover:text-black"><ArrowLeft size={18} /></button>
+              <button type="button" onClick={() => move(1)} aria-label="Next featured car" className="rounded-full bg-black/70 p-2.5 text-white backdrop-blur hover:bg-emerald-500 hover:text-black"><ArrowRight size={18} /></button>
             </div>}
           </article>
 
-          {featured.length > 1 && <div className="mt-3 hidden justify-center gap-1.5 lg:flex">{featured.map((item, index) => <button key={item.id} onClick={() => setActive(index)} aria-label={`Show ${item.title}`} className={`h-1.5 rounded-full transition-all ${index === active ? "w-8 bg-emerald-400" : "w-3 bg-white/25"}`} />)}</div>}
+          {featured.length > 1 && <div className="mt-3 hidden justify-center gap-1.5 lg:flex">{featured.map((item, index) => <button type="button" key={item.id} onClick={() => setActive(index)} aria-label={`Show ${item.title}`} aria-current={index === active ? "true" : undefined} className={`h-1.5 rounded-full transition-all ${index === active ? "w-8 bg-emerald-400" : "w-3 bg-white/25"}`} />)}</div>}
         </div>
       </section>
 

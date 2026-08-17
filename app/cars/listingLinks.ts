@@ -8,12 +8,11 @@ export function getShortListingPath(vehicleId: string) {
   return `/v/${getListingCode(vehicleId)}`;
 }
 
-export function getShortListingUrl(vehicleId: string) {
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
-  return `${siteUrl}${getShortListingPath(vehicleId)}`;
+export function getShortListingUrl(vehicleId: string, siteUrl: string) {
+  return `${siteUrl.replace(/\/$/, "")}${getShortListingPath(vehicleId)}`;
 }
 
-export function getWhatsAppListingMessage(vehicle: Vehicle) {
+export function getWhatsAppListingMessage(vehicle: Vehicle, siteUrl: string) {
   const price = new Intl.NumberFormat("en-KE").format(vehicle.price);
   const reference = `ABF-${getListingCode(vehicle.id)}`;
 
@@ -25,7 +24,7 @@ export function getWhatsAppListingMessage(vehicle: Vehicle) {
     `Location: ${vehicle.location}`,
     `Ref: ${reference}`,
     "",
-    getShortListingUrl(vehicle.id),
+    getShortListingUrl(vehicle.id, siteUrl),
     "",
     "I'm interested in this car and would like to arrange a viewing. Kindly get back to me so we can confirm the time and location.",
   ].join("\n");

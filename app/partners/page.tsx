@@ -4,8 +4,16 @@ import { ArrowRight, BadgeCheck, Banknote, Radio, Share2, UserRoundCheck } from 
 import { contact } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Work With Us",
-  description: "Earn KSh 10,000 when a buyer or seller you refer completes a successful vehicle deal with Auto Bazaar Finds.",
+  title: "Vehicle Referral Programme",
+  description:
+    "Refer a genuine car buyer or seller to Auto Bazaar Finds and earn KSh 10,000 when their vehicle deal is successfully completed.",
+  alternates: { canonical: "/partners" },
+  openGraph: {
+    title: "Earn KSh 10,000 for a Successful Vehicle Referral",
+    description:
+      "Introduce a genuine buyer or seller to Auto Bazaar Finds and earn after the deal is completed.",
+    url: "/partners",
+  },
 };
 
 const referralMessage = encodeURIComponent(

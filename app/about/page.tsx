@@ -12,8 +12,16 @@ const whatsappUrl =
   "https://wa.me/254741056053?text=Hi%20Auto%20Bazaar%20Finds%2C%20I%20saw%20your%20website%20and%20I%20need%20help%20with%20a%20car.";
 
 export const metadata: Metadata = {
-  title: "About",
-  description: "See how Auto Bazaar Finds helps private owners and showrooms sell cars, and helps buyers find cars in Kenya.",
+  title: "About Us",
+  description:
+    "Learn how Auto Bazaar Finds helps private owners and showrooms advertise vehicles and helps buyers source quality cars across Kenya.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About Auto Bazaar Finds",
+    description:
+      "A Kenyan vehicle marketplace and sourcing service built to make buying and selling cars clearer and easier.",
+    url: "/about",
+  },
 };
 
 export default function AboutPage() {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 
@@ -6,6 +7,11 @@ import { isAdminUser } from "@/lib/admin-auth";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { logout } from "../admin-login/actions";
 import ThemeToggle from "../components/theme/ThemeToggle";
+
+export const metadata: Metadata = {
+  title: "Administration",
+  robots: { index: false, follow: false, noarchive: true },
+};
 
 export default async function AdminLayout({
   children,

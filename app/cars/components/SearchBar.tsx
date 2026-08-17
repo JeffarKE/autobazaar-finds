@@ -19,6 +19,9 @@ export default function SearchBar({
 
       <input
         type="text"
+        aria-label="Search cars"
+        autoComplete="off"
+        enterKeyHint="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search by make, model or vehicle name..."

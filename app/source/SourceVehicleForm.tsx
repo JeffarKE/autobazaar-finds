@@ -28,12 +28,12 @@ export default function SourceVehicleForm() {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 text-slate-900 shadow-xl shadow-slate-200/60 dark:border-white/10 dark:bg-neutral-900 dark:text-white dark:shadow-black/20 sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Your name" value={name} onChange={setName} placeholder="Your name" />
-        <Field label="Vehicle" value={vehicle} onChange={setVehicle} placeholder="e.g. Mazda CX-5" />
-        <Field label="Budget" value={budget} onChange={setBudget} placeholder="e.g. KSh 2,000,000" />
-        <Field label="Preferred year" value={year} onChange={setYear} placeholder="e.g. 2018 or newer" />
+        <Field label="Your name" name="name" autoComplete="name" value={name} onChange={setName} placeholder="Your name" />
+        <Field label="Vehicle" name="vehicle" value={vehicle} onChange={setVehicle} placeholder="e.g. Mazda CX-5" />
+        <Field label="Budget" name="budget" inputMode="numeric" value={budget} onChange={setBudget} placeholder="e.g. KSh 2,000,000" />
+        <Field label="Preferred year" name="year" inputMode="numeric" value={year} onChange={setYear} placeholder="e.g. 2018 or newer" />
         <div className="sm:col-span-2">
-          <Field label="Your location" value={location} onChange={setLocation} placeholder="e.g. Nairobi" />
+          <Field label="Your location" name="location" autoComplete="address-level2" value={location} onChange={setLocation} placeholder="e.g. Nairobi" />
         </div>
       </div>
 
@@ -56,22 +56,32 @@ export default function SourceVehicleForm() {
 
 function Field({
   label,
+  name,
   value,
   onChange,
   placeholder,
+  autoComplete,
+  inputMode,
 }: {
   label: string;
+  name: string;
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
+  autoComplete?: string;
+  inputMode?: "numeric";
 }) {
   return (
     <label className="block">
       <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{label}</span>
       <input
+        name={name}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        maxLength={80}
         className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 caret-slate-950 outline-none transition placeholder:text-slate-400 focus:border-green-600 focus:bg-white focus:ring-4 focus:ring-green-100 dark:border-white/10 dark:bg-neutral-950 dark:text-white dark:caret-white dark:placeholder:text-slate-500 dark:focus:border-emerald-400 dark:focus:bg-neutral-950 dark:focus:ring-emerald-900/40"
       />
     </label>

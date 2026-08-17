@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   MessageCircle,
@@ -16,30 +17,46 @@ import { getShortListingUrl, getWhatsAppListingMessage } from "../listingLinks";
 
 interface ContactCardProps {
   vehicle: Vehicle;
+  siteUrl: string;
 }
 
 export default function ContactCard({
   vehicle,
+  siteUrl,
 }: ContactCardProps) {
+  const [shareStatus, setShareStatus] = useState("");
   const phone = vehicle.seller.phone.replace(/\D/g, "");
   const hasPhone = phone.length > 0;
 
-  const whatsappMessage = encodeURIComponent(getWhatsAppListingMessage(vehicle));
+  const whatsappMessage = encodeURIComponent(
+    getWhatsAppListingMessage(vehicle, siteUrl)
+  );
 
   const whatsappLink = `https://wa.me/${phone}?text=${whatsappMessage}`;
 
   async function shareVehicle() {
-    void trackListingEvent(vehicle.id, "share");
+    const shortUrl = getShortListingUrl(vehicle.id, siteUrl);
     const shareData = {
       title: vehicle.title,
       text: `${vehicle.title} — KSh ${new Intl.NumberFormat("en-KE").format(vehicle.price)} on Auto Bazaar Finds.`,
-      url: getShortListingUrl(vehicle.id),
+      url: shortUrl,
     };
     if (navigator.share) {
-      await navigator.share(shareData).catch(() => undefined);
+      try {
+        await navigator.share(shareData);
+        void trackListingEvent(vehicle.id, "share");
+      } catch {
+        // Closing the native share sheet is not an error the user needs to see.
+      }
       return;
     }
-    await navigator.clipboard.writeText(getShortListingUrl(vehicle.id));
+    try {
+      await navigator.clipboard.writeText(shortUrl);
+      setShareStatus("Listing link copied");
+      void trackListingEvent(vehicle.id, "share");
+    } catch {
+      setShareStatus("Could not copy the link. Please copy it from the address bar.");
+    }
   }
 
   return (
@@ -112,6 +129,9 @@ export default function ContactCard({
               <button type="button" onClick={shareVehicle} className="flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-300 px-6 py-4 font-semibold transition hover:bg-slate-50 dark:border-neutral-700 dark:hover:bg-neutral-800">
                 <Share2 className="h-5 w-5" /> Share this car
               </button>
+              <p aria-live="polite" className="-mt-3 text-center text-xs text-slate-500 dark:text-slate-400">
+                {shareStatus}
+              </p>
 
               <Link
                 href="/source"

@@ -1,13 +1,20 @@
 import type { NextConfig } from "next";
 
 const isDevelopment = process.env.NODE_ENV === "development";
+const fallbackSupabaseUrl = "https://pjbnvdnxazcrcubkcjmj.supabase.co";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? fallbackSupabaseUrl;
+const supabaseOrigin = new URL(supabaseUrl).origin;
+const supabaseHostname = new URL(supabaseUrl).hostname;
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' blob: data: https://pjbnvdnxazcrcubkcjmj.supabase.co",
+  `img-src 'self' blob: data: ${supabaseOrigin}`,
   "font-src 'self' data:",
-  "connect-src 'self' https://pjbnvdnxazcrcubkcjmj.supabase.co wss://pjbnvdnxazcrcubkcjmj.supabase.co",
+  `connect-src 'self' ${supabaseOrigin} wss://${supabaseHostname}`,
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "media-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -22,7 +29,16 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  { key: "Origin-Agent-Cluster", value: "?1" },
+  { key: "X-DNS-Prefetch-Control", value: "on" },
+  { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+];
+
+const privateRouteHeaders = [
+  { key: "Cache-Control", value: "private, no-store, max-age=0" },
+  { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
 ];
 
 const nextConfig: NextConfig = {
@@ -32,11 +48,11 @@ const nextConfig: NextConfig = {
       { source: "/:path*", headers: securityHeaders },
       {
         source: "/admin/:path*",
-        headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }],
+        headers: privateRouteHeaders,
       },
       {
         source: "/admin-login",
-        headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }],
+        headers: privateRouteHeaders,
       },
     ];
   },
@@ -60,10 +76,12 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 3600,
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pjbnvdnxazcrcubkcjmj.supabase.co",
+        hostname: supabaseHostname,
         pathname: "/storage/v1/object/**",
       },
     ],

@@ -24,6 +24,23 @@ export default function Navbar() {
     void Promise.resolve().then(() => setMobileOpen(false));
   }, [pathname]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileOpen]);
+
   const navItems = [
     {
       href: "/",
@@ -53,6 +70,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
+          aria-label="Auto Bazaar Finds home"
           className="flex items-center gap-1 text-2xl font-extrabold tracking-tight"
         >
           <span className="text-white">Auto</span>
@@ -65,7 +83,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-2 lg:flex">
+        <nav aria-label="Primary navigation" className="hidden items-center gap-2 lg:flex">
           {navItems.map(({ href, label, icon: Icon }) => {
             const active =
               href === "/"
@@ -76,6 +94,7 @@ export default function Navbar() {
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ${
                   active
                     ? "bg-green-500 text-white shadow-lg"
@@ -102,9 +121,12 @@ export default function Navbar() {
           </Link>
 
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
             className="rounded-lg p-2 text-white transition hover:bg-white/10 lg:hidden"
             aria-label="Toggle navigation menu"
+            aria-controls="mobile-navigation"
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X /> : <Menu />}
           </button>
@@ -113,8 +135,8 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-black/95 backdrop-blur-xl lg:hidden">
-          <div className="flex flex-col p-4">
+        <div id="mobile-navigation" className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/10 bg-black/95 backdrop-blur-xl lg:hidden">
+          <nav aria-label="Mobile navigation" className="flex flex-col p-4">
             {navItems.map(({ href, label, icon: Icon }) => {
               const active =
                 href === "/"
@@ -125,6 +147,7 @@ export default function Navbar() {
                 <Link
                   key={href}
                   href={href}
+                  aria-current={active ? "page" : undefined}
                   className={`mb-2 flex items-center gap-3 rounded-xl px-4 py-3 transition ${
                     active
                       ? "bg-green-500 text-white"
@@ -146,7 +169,7 @@ export default function Navbar() {
               <MessageCircle size={20} />
               Chat on WhatsApp
             </Link>
-          </div>
+          </nav>
         </div>
       )}
     </header>

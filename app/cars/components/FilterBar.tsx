@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import SearchBar from "./SearchBar";
 import SortDropdown from "./SortDropdown";
@@ -35,6 +35,24 @@ const optionPairs = (values: string[]): Array<[string, string]> =>
 export default function FilterBar(props: Props) {
   const [open, setOpen] = useState(false);
   const selectClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15 dark:border-white/10 dark:bg-neutral-950 dark:text-white";
+
+  useEffect(() => {
+    if (!open) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    const shouldLockScroll = window.matchMedia("(max-width: 1023px)").matches;
+    const previousOverflow = document.body.style.overflow;
+
+    if (shouldLockScroll) document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      if (shouldLockScroll) document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
 
   const select = (label: string, value: string, onChange: (value: string) => void, options: Array<[string, string]>, disabled = false) => (
     <label className="space-y-1.5">
@@ -77,7 +95,7 @@ export default function FilterBar(props: Props) {
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_15rem_auto]">
         <SearchBar value={props.search} onChange={props.setSearch} />
         <SortDropdown value={props.sortBy} onChange={props.setSortBy} />
-        <button type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 font-bold text-white transition hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400">
+        <button type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-controls="desktop-filter-panel mobile-filter-panel" className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 font-bold text-white transition hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400">
           <SlidersHorizontal className="h-5 w-5" />
           Filters
           {props.activeFilterCount > 0 && <span className="rounded-full bg-emerald-400 px-2 py-0.5 text-xs text-emerald-950 dark:bg-emerald-950 dark:text-emerald-300">{props.activeFilterCount}</span>}
@@ -85,12 +103,12 @@ export default function FilterBar(props: Props) {
         </button>
       </div>
 
-      {open && <div className="mt-4 hidden border-t border-slate-200 pt-5 lg:block dark:border-white/10">{fields}</div>}
+      {open && <div id="desktop-filter-panel" className="mt-4 hidden border-t border-slate-200 pt-5 lg:block dark:border-white/10">{fields}</div>}
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-neutral-950 lg:hidden">
+        <div id="mobile-filter-panel" role="dialog" aria-modal="true" aria-labelledby="mobile-filter-title" className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-neutral-950 lg:hidden">
           <div className="flex items-center justify-between border-b px-4 py-4 dark:border-white/10">
-            <div><p className="text-lg font-black">Filter cars</p><p className="text-xs text-slate-500">Narrow down the listings</p></div>
+            <div><p id="mobile-filter-title" className="text-lg font-black">Filter cars</p><p className="text-xs text-slate-500">Narrow down the listings</p></div>
             <button type="button" aria-label="Close filters" onClick={() => setOpen(false)} className="rounded-full border p-2 dark:border-white/10"><X className="h-5 w-5" /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4">{fields}</div>
