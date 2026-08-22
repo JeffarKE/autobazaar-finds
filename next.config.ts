@@ -76,6 +76,10 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Public vehicle photos use expiring Supabase signed URLs. Sending each
+    // refreshed URL through Vercel creates a new billable transformation for
+    // the same photo, so serve the already-compressed uploads directly.
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 3600,
     remotePatterns: [
