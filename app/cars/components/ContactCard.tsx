@@ -28,11 +28,12 @@ export default function ContactCard({
   const phone = vehicle.seller.phone.replace(/\D/g, "");
   const hasPhone = phone.length > 0;
 
-  const whatsappMessage = encodeURIComponent(
-    getWhatsAppListingMessage(vehicle, siteUrl)
-  );
-
-  const whatsappLink = `https://wa.me/${phone}?text=${whatsappMessage}`;
+  const availabilityLink = `https://wa.me/${phone}?text=${encodeURIComponent(
+    getWhatsAppListingMessage(vehicle, siteUrl, "availability")
+  )}`;
+  const viewingLink = `https://wa.me/${phone}?text=${encodeURIComponent(
+    getWhatsAppListingMessage(vehicle, siteUrl, "viewing")
+  )}`;
 
   async function shareVehicle() {
     const shortUrl = getShortListingUrl(vehicle.id, siteUrl);
@@ -116,11 +117,22 @@ export default function ContactCard({
           {hasPhone ? (
             <>
               <Link
-                href={whatsappLink}
+                href={availabilityLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => void trackListingEvent(vehicle.id, "whatsapp_click")}
                 className="flex items-center justify-center gap-3 rounded-2xl bg-green-600 px-6 py-4 font-semibold text-white transition hover:bg-green-700"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Is this still available?
+              </Link>
+
+              <Link
+                href={viewingLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => void trackListingEvent(vehicle.id, "whatsapp_click")}
+                className="flex items-center justify-center gap-3 rounded-2xl border border-green-600 px-6 py-4 font-semibold text-green-700 transition hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20"
               >
                 <MessageCircle className="h-5 w-5" />
                 Arrange a viewing

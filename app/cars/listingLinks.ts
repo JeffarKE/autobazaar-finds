@@ -12,20 +12,22 @@ export function getShortListingUrl(vehicleId: string, siteUrl: string) {
   return `${siteUrl.replace(/\/$/, "")}${getShortListingPath(vehicleId)}`;
 }
 
-export function getWhatsAppListingMessage(vehicle: Vehicle, siteUrl: string) {
-  const price = new Intl.NumberFormat("en-KE").format(vehicle.price);
+export type ListingEnquiryIntent = "availability" | "viewing";
+
+export function getWhatsAppListingMessage(
+  vehicle: Vehicle,
+  siteUrl: string,
+  intent: ListingEnquiryIntent = "viewing"
+) {
   const reference = `ABF-${getListingCode(vehicle.id)}`;
+  const opening = intent === "availability"
+    ? `Hello, is the ${vehicle.title} still available?`
+    : `Hello, I would like to arrange a viewing for the ${vehicle.title}.`;
 
   return [
-    "Hi Auto Bazaar Finds, I'd like to arrange a viewing for this car:",
+    opening,
     "",
-    `*${vehicle.title}*`,
-    `Price: KSh ${price}`,
-    `Location: ${vehicle.location}`,
     `Ref: ${reference}`,
-    "",
     getShortListingUrl(vehicle.id, siteUrl),
-    "",
-    "I'm interested in this car and would like to arrange a viewing. Kindly get back to me so we can confirm the time and location.",
   ].join("\n");
 }
