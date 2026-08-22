@@ -12,8 +12,15 @@ export default function DescriptionCard({
     ? description.split("•").map((part) => part.trim()).filter(Boolean)
     : [];
   const hasIntro = hasBullets && !description.trimStart().startsWith("•");
-  const intro = hasIntro ? bulletParts[0] : "";
-  const bulletItems = hasIntro ? bulletParts.slice(1) : bulletParts;
+  const firstPart = hasIntro ? bulletParts[0] : "";
+  const headingHasOpenParenthesis =
+    (firstPart.match(/\(/g)?.length ?? 0) > (firstPart.match(/\)/g)?.length ?? 0);
+  const intro = headingHasOpenParenthesis && bulletParts[1]
+    ? `${firstPart} • ${bulletParts[1]}`
+    : firstPart;
+  const bulletItems = hasIntro
+    ? bulletParts.slice(headingHasOpenParenthesis ? 2 : 1)
+    : bulletParts;
   const paragraphs = hasBullets
     ? []
     : description.split(/\n+/).map((part) => part.trim()).filter(Boolean);
