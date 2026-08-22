@@ -3,13 +3,14 @@ import "server-only";
 import type { Vehicle } from "@/app/cars/types";
 
 export const siteName = "Auto Bazaar Finds";
+const productionSiteUrl = "https://autobazaarfinds.co.ke";
 export const defaultDescription =
   "Browse quality cars for sale in Kenya, advertise your vehicle, or let Auto Bazaar Finds help you source the right car.";
 
 function normalizeSiteUrl(value: string | undefined) {
   if (!value) {
     return process.env.NODE_ENV === "production"
-      ? "https://autobazaarfinds.co.ke"
+      ? productionSiteUrl
       : "http://localhost:3000";
   }
 
@@ -21,9 +22,9 @@ function normalizeSiteUrl(value: string | undefined) {
 }
 
 export const siteUrl = normalizeSiteUrl(
-  process.env.NEXT_PUBLIC_SITE_URL ??
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ??
-    process.env.VERCEL_URL
+  process.env.NODE_ENV === "production"
+    ? productionSiteUrl
+    : process.env.NEXT_PUBLIC_SITE_URL
 );
 
 export function absoluteUrl(path = "/") {
