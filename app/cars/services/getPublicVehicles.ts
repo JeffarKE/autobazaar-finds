@@ -17,6 +17,8 @@ type VehicleRow = {
   engineSize: string | null;
   bodyType: string | null;
   exteriorColor?: string | null;
+  interiorColor?: string | null;
+  condition?: string | null;
   description: string | null;
   sellerName: string | null;
   phone: string | null;
@@ -81,6 +83,8 @@ function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
     bodyType: vehicle.bodyType ?? "",
     driveType: vehicle.driveType ?? "",
     color: vehicle.exteriorColor ?? "",
+    interiorColor: vehicle.interiorColor ?? "",
+    condition: vehicle.condition ?? "",
     location: displayWords(vehicle.location) || "Kenya",
     featured: Boolean(vehicle.featured),
     verified: Boolean(vehicle.verified),
@@ -150,7 +154,7 @@ async function fetchPublicVehicles(): Promise<Vehicle[]> {
   let [vehiclesResult, imagesResult] = await Promise.all([
     supabase
       .from("public_vehicles")
-      .select("id, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, description, location, featured, verified, created_at")
+      .select("id, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, interiorColor, condition, description, location, featured, verified, created_at")
       .order("created_at", { ascending: false }),
     supabase
       .from("public_vehicle_images")

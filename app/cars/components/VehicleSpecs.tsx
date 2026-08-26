@@ -59,6 +59,16 @@ const specs = (vehicle: Vehicle) => [
     value: vehicle.driveType,
   },
   {
+    icon: CarFront,
+    label: "Condition",
+    value: vehicle.condition ?? "",
+  },
+  {
+    icon: Cog,
+    label: "Interior colour",
+    value: vehicle.interiorColor ?? "",
+  },
+  {
     icon: MapPin,
     label: "Location",
     value: vehicle.location,

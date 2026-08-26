@@ -1,7 +1,7 @@
 "use client";
 
 import type { Dispatch, ReactNode, SetStateAction } from "react";
-import { CheckCircle2, DollarSign, HandCoins, MapPin } from "lucide-react";
+import { DollarSign, HandCoins, MapPin } from "lucide-react";
 
 import type { Vehicle } from "@/lib/vehicle";
 
@@ -28,10 +28,14 @@ export default function Pricing({ vehicle, setVehicleAction }: Props) {
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <ToggleCard icon={<HandCoins className="h-5 w-5" />} title="Negotiable Price" description="Allow buyers to negotiate." checked={vehicle.negotiable} onChange={(negotiable) => setVehicleAction((current) => ({ ...current, negotiable }))} />
-        <ToggleCard icon={<CheckCircle2 className="h-5 w-5" />} title="Used condition" description="Turn off only for a brand-new vehicle." checked={vehicle.condition !== "New"} onChange={(used) => setVehicleAction((current) => ({ ...current, condition: used ? "Used" : "New" }))} />
+        <SelectField label="Condition (optional)" value={vehicle.condition} options={["Used", "New", "Local", "Import", "Accident free", "Salvage title"]} onChange={(condition) => setVehicleAction((current) => ({ ...current, condition }))} />
       </div>
     </section>
   );
+}
+
+function SelectField({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (value: string) => void }) {
+  return <label className="block"><span className="mb-2 block text-sm font-semibold text-gray-700">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-xl border bg-gray-50 px-4 py-3 outline-none focus:border-black focus:bg-white"><option value="">Not specified</option>{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>;
 }
 
 type InputFieldProps = {

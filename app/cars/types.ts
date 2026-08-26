@@ -37,6 +37,8 @@ export interface Vehicle {
   driveType: string;
 
   color: string;
+  interiorColor?: string;
+  condition?: string;
 
   location: string;
 

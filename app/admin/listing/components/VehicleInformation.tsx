@@ -17,7 +17,8 @@ const fields = [
   { key: "model", label: "Model", placeholder: "Land Cruiser Prado", icon: Car, type: "text" },
   { key: "year", label: "Year", placeholder: "2020", icon: Calendar, type: "number" },
   { key: "mileage", label: "Mileage (optional)", placeholder: "45,000 km", icon: Gauge, type: "text" },
-  { key: "exteriorColor", label: "Colour (optional)", placeholder: "Pearl White", icon: Palette, type: "text" },
+  { key: "exteriorColor", label: "Exterior colour (optional)", placeholder: "Pearl White", icon: Palette, type: "text" },
+  { key: "interiorColor", label: "Interior colour (optional)", placeholder: "Black leather", icon: Palette, type: "text" },
 ] as const;
 
 export default function VehicleInformation({ vehicle, setVehicle }: Props) {
