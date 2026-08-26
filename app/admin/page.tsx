@@ -36,6 +36,14 @@ type VehicleRow = {
   created_at: string | null;
 };
 
+type VehicleImageRow = {
+  vehicle_id: string | number;
+  image_url: string | null;
+  storage_path: string | null;
+  is_cover: boolean | null;
+  display_order: number | null;
+};
+
 type DashboardVehicle = {
   id: string;
   make: string;
@@ -45,6 +53,7 @@ type DashboardVehicle = {
   location: string;
   status: VehicleStatus;
   createdAt: string;
+  image: string;
 };
 
 type DashboardStats = {
@@ -143,18 +152,28 @@ export default function AdminDashboard() {
     setErrorMessage("");
 
     try {
-      const { data, error } = await supabase
-        .from("vehicles")
-        .select(
-          "id, make, model, year, price, location, status, created_at"
-        )
-        .order("created_at", { ascending: false });
+      const [vehiclesResult, imagesResult] = await Promise.all([
+        supabase.from("vehicles").select("id, make, model, year, price, location, status, created_at").order("created_at", { ascending: false }),
+        supabase.from("vehicle_images").select("vehicle_id, image_url, storage_path, is_cover, display_order").order("display_order", { ascending: true }),
+      ]);
+      if (vehiclesResult.error) throw new Error(vehiclesResult.error.message);
+      if (imagesResult.error) throw new Error(imagesResult.error.message);
 
-      if (error) {
-        throw new Error(error.message);
+      const rows = (vehiclesResult.data as VehicleRow[] | null) ?? [];
+      const images = (imagesResult.data as VehicleImageRow[] | null) ?? [];
+      const paths = images.map((image) => image.storage_path).filter((path): path is string => Boolean(path));
+      const { data: signedImages, error: signedImagesError } = paths.length
+        ? await supabase.storage.from("vehicle-images").createSignedUrls(paths, 3600)
+        : { data: [], error: null };
+      if (signedImagesError) throw new Error(signedImagesError.message);
+      const signedByPath = new Map((signedImages ?? []).flatMap((image) => image.path && image.signedUrl ? [[image.path, image.signedUrl] as const] : []));
+      const imageByVehicle = new Map<string, string>();
+      for (const image of images) {
+        const url = image.storage_path ? signedByPath.get(image.storage_path) ?? image.image_url : image.image_url;
+        if (!url) continue;
+        const id = String(image.vehicle_id);
+        if (!imageByVehicle.has(id) || image.is_cover) imageByVehicle.set(id, url);
       }
-
-      const rows = (data as VehicleRow[] | null) ?? [];
 
       const calculatedStats: DashboardStats = {
         total: rows.length,
@@ -191,6 +210,7 @@ export default function AdminDashboard() {
           location: vehicle.location ?? "",
           status: normalizeStatus(vehicle.status),
           createdAt: vehicle.created_at ?? "",
+          image: imageByVehicle.get(String(vehicle.id)) ?? "",
         }));
 
       setStats(calculatedStats);
@@ -592,6 +612,13 @@ function RecentVehicleRow({
 }) {
   return (
     <div className="flex flex-col gap-4 p-6 transition hover:bg-gray-50 sm:flex-row sm:items-center sm:justify-between">
+      <div className="h-16 w-full shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:w-24">
+        {vehicle.image ? (
+          // Signed storage URLs are already sized on upload and expire, so use native loading here.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={vehicle.image} alt="" className="h-full w-full object-cover" />
+        ) : <div className="grid h-full place-items-center text-xs text-gray-400">No photo</div>}
+      </div>
       <div className="min-w-0">
         <h3 className="font-semibold text-gray-900">
           {vehicle.year} {vehicle.make} {vehicle.model}

@@ -234,21 +234,38 @@ export default function InventoryPage() {
       const imageRows =
         (imagesResult.data as VehicleImageRow[] | null) ?? [];
 
+      const storagePaths = imageRows
+        .map((image) => image.storage_path)
+        .filter((path): path is string => Boolean(path));
+      const { data: signedImages, error: signedImagesError } = storagePaths.length
+        ? await supabase.storage.from("vehicle-images").createSignedUrls(storagePaths, 3600)
+        : { data: [], error: null };
+
+      if (signedImagesError) throw new Error(signedImagesError.message);
+
+      const signedUrlByPath = new Map(
+        (signedImages ?? []).flatMap((image) =>
+          image.path && image.signedUrl ? [[image.path, image.signedUrl] as const] : []
+        )
+      );
       const imageMap = new Map<string, string>();
 
       for (const image of imageRows) {
-        if (!image.image_url) {
+        const imageUrl = image.storage_path
+          ? signedUrlByPath.get(image.storage_path) ?? image.image_url
+          : image.image_url;
+        if (!imageUrl) {
           continue;
         }
 
         const vehicleId = String(image.vehicle_id);
 
         if (!imageMap.has(vehicleId)) {
-          imageMap.set(vehicleId, image.image_url);
+          imageMap.set(vehicleId, imageUrl);
         }
 
         if (image.is_cover) {
-          imageMap.set(vehicleId, image.image_url);
+          imageMap.set(vehicleId, imageUrl);
         }
       }
 
