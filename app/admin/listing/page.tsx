@@ -9,7 +9,6 @@ import Description from "./components/Description";
 import LivePreview from "./components/LivePreview";
 import Pricing from "./components/Pricing";
 import PublishBar from "./components/PublishBar";
-import SellerInformation from "./components/SellerInformation";
 import UploadPhotos from "./components/UploadPhotos";
 import VehicleInformation from "./components/VehicleInformation";
 import VehicleSpecifications from "./components/VehicleSpecifications";
@@ -442,15 +441,8 @@ export default function ListingPage() {
     vehicle.make,
     vehicle.model,
     vehicle.year,
-    vehicle.mileage,
     vehicle.price,
     vehicle.location,
-    vehicle.bodyType,
-    vehicle.fuelType,
-    vehicle.transmission,
-    vehicle.driveType,
-    vehicle.engineSize,
-    vehicle.description,
   ];
   const completedEssentials = essentials.filter(Boolean).length;
   const completion = Math.round((completedEssentials / essentials.length) * 100);
@@ -523,20 +515,12 @@ export default function ListingPage() {
                 setVehicle={setVehicle}
               />
 
-              <details open className="group overflow-hidden rounded-3xl border bg-white shadow-sm">
+              <details className="group overflow-hidden rounded-3xl border bg-white shadow-sm">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 sm:p-8">
-                  <div><p className="font-bold text-gray-950">More vehicle details</p><p className="mt-1 text-sm text-gray-500">Body, transmission, fuel, drivetrain and optional specifications</p></div>
+                  <div><p className="font-bold text-gray-950">Add optional vehicle details</p><p className="mt-1 text-sm text-gray-500">Fuel, transmission, body type, engine capacity and registration number.</p></div>
                   <ChevronDown className="h-5 w-5 shrink-0 transition group-open:rotate-180" />
                 </summary>
                 <div className="border-t"><VehicleSpecifications vehicle={vehicle} setVehicle={setVehicle} /></div>
-              </details>
-
-              <details className="group overflow-hidden rounded-3xl border bg-white shadow-sm">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 sm:p-8">
-                  <div><p className="font-bold text-gray-950">Owner or showroom record</p><p className="mt-1 text-sm text-gray-500">Optional internal details. Buyers always contact Auto Bazaar Finds.</p></div>
-                  <ChevronDown className="h-5 w-5 shrink-0 transition group-open:rotate-180" />
-                </summary>
-                <div className="border-t"><SellerInformation vehicle={vehicle} setVehicle={setVehicle} /></div>
               </details>
             </form>
 

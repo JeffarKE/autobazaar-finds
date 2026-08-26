@@ -60,12 +60,8 @@ export default function LivePreview({ vehicle }: Props) {
     vehicle.model,
     vehicle.year,
     vehicle.price,
-    vehicle.mileage,
-    vehicle.fuelType,
-    vehicle.transmission,
     vehicle.location,
     vehicle.description,
-    vehicle.sellerName,
     coverImage,
   ];
   const completedFields = completionFields.filter((field) => Boolean(field?.trim())).length;
@@ -112,7 +108,7 @@ export default function LivePreview({ vehicle }: Props) {
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <Spec icon={<CalendarDays className="h-4 w-4" />} label="Year" value={vehicle.year || "Not set"} />
-            <Spec icon={<Gauge className="h-4 w-4" />} label="Mileage" value={formatMileage(vehicle.mileage)} />
+            {vehicle.mileage && <Spec icon={<Gauge className="h-4 w-4" />} label="Mileage" value={formatMileage(vehicle.mileage)} />}
             <Spec icon={<Fuel className="h-4 w-4" />} label="Fuel" value={vehicle.fuelType || "Not set"} />
             <Spec icon={<Settings2 className="h-4 w-4" />} label="Transmission" value={vehicle.transmission || "Not set"} />
           </div>

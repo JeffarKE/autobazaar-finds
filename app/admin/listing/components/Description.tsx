@@ -49,12 +49,10 @@ export default function Description({
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Vehicle Description
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900">Description (optional)</h2>
 
           <p className="text-gray-500">
-            Describe the vehicle and highlight its best features.
+            A short, honest description makes the listing easier to trust.
           </p>
         </div>
       </div>

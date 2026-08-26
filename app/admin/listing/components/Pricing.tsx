@@ -1,7 +1,7 @@
 "use client";
 
 import type { Dispatch, ReactNode, SetStateAction } from "react";
-import { BadgeCheck, DollarSign, Globe, HandCoins, MapPin, Star } from "lucide-react";
+import { CheckCircle2, DollarSign, HandCoins, MapPin } from "lucide-react";
 
 import type { Vehicle } from "@/lib/vehicle";
 
@@ -16,22 +16,19 @@ export default function Pricing({ vehicle, setVehicleAction }: Props) {
       <div className="flex items-center gap-3">
         <div className="rounded-xl bg-gray-100 p-3"><DollarSign className="h-6 w-6" /></div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Pricing &amp; Listing</h2>
-          <p className="text-gray-500">Configure the selling price and listing options.</p>
+          <h2 className="text-2xl font-bold text-gray-900">Price &amp; location</h2>
+          <p className="text-gray-500">The two details buyers look for first.</p>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:gap-6">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:gap-6">
         <InputField label="Selling Price" placeholder="4850000" icon={<DollarSign className="h-5 w-5" />} value={vehicle.price} onChange={(price) => setVehicleAction((current) => ({ ...current, price }))} />
         <InputField label="Vehicle Location" placeholder="Karen, Nairobi" icon={<MapPin className="h-5 w-5" />} value={vehicle.location} onChange={(location) => setVehicleAction((current) => ({ ...current, location }))} />
-        <SelectField label="Listing Status" icon={<Globe className="h-5 w-5" />} options={["Draft", "Live", "Reserved", "Sold", "Archived"]} value={vehicle.status} onChange={(status) => setVehicleAction((current) => ({ ...current, status: status as Vehicle["status"] }))} />
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <ToggleCard icon={<HandCoins className="h-5 w-5" />} title="Negotiable Price" description="Allow buyers to negotiate." checked={vehicle.negotiable} onChange={(negotiable) => setVehicleAction((current) => ({ ...current, negotiable }))} />
-        <ToggleCard icon={<Star className="h-5 w-5" />} title="Featured Listing" description="Display this vehicle prominently." checked={vehicle.featured} onChange={(featured) => setVehicleAction((current) => ({ ...current, featured }))} />
-        <ToggleCard icon={<BadgeCheck className="h-5 w-5" />} title="Verified Listing" description="Show a verified badge." checked={vehicle.verified} onChange={(verified) => setVehicleAction((current) => ({ ...current, verified }))} />
-        <ToggleCard icon={<Globe className="h-5 w-5" />} title="Publish Immediately" description="Make this listing visible after saving." checked={vehicle.publishImmediately} onChange={(publishImmediately) => setVehicleAction((current) => ({ ...current, publishImmediately }))} />
+        <ToggleCard icon={<CheckCircle2 className="h-5 w-5" />} title="Used condition" description="Turn off only for a brand-new vehicle." checked={vehicle.condition !== "New"} onChange={(used) => setVehicleAction((current) => ({ ...current, condition: used ? "Used" : "New" }))} />
       </div>
     </section>
   );
@@ -52,28 +49,6 @@ function InputField({ label, placeholder, icon, value, onChange }: InputFieldPro
       <span className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
         <span className="shrink-0 text-gray-400">{icon}</span>
         <input value={value} onChange={(event) => onChange(event.target.value)} className="min-w-0 w-full bg-transparent outline-none" placeholder={placeholder} />
-      </span>
-    </label>
-  );
-}
-
-type SelectFieldProps = {
-  label: string;
-  icon: ReactNode;
-  options: readonly string[];
-  value: string;
-  onChange: (value: string) => void;
-};
-
-function SelectField({ label, icon, options, value, onChange }: SelectFieldProps) {
-  return (
-    <label className="block min-w-0">
-      <span className="mb-2 block text-sm font-semibold text-gray-700">{label}</span>
-      <span className="flex items-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 transition focus-within:border-black focus-within:bg-white">
-        <span className="shrink-0 text-gray-400">{icon}</span>
-        <select value={value} onChange={(event) => onChange(event.target.value)} className="min-w-0 w-full bg-transparent outline-none">
-          {options.map((option) => <option key={option} value={option}>{option}</option>)}
-        </select>
       </span>
     </label>
   );

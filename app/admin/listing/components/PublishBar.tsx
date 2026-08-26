@@ -22,13 +22,13 @@ export default function PublishBar({
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-bold">
-        {isEditing ? "Edit Listing" : "Publish Listing"}
+        {isEditing ? "Edit Listing" : "Ready when you are"}
       </h2>
 
       <p className="mt-2 text-sm text-gray-500">
         {isEditing
           ? "Review your changes and save the updated vehicle listing."
-          : "Save your progress locally or publish the vehicle when it is complete."}
+          : "Post with the details you have now. You can add or change anything later."}
       </p>
 
       <div className="mt-8 space-y-3">
@@ -68,7 +68,7 @@ export default function PublishBar({
               : "Publishing..."
             : isEditing
               ? "Save Changes"
-              : "Publish Vehicle"}
+            : "Post listing"}
         </button>
       </div>
 

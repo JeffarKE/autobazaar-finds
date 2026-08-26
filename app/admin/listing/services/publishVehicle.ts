@@ -8,37 +8,16 @@ type UploadedImage = {
   storagePath: string;
 };
 
-const requiredFields: Array<[keyof Vehicle, string]> = [
-  ["make", "Make"],
-  ["model", "Model"],
-  ["year", "Year"],
-  ["price", "Price"],
-  ["mileage", "Mileage"],
-  ["bodyType", "Body type"],
-  ["fuelType", "Fuel type"],
-  ["transmission", "Transmission"],
-  ["driveType", "Drive type"],
-  ["engineSize", "Engine size"],
-  ["location", "Location"],
-  ["description", "Description"],
-  ["sellerName", "Seller name"],
-  ["phone", "Phone number"],
-];
+function optionalNumber(value: string, label: string) {
+  if (!value.trim()) return null;
 
-function validateVehicle(vehicle: Vehicle) {
-  const missing = requiredFields
-    .filter(([field]) => !String(vehicle[field]).trim())
-    .map(([, label]) => label);
+  const number = Number(value.replace(/[^0-9.-]/g, ""));
 
-  if (vehicle.images.length === 0) missing.push("at least one vehicle photo");
-
-  if (missing.length > 0) {
-    throw new Error(`Complete the following before publishing: ${missing.join(", ")}.`);
+  if (!Number.isFinite(number)) {
+    throw new Error(`${label} must be a valid number when provided.`);
   }
 
-  if (!Number.isFinite(Number(vehicle.year)) || !Number.isFinite(Number(vehicle.price)) || !Number.isFinite(Number(vehicle.mileage))) {
-    throw new Error("Year, price, and mileage must be valid numbers.");
-  }
+  return number;
 }
 
 async function uploadImage(image: VehicleImage): Promise<UploadedImage> {
@@ -59,24 +38,22 @@ async function uploadImage(image: VehicleImage): Promise<UploadedImage> {
  * This follows the same database column conventions already used by app/sell.
  */
 export async function publishVehicle(vehicle: Vehicle) {
-  validateVehicle(vehicle);
-
   const uploadedImages = await Promise.all(vehicle.images.map(uploadImage));
   const { data: createdVehicle, error: vehicleError } = await supabase
     .from("vehicles")
     .insert({
       make: vehicle.make,
       model: vehicle.model,
-      year: Number(vehicle.year),
+      year: optionalNumber(vehicle.year, "Year"),
       registrationNumber: vehicle.registrationNumber || null,
       vin: vehicle.vin || null,
-      price: Number(vehicle.price),
-      mileage: Number(vehicle.mileage),
-      fuelType: vehicle.fuelType,
-      transmission: vehicle.transmission,
-      driveType: vehicle.driveType,
-      engineSize: vehicle.engineSize,
-      bodyType: vehicle.bodyType,
+      price: optionalNumber(vehicle.price, "Price"),
+      mileage: optionalNumber(vehicle.mileage, "Mileage"),
+      fuelType: vehicle.fuelType || null,
+      transmission: vehicle.transmission || null,
+      driveType: vehicle.driveType || null,
+      engineSize: vehicle.engineSize || null,
+      bodyType: vehicle.bodyType || null,
       exteriorColor: vehicle.exteriorColor || null,
       interiorColor: vehicle.interiorColor || null,
       condition: vehicle.condition || null,
@@ -85,11 +62,11 @@ export async function publishVehicle(vehicle: Vehicle) {
       horsepower: vehicle.horsepower || null,
       torque: vehicle.torque || null,
       groundClearance: vehicle.groundClearance || null,
-      description: vehicle.description,
-      sellerName: vehicle.sellerName,
-      phone: vehicle.phone,
+      description: vehicle.description || null,
+      sellerName: vehicle.sellerName || null,
+      phone: vehicle.phone || null,
       email: vehicle.email || null,
-      location: vehicle.location,
+      location: vehicle.location || null,
       preferredContact: vehicle.preferredContact || null,
       bestTime: vehicle.bestTime || null,
       status: vehicle.publishImmediately ? "Live" : vehicle.status,
