@@ -39,6 +39,8 @@ export interface Vehicle {
   color: string;
   interiorColor?: string;
   condition?: string;
+  origin?: string;
+  history?: string;
 
   location: string;
 

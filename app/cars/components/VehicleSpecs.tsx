@@ -64,6 +64,16 @@ const specs = (vehicle: Vehicle) => [
     value: vehicle.condition ?? "",
   },
   {
+    icon: MapPin,
+    label: "Origin",
+    value: vehicle.origin ?? "",
+  },
+  {
+    icon: Settings2,
+    label: "Vehicle history",
+    value: vehicle.history ?? "",
+  },
+  {
     icon: Cog,
     label: "Interior colour",
     value: vehicle.interiorColor ?? "",

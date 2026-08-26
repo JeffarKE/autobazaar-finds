@@ -25,6 +25,8 @@ export type Vehicle = {
   exteriorColor: string;
   interiorColor: string;
   condition: string;
+  origin: string;
+  history: string;
   seats: string;
   doors: string;
   horsepower: string;
@@ -66,6 +68,8 @@ export const emptyVehicle: Vehicle = {
   exteriorColor: "",
   interiorColor: "",
   condition: "",
+  origin: "",
+  history: "",
   seats: "",
   doors: "",
   horsepower: "",

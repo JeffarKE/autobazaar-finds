@@ -17,9 +17,12 @@ const fields = [
   { key: "model", label: "Model", placeholder: "Land Cruiser Prado", icon: Car, type: "text" },
   { key: "year", label: "Year", placeholder: "2020", icon: Calendar, type: "number" },
   { key: "mileage", label: "Mileage (optional)", placeholder: "45,000 km", icon: Gauge, type: "text" },
-  { key: "exteriorColor", label: "Exterior colour (optional)", placeholder: "Pearl White", icon: Palette, type: "text" },
-  { key: "interiorColor", label: "Interior colour (optional)", placeholder: "Black leather", icon: Palette, type: "text" },
 ] as const;
+
+const colourOptions = [
+  "Black", "Blue", "Brown", "Gold", "Gray", "Green", "Orange", "Red",
+  "Silver", "White", "Yellow", "Beige", "Other",
+];
 
 export default function VehicleInformation({ vehicle, setVehicle }: Props) {
   return (
@@ -46,8 +49,27 @@ export default function VehicleInformation({ vehicle, setVehicle }: Props) {
               </label>
             );
           })}
+          <ColourSelect label="Exterior colour (optional)" value={vehicle.exteriorColor} onChange={(exteriorColor) => setVehicle((current) => ({ ...current, exteriorColor }))} />
+          <ColourSelect label="Interior colour (optional)" value={vehicle.interiorColor} onChange={(interiorColor) => setVehicle((current) => ({ ...current, interiorColor }))} />
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function ColourSelect({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  const options = value && !colourOptions.includes(value) ? [value, ...colourOptions] : colourOptions;
+
+  return (
+    <label className="block min-w-0">
+      <span className="mb-2 block text-sm font-semibold text-gray-700">{label}</span>
+      <span className="relative block">
+        <Palette className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <select value={value} onChange={(event) => onChange(event.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background py-2 pl-10 pr-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50">
+          <option value="">Not specified</option>
+          {options.map((option) => <option key={option} value={option}>{option}</option>)}
+        </select>
+      </span>
+    </label>
   );
 }

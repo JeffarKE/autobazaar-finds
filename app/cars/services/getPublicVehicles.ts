@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 
 import { createPublicSupabaseClient } from "@/lib/supabase-public";
+import { parseVehicleCondition } from "@/lib/vehicleCondition";
 import type { FuelType, Transmission, Vehicle } from "../types";
 import { mockVehicles } from "../mockVehicles";
 
@@ -68,6 +69,7 @@ function normalizeTransmission(value: string | null): Transmission {
 function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
   const id = String(vehicle.id);
   const year = Number(vehicle.year) || 0;
+  const conditionDetails = parseVehicleCondition(vehicle.condition);
 
   return {
     id,
@@ -84,7 +86,9 @@ function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
     driveType: vehicle.driveType ?? "",
     color: vehicle.exteriorColor ?? "",
     interiorColor: vehicle.interiorColor ?? "",
-    condition: vehicle.condition ?? "",
+    condition: conditionDetails.condition,
+    origin: conditionDetails.origin,
+    history: conditionDetails.history,
     location: displayWords(vehicle.location) || "Kenya",
     featured: Boolean(vehicle.featured),
     verified: Boolean(vehicle.verified),
@@ -223,7 +227,7 @@ async function fetchPublicVehicleById(id: string): Promise<Vehicle | null> {
   let [vehicleResult, imagesResult] = await Promise.all([
     supabase
       .from("public_vehicles")
-      .select("id, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, description, location, featured, verified, created_at")
+      .select("id, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, interiorColor, condition, description, location, featured, verified, created_at")
       .eq("id", id)
       .maybeSingle(),
     supabase

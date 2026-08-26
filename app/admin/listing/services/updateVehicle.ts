@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { Vehicle } from "@/lib/vehicle";
+import { serializeVehicleCondition } from "@/lib/vehicleCondition";
 
 function optionalNumber(value: string, label: string) {
   if (!value.trim()) return null;
@@ -78,7 +79,7 @@ export async function updateVehicle(
           vehicle.exteriorColor || null,
         interiorColor:
           vehicle.interiorColor || null,
-        condition: vehicle.condition || null,
+        condition: serializeVehicleCondition(vehicle.condition, vehicle.origin, vehicle.history),
         seats: vehicle.seats || null,
         doors: vehicle.doors || null,
         horsepower: vehicle.horsepower || null,

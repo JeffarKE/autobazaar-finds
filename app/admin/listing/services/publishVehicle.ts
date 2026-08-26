@@ -2,6 +2,7 @@ import { createVehicleImages } from "@/app/sell/services/createVehicleImages";
 import { uploadVehicleImage } from "@/lib/imageUpload";
 import { supabase } from "@/lib/supabase";
 import type { Vehicle, VehicleImage } from "@/lib/vehicle";
+import { serializeVehicleCondition } from "@/lib/vehicleCondition";
 
 type UploadedImage = {
   publicUrl: string;
@@ -56,7 +57,7 @@ export async function publishVehicle(vehicle: Vehicle) {
       bodyType: vehicle.bodyType || null,
       exteriorColor: vehicle.exteriorColor || null,
       interiorColor: vehicle.interiorColor || null,
-      condition: vehicle.condition || null,
+      condition: serializeVehicleCondition(vehicle.condition, vehicle.origin, vehicle.history),
       seats: vehicle.seats || null,
       doors: vehicle.doors || null,
       horsepower: vehicle.horsepower || null,

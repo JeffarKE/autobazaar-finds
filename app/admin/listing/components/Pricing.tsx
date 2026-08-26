@@ -28,7 +28,9 @@ export default function Pricing({ vehicle, setVehicleAction }: Props) {
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <ToggleCard icon={<HandCoins className="h-5 w-5" />} title="Negotiable Price" description="Allow buyers to negotiate." checked={vehicle.negotiable} onChange={(negotiable) => setVehicleAction((current) => ({ ...current, negotiable }))} />
-        <SelectField label="Condition (optional)" value={vehicle.condition} options={["Used", "New", "Local", "Import", "Accident free", "Salvage title"]} onChange={(condition) => setVehicleAction((current) => ({ ...current, condition }))} />
+        <SelectField label="Condition (optional)" value={vehicle.condition} options={["Used", "New"]} onChange={(condition) => setVehicleAction((current) => ({ ...current, condition }))} />
+        <SelectField label="Origin (optional)" value={vehicle.origin} options={["Local", "Import"]} onChange={(origin) => setVehicleAction((current) => ({ ...current, origin }))} />
+        <SelectField label="History / title (optional)" value={vehicle.history} options={["Accident-free", "Salvage title"]} onChange={(history) => setVehicleAction((current) => ({ ...current, history }))} />
       </div>
     </section>
   );

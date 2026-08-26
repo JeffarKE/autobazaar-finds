@@ -7,10 +7,10 @@ import type { Vehicle } from "@/lib/vehicle";
 type Props = { vehicle: Vehicle; setVehicle: Dispatch<SetStateAction<Vehicle>> };
 
 const selectFields = [
-  { key: "bodyType", label: "Body type", icon: CarFront, options: ["SUV", "Sedan", "Hatchback", "Pickup", "Station Wagon", "Van", "Coupe", "Other"] },
-  { key: "transmission", label: "Transmission", icon: Cog, options: ["Automatic", "Manual", "CVT", "Semi-automatic"] },
-  { key: "fuelType", label: "Fuel type", icon: Fuel, options: ["Petrol", "Diesel", "Hybrid", "Electric", "Plug-in Hybrid"] },
-  { key: "driveType", label: "Drive type", icon: CarFront, options: ["2WD", "FWD", "RWD", "AWD", "4WD"] },
+  { key: "bodyType", label: "Body type (optional)", icon: CarFront, options: ["SUV", "Sedan", "Hatchback", "Pickup", "Station Wagon", "Van", "Coupe", "Other"] },
+  { key: "transmission", label: "Transmission (optional)", icon: Cog, options: ["Automatic", "Manual", "CVT", "Semi-automatic"] },
+  { key: "fuelType", label: "Fuel type (optional)", icon: Fuel, options: ["Petrol", "Diesel", "Hybrid", "Electric", "Plug-in Hybrid"] },
+  { key: "driveType", label: "Drive train (optional)", icon: CarFront, options: ["2WD", "FWD", "RWD", "AWD", "4WD"] },
 ] as const;
 
 export default function VehicleSpecifications({ vehicle, setVehicle }: Props) {

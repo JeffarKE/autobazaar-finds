@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, BarChart3, ChevronDown, Eye, Loader2, MessageCircle, Send, Share2, Sparkles } from "lucide-react";
+import { ArrowLeft, BarChart3, Eye, Loader2, MessageCircle, Send, Share2, Sparkles } from "lucide-react";
 
 import Description from "./components/Description";
 import LivePreview from "./components/LivePreview";
@@ -17,6 +17,7 @@ import { publishVehicle } from "./services/publishVehicle";
 import { updateVehicle } from "./services/updateVehicle";
 
 import { emptyVehicle, Vehicle } from "@/lib/vehicle";
+import { parseVehicleCondition } from "@/lib/vehicleCondition";
 import { supabase } from "@/lib/supabase";
 
 const DRAFT_KEY = "autobazaar-admin-listing-draft";
@@ -249,6 +250,8 @@ export default function ListingPage() {
         /*
          * Build the complete vehicle object.
          */
+        const conditionDetails = parseVehicleCondition(vehicleRow.condition);
+
         const loadedVehicle: Vehicle = {
           ...emptyVehicle,
 
@@ -277,7 +280,9 @@ export default function ListingPage() {
             vehicleRow.interiorColor
           ),
 
-          condition: stringValue(vehicleRow.condition),
+          condition: conditionDetails.condition,
+          origin: conditionDetails.origin,
+          history: conditionDetails.history,
           seats: stringValue(vehicleRow.seats),
           doors: stringValue(vehicleRow.doors),
           horsepower: stringValue(vehicleRow.horsepower),
@@ -515,13 +520,13 @@ export default function ListingPage() {
                 setVehicle={setVehicle}
               />
 
-              <details className="group overflow-hidden rounded-3xl border bg-white shadow-sm">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 sm:p-8">
-                  <div><p className="font-bold text-gray-950">Add optional vehicle details</p><p className="mt-1 text-sm text-gray-500">Fuel, transmission, body type, engine capacity and registration number.</p></div>
-                  <ChevronDown className="h-5 w-5 shrink-0 transition group-open:rotate-180" />
-                </summary>
+              <section className="overflow-hidden rounded-3xl border bg-white shadow-sm">
+                <div className="p-6 sm:p-8">
+                  <p className="font-bold text-gray-950">Optional vehicle details</p>
+                  <p className="mt-1 text-sm text-gray-500">Choose only what you know. Unselected details stay hidden from buyers.</p>
+                </div>
                 <div className="border-t"><VehicleSpecifications vehicle={vehicle} setVehicle={setVehicle} /></div>
-              </details>
+              </section>
             </form>
 
             <aside
