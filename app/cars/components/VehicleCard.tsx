@@ -11,7 +11,6 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle, eager = false }: VehicleCardProps) {
   const formattedPrice = new Intl.NumberFormat("en-KE").format(vehicle.price);
-  const formattedMileage = new Intl.NumberFormat("en-KE").format(vehicle.mileage);
   const images = vehicle.images.length ? vehicle.images : ["/cars/forester.jpg"];
   const photo = (index: number) => images[index % images.length];
   const showPhotoMosaic = vehicle.featured && images.length > 1;
@@ -62,20 +61,11 @@ export default function VehicleCard({ vehicle, eager = false }: VehicleCardProps
           KSh {formattedPrice}
         </p>
 
-        <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-300">
-          <div className="flex min-w-0 items-center gap-1.5">
-            <Gauge className="h-4 w-4 shrink-0 text-gray-400" />
-            <span className="truncate">{formattedMileage} km</span>
-          </div>
-          <div className="flex min-w-0 items-center gap-1.5">
-            <Fuel className="h-4 w-4 shrink-0 text-gray-400" />
-            <span className="truncate">{vehicle.fuel}</span>
-          </div>
-          <div className="flex min-w-0 items-center gap-1.5">
-            <Settings2 className="h-4 w-4 shrink-0 text-gray-400" />
-            <span className="truncate">{vehicle.transmission}</span>
-          </div>
-        </div>
+        {(vehicle.mileage > 0 || vehicle.fuel || vehicle.transmission) && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600 dark:text-gray-300">
+          {vehicle.mileage > 0 && <div className="flex min-w-0 items-center gap-1.5"><Gauge className="h-4 w-4 shrink-0 text-gray-400" /><span className="truncate">{new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km</span></div>}
+          {vehicle.fuel && <div className="flex min-w-0 items-center gap-1.5"><Fuel className="h-4 w-4 shrink-0 text-gray-400" /><span className="truncate">{vehicle.fuel}</span></div>}
+          {vehicle.transmission && <div className="flex min-w-0 items-center gap-1.5"><Settings2 className="h-4 w-4 shrink-0 text-gray-400" /><span className="truncate">{vehicle.transmission}</span></div>}
+        </div>}
 
         <div className="mt-3 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">

@@ -55,11 +55,12 @@ function normalizeFuel(value: string | null): FuelType {
     return value;
   }
 
-  return "Petrol";
+  return value === "Petrol" ? "Petrol" : "";
 }
 
 function normalizeTransmission(value: string | null): Transmission {
-  return value === "Manual" ? "Manual" : "Automatic";
+  if (value === "Manual" || value === "Automatic") return value;
+  return "";
 }
 
 function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
@@ -74,12 +75,12 @@ function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
     year,
     price: Number(vehicle.price) || 0,
     mileage: Number(vehicle.mileage) || 0,
-    engine: vehicle.engineSize ?? "Not specified",
+    engine: vehicle.engineSize ?? "",
     transmission: normalizeTransmission(vehicle.transmission),
     fuel: normalizeFuel(vehicle.fuelType),
-    bodyType: vehicle.bodyType ?? "Not specified",
-    driveType: vehicle.driveType ?? "Not specified",
-    color: vehicle.exteriorColor ?? "Not specified",
+    bodyType: vehicle.bodyType ?? "",
+    driveType: vehicle.driveType ?? "",
+    color: vehicle.exteriorColor ?? "",
     location: displayWords(vehicle.location) || "Kenya",
     featured: Boolean(vehicle.featured),
     verified: Boolean(vehicle.verified),

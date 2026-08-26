@@ -140,7 +140,7 @@ export default function HomeMarketplace({ vehicles, siteUrl }: Props) {
                 <p className="mt-3 text-2xl font-black tracking-tight sm:text-4xl">{vehicle.title}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-200">
                   <strong className="text-xl text-emerald-400 sm:text-2xl">KSh {new Intl.NumberFormat("en-KE").format(vehicle.price)}</strong>
-                  <span>{new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km</span>
+                  {vehicle.mileage > 0 && <span>{new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km</span>}
                   <span className="inline-flex items-center gap-1"><MapPin size={14} /> {vehicle.location}</span>
                   {vehicle.verified && <span className="inline-flex items-center gap-1"><BadgeCheck size={15} /> Verified</span>}
                 </div>

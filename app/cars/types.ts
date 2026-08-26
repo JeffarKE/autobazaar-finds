@@ -6,13 +6,14 @@ export interface Seller {
   verified: boolean;
 }
 
-export type Transmission = "Automatic" | "Manual";
+export type Transmission = "Automatic" | "Manual" | "";
 
 export type FuelType =
   | "Petrol"
   | "Diesel"
   | "Hybrid"
-  | "Electric";
+  | "Electric"
+  | "";
 
 export interface Vehicle {
   id: string;

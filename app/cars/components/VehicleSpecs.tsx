@@ -39,7 +39,9 @@ const specs = (vehicle: Vehicle) => [
   {
     icon: Gauge,
     label: "Mileage",
-    value: `${new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km`,
+    value: vehicle.mileage > 0
+      ? `${new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km`
+      : "",
   },
   {
     icon: Cog,
@@ -66,6 +68,12 @@ const specs = (vehicle: Vehicle) => [
 export default function VehicleSpecs({
   vehicle,
 }: VehicleSpecsProps) {
+  const filledSpecs = specs(vehicle).filter((spec) =>
+    typeof spec.value === "number" ? spec.value > 0 : Boolean(spec.value.trim())
+  );
+
+  if (filledSpecs.length === 0) return null;
+
   return (
     <section className="space-y-6">
       <div>
@@ -79,7 +87,7 @@ export default function VehicleSpecs({
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        {specs(vehicle).map((spec) => {
+        {filledSpecs.map((spec) => {
           const Icon = spec.icon;
 
           return (
