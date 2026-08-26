@@ -171,10 +171,11 @@ export default function CarsBrowser({ cars, initialSearch = "" }: CarsBrowserPro
 
         {filteredCars.length > 0 ? (
           <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {visibleCars.map((vehicle) => (
+            {visibleCars.map((vehicle, index) => (
               <VehicleCard
                 key={vehicle.id}
                 vehicle={vehicle}
+                eager={index < 4}
               />
             ))}
           </section>

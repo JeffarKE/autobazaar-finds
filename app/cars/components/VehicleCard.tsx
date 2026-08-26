@@ -6,9 +6,10 @@ import type { Vehicle } from "../types";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
+  eager?: boolean;
 }
 
-export default function VehicleCard({ vehicle }: VehicleCardProps) {
+export default function VehicleCard({ vehicle, eager = false }: VehicleCardProps) {
   const formattedPrice = new Intl.NumberFormat("en-KE").format(vehicle.price);
   const formattedMileage = new Intl.NumberFormat("en-KE").format(vehicle.mileage);
   const images = vehicle.images.length ? vehicle.images : ["/cars/forester.jpg"];
@@ -23,7 +24,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
       {showPhotoMosaic && (
         <div className="grid aspect-[7/6] grid-cols-[1.7fr_0.9fr] grid-rows-[1.45fr_1fr] gap-1 overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800">
           <div className="relative col-span-2 overflow-hidden">
-            <Image src={photo(0)} alt={vehicle.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw" loading="lazy" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
+            <Image src={photo(0)} alt={vehicle.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw" loading={eager ? "eager" : "lazy"} className="object-cover transition duration-300 group-hover:scale-[1.03]" />
           </div>
           <div className="relative overflow-hidden"><Image src={photo(1)} alt="" fill sizes="(max-width:640px) 66vw, (max-width:1024px) 33vw, 20vw" loading="lazy" className="object-cover" /></div>
           <div className="grid grid-rows-2 gap-0.5">
@@ -38,7 +39,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           alt={vehicle.title}
           fill
           sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, (max-width:1280px) 33vw, 25vw"
-          loading="lazy"
+          loading={eager ? "eager" : "lazy"}
           className="object-cover transition duration-300 group-hover:scale-[1.03]"
         />
       </div>}
