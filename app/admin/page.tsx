@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import {
   Archive,
+  BarChart3,
   Car,
   CheckCircle,
   Clock3,
   Eye,
   FileEdit,
+  ListPlus,
   Plus,
   RefreshCw,
   TrendingUp,
@@ -220,23 +222,52 @@ export default function AdminDashboard() {
 
   return (
     <main className="space-y-8">
-      {/* Header */}
-      <section className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p className="text-sm font-medium uppercase tracking-widest text-gray-500">
-            Auto Baazar Finds
-          </p>
-
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900">
-            Welcome back
-          </h1>
-
-          <p className="mt-3 max-w-2xl text-gray-600">
-            Manage your inventory, publish vehicles and monitor your
-            vehicle marketing and sourcing platform from one place.
-          </p>
+      {/* Marketplace-style command centre */}
+      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-neutral-900">
+        <div className="bg-slate-950 px-6 py-7 text-white sm:px-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-300">
+                Marketplace management
+              </p>
+              <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+                Your selling dashboard
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+                Create a vehicle post, see what is live, and keep every listing moving from one simple place.
+              </p>
+            </div>
+            <Link
+              href="/admin/listing"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-400 px-5 py-3 font-bold text-emerald-950 transition hover:bg-emerald-300"
+            >
+              <Plus className="h-5 w-5" />
+              Create listing
+            </Link>
+          </div>
         </div>
 
+        <div className="grid gap-3 p-4 sm:grid-cols-3 sm:p-5">
+          <Link href="/admin/listing" className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-emerald-400 hover:bg-emerald-50 dark:border-white/10 dark:hover:bg-emerald-400/10">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300"><ListPlus className="h-5 w-5" /></span>
+            <span><span className="block font-bold">Sell something</span><span className="text-sm text-gray-500">Post a vehicle in minutes</span></span>
+          </Link>
+          <Link href="/admin/inventory" className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-sky-400 hover:bg-sky-50 dark:border-white/10 dark:hover:bg-sky-400/10">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-sky-100 text-sky-700 dark:bg-sky-400/15 dark:text-sky-300"><Car className="h-5 w-5" /></span>
+            <span><span className="block font-bold">Your listings</span><span className="text-sm text-gray-500">Edit, sell or delist vehicles</span></span>
+          </Link>
+          <Link href="/cars" className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-violet-400 hover:bg-violet-50 dark:border-white/10 dark:hover:bg-violet-400/10">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-400/15 dark:text-violet-300"><BarChart3 className="h-5 w-5" /></span>
+            <span><span className="block font-bold">See marketplace</span><span className="text-sm text-gray-500">View the public experience</span></span>
+          </Link>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-black tracking-tight text-gray-900">Listing overview</h2>
+          <p className="mt-1 text-sm text-gray-500">A clear view of what buyers can see right now.</p>
+        </div>
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
@@ -252,14 +283,6 @@ export default function AdminDashboard() {
 
             Refresh
           </button>
-
-          <Link
-            href="/admin/listing"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-black px-5 py-3 font-medium text-white transition hover:bg-gray-800"
-          >
-            <Plus className="h-5 w-5" />
-            New Listing
-          </Link>
         </div>
       </section>
 
