@@ -56,16 +56,20 @@ export async function generateMetadata({
   const shareDescription = vehicleMetaDescription(vehicle);
   const canonicalPath = `/cars/${vehicle.id}`;
   const socialImage = vehicleImageUrl(vehicle.id);
+  const keywords = [
+    `${vehicle.title} for sale`,
+    `${vehicle.make} ${vehicle.model} Kenya`,
+    `cars for sale in ${vehicle.location}`,
+  ];
+
+  if (vehicle.bodyType) {
+    keywords.push(`${vehicle.bodyType} for sale in Kenya`);
+  }
 
   return {
     title: `${vehicle.title} for Sale in ${vehicle.location}`,
     description: shareDescription,
-    keywords: [
-      `${vehicle.title} for sale`,
-      `${vehicle.make} ${vehicle.model} Kenya`,
-      `cars for sale in ${vehicle.location}`,
-      `${vehicle.bodyType} for sale in Kenya`,
-    ],
+    keywords,
     alternates: { canonical: canonicalPath },
     openGraph: {
       title: `${vehicle.title} for Sale in ${vehicle.location}`,
@@ -106,6 +110,12 @@ export default async function VehicleDetailsPage({
   const structuredImages = vehicle.images.map((_, index) =>
     vehicleImageUrl(vehicle.id, index)
   );
+  const itemCondition =
+    vehicle.condition === "New"
+      ? "https://schema.org/NewCondition"
+      : vehicle.condition === "Used"
+        ? "https://schema.org/UsedCondition"
+        : undefined;
   const vehicleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Vehicle",
@@ -117,28 +127,36 @@ export default async function VehicleDetailsPage({
     sku: vehicle.id,
     brand: { "@type": "Brand", name: vehicle.make },
     model: vehicle.model,
-    vehicleModelDate: String(vehicle.year),
-    vehicleTransmission: vehicle.transmission,
-    fuelType: vehicle.fuel,
-    bodyType: vehicle.bodyType,
-    color: vehicle.color,
-    driveWheelConfiguration: vehicle.driveType,
-    mileageFromOdometer: {
-      "@type": "QuantitativeValue",
-      value: vehicle.mileage,
-      unitCode: "KMT",
-    },
-    vehicleEngine: {
-      "@type": "EngineSpecification",
-      name: vehicle.engine,
-    },
+    ...(vehicle.year > 0 && { vehicleModelDate: String(vehicle.year) }),
+    ...(vehicle.transmission && {
+      vehicleTransmission: vehicle.transmission,
+    }),
+    ...(vehicle.fuel && { fuelType: vehicle.fuel }),
+    ...(vehicle.bodyType && { bodyType: vehicle.bodyType }),
+    ...(vehicle.color && { color: vehicle.color }),
+    ...(vehicle.driveType && {
+      driveWheelConfiguration: vehicle.driveType,
+    }),
+    ...(vehicle.mileage > 0 && {
+      mileageFromOdometer: {
+        "@type": "QuantitativeValue",
+        value: vehicle.mileage,
+        unitCode: "KMT",
+      },
+    }),
+    ...(vehicle.engine && {
+      vehicleEngine: {
+        "@type": "EngineSpecification",
+        name: vehicle.engine,
+      },
+    }),
     offers: {
       "@type": "Offer",
       url: canonicalUrl,
       priceCurrency: "KES",
       price: vehicle.price,
       availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/UsedCondition",
+      ...(itemCondition && { itemCondition }),
       seller: { "@id": `${absoluteUrl("/")}#organization` },
     },
   };

@@ -41,9 +41,18 @@ export function vehicleImageUrl(vehicleId: string, index = 0) {
 
 export function vehicleMetaDescription(vehicle: Vehicle) {
   const price = new Intl.NumberFormat("en-KE").format(vehicle.price);
-  const mileage = new Intl.NumberFormat("en-KE").format(vehicle.mileage);
+  const highlights = [`KSh ${price}`];
 
-  return `${vehicle.title} for sale in ${vehicle.location}, Kenya. KSh ${price}, ${mileage} km, ${vehicle.fuel}, ${vehicle.transmission}. View photos and arrange a viewing with Auto Bazaar Finds.`;
+  if (vehicle.mileage > 0) {
+    highlights.push(
+      `${new Intl.NumberFormat("en-KE").format(vehicle.mileage)} km`
+    );
+  }
+
+  if (vehicle.fuel) highlights.push(vehicle.fuel);
+  if (vehicle.transmission) highlights.push(vehicle.transmission);
+
+  return `${vehicle.title} for sale in ${vehicle.location}, Kenya. ${highlights.join(", ")}. View photos and arrange a viewing with Auto Bazaar Finds.`;
 }
 
 export function vehicleListJsonLd(
