@@ -454,10 +454,10 @@ export default function ListingPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <section className="sticky top-0 z-30 border-b bg-white/95 backdrop-blur">
+      <section className="sticky top-0 z-30 border-b bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <Link href="/admin/inventory" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border bg-white transition hover:bg-gray-50" aria-label="Back to inventory">
+            <Link href="/admin/inventory" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border bg-white transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700" aria-label="Back to inventory">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="min-w-0">
@@ -467,7 +467,7 @@ export default function ListingPage() {
           </div>
           <div className="hidden min-w-48 sm:block">
             <div className="flex justify-between text-xs font-semibold text-gray-500"><span>Ready to publish</span><span>{completion}%</span></div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100"><div className="h-full rounded-full bg-green-500 transition-all" style={{ width: `${completion}%` }} /></div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700"><div className="h-full rounded-full bg-green-500 transition-all" style={{ width: `${completion}%` }} /></div>
           </div>
 
           {notice && (
@@ -573,7 +573,7 @@ export default function ListingPage() {
       </section>
 
       {!isLoadingEdit && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 shadow-[0_-12px_30px_rgba(0,0,0,0.08)] backdrop-blur xl:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 shadow-[0_-12px_30px_rgba(0,0,0,0.08)] backdrop-blur dark:border-gray-800 dark:bg-gray-900/95 xl:hidden">
           <div className="mx-auto flex max-w-7xl gap-3">
             <button type="button" onClick={saveDraft} disabled={isPublishing} className="rounded-xl border px-5 py-3 text-sm font-bold disabled:opacity-50">
               Save draft
