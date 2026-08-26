@@ -36,6 +36,15 @@ export default function VehicleInformation({ vehicle, setVehicle }: Props) {
           </div>
         </div>
 
+        <label className="block min-w-0">
+          <span className="mb-2 block text-sm font-semibold text-gray-700">Listing title (optional)</span>
+          <span className="relative block">
+            <Car className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input placeholder="Toyota Land Cruiser Prado TX" className="pl-10" value={vehicle.listingTitle} onChange={(event) => setVehicle((current) => ({ ...current, listingTitle: event.target.value }))} />
+          </span>
+          <span className="mt-2 block text-xs text-gray-500">This exact title will appear to buyers. Leave it blank to use year, make and model.</span>
+        </label>
+
         <div className="grid gap-4 sm:grid-cols-2">
           {fields.map((field) => {
             const Icon = field.icon;

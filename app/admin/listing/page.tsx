@@ -255,6 +255,7 @@ export default function ListingPage() {
         const loadedVehicle: Vehicle = {
           ...emptyVehicle,
 
+          listingTitle: stringValue(vehicleRow.listingTitle),
           make: stringValue(vehicleRow.make),
           model: stringValue(vehicleRow.model),
           year: stringValue(vehicleRow.year),
@@ -305,6 +306,7 @@ export default function ListingPage() {
           negotiable: Boolean(vehicleRow.negotiable),
           featured: Boolean(vehicleRow.featured),
           verified: Boolean(vehicleRow.verified),
+          turbo: Boolean(vehicleRow.turbo),
           publishImmediately: Boolean(
             vehicleRow.publishImmediately
           ),

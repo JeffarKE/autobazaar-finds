@@ -61,6 +61,7 @@ export async function updateVehicle(
     await supabase
       .from("vehicles")
       .update({
+        listingTitle: vehicle.listingTitle || null,
         make: vehicle.make,
         model: vehicle.model,
         year: optionalNumber(vehicle.year, "Year"),
@@ -103,6 +104,7 @@ export async function updateVehicle(
         negotiable: vehicle.negotiable,
         featured: vehicle.featured,
         verified: vehicle.verified,
+        turbo: vehicle.turbo,
         publishImmediately:
           vehicle.publishImmediately,
       })

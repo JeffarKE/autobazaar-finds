@@ -7,6 +7,7 @@ import { mockVehicles } from "../mockVehicles";
 
 type VehicleRow = {
   id: string | number;
+  listingTitle?: string | null;
   make: string | null;
   model: string | null;
   year: number | string | null;
@@ -26,6 +27,7 @@ type VehicleRow = {
   location: string | null;
   featured?: boolean | null;
   verified?: boolean | null;
+  turbo?: boolean | null;
   created_at?: string | null;
 };
 
@@ -73,7 +75,7 @@ function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
 
   return {
     id,
-    title: `${year || ""} ${displayWords(vehicle.make)} ${displayWords(vehicle.model)}`.trim(),
+    title: vehicle.listingTitle?.trim() || `${year || ""} ${displayWords(vehicle.make)} ${displayWords(vehicle.model)}`.trim(),
     make: displayWords(vehicle.make),
     model: displayWords(vehicle.model),
     year,
@@ -92,6 +94,7 @@ function mapVehicle(vehicle: VehicleRow, images: string[]): Vehicle {
     location: displayWords(vehicle.location) || "Kenya",
     featured: Boolean(vehicle.featured),
     verified: Boolean(vehicle.verified),
+    turbo: Boolean(vehicle.turbo),
     images: images.length > 0 ? images : [FALLBACK_IMAGE],
     description: vehicle.description ?? "Contact us for more information about this vehicle.",
     seller: {
@@ -158,7 +161,7 @@ async function fetchPublicVehicles(): Promise<Vehicle[]> {
   let [vehiclesResult, imagesResult] = await Promise.all([
     supabase
       .from("public_vehicles")
-      .select("id, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, interiorColor, condition, description, location, featured, verified, created_at")
+      .select("id, listingTitle, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, interiorColor, condition, description, location, featured, verified, turbo, created_at")
       .order("created_at", { ascending: false }),
     supabase
       .from("public_vehicle_images")
@@ -227,7 +230,7 @@ async function fetchPublicVehicleById(id: string): Promise<Vehicle | null> {
   let [vehicleResult, imagesResult] = await Promise.all([
     supabase
       .from("public_vehicles")
-      .select("id, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, interiorColor, condition, description, location, featured, verified, created_at")
+      .select("id, listingTitle, make, model, year, price, mileage, fuelType, transmission, driveType, engineSize, bodyType, exteriorColor, interiorColor, condition, description, location, featured, verified, turbo, created_at")
       .eq("id", id)
       .maybeSingle(),
     supabase

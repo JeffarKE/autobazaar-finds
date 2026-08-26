@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Star,
   UserRound,
+  Wind,
 } from "lucide-react";
 
 import type { Vehicle } from "@/lib/vehicle";
@@ -49,9 +50,10 @@ function formatMileage(value: string) {
 }
 
 export default function LivePreview({ vehicle }: Props) {
-  const title = [vehicle.year, vehicle.make, vehicle.model]
+  const automaticTitle = [vehicle.year, vehicle.make, vehicle.model]
     .filter(hasValue)
-    .join(" ") || "New Vehicle Listing";
+    .join(" ");
+  const title = vehicle.listingTitle.trim() || automaticTitle || "New Vehicle Listing";
   const coverImage =
     vehicle.images.find((image) => image.isCover)?.publicUrl ||
     vehicle.images[0]?.publicUrl;
@@ -111,6 +113,7 @@ export default function LivePreview({ vehicle }: Props) {
             {vehicle.mileage && <Spec icon={<Gauge className="h-4 w-4" />} label="Mileage" value={formatMileage(vehicle.mileage)} />}
             <Spec icon={<Fuel className="h-4 w-4" />} label="Fuel" value={vehicle.fuelType || "Not set"} />
             <Spec icon={<Settings2 className="h-4 w-4" />} label="Transmission" value={vehicle.transmission || "Not set"} />
+            {vehicle.turbo && <Spec icon={<Wind className="h-4 w-4" />} label="Turbo" value="Turbocharged" />}
           </div>
 
           <div className="mt-6 flex items-center gap-2 text-sm text-gray-600">

@@ -1,7 +1,7 @@
 "use client";
 
 import type { Dispatch, ReactNode, SetStateAction } from "react";
-import { DollarSign, HandCoins, MapPin } from "lucide-react";
+import { BadgeCheck, DollarSign, HandCoins, MapPin, Star, Wind } from "lucide-react";
 
 import type { Vehicle } from "@/lib/vehicle";
 
@@ -31,6 +31,16 @@ export default function Pricing({ vehicle, setVehicleAction }: Props) {
         <SelectField label="Condition (optional)" value={vehicle.condition} options={["Used", "New"]} onChange={(condition) => setVehicleAction((current) => ({ ...current, condition }))} />
         <SelectField label="Origin (optional)" value={vehicle.origin} options={["Local", "Import"]} onChange={(origin) => setVehicleAction((current) => ({ ...current, origin }))} />
         <SelectField label="History / title (optional)" value={vehicle.history} options={["Accident-free", "Salvage title"]} onChange={(history) => setVehicleAction((current) => ({ ...current, history }))} />
+      </div>
+
+      <div className="mt-8 border-t pt-6">
+        <h3 className="font-bold text-gray-950">Listing switches</h3>
+        <p className="mt-1 text-sm text-gray-500">Turn on only the labels that apply to this vehicle.</p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <ToggleCard icon={<Star className="h-5 w-5" />} title="Featured" description="Highlight this listing in featured areas." checked={vehicle.featured} onChange={(featured) => setVehicleAction((current) => ({ ...current, featured }))} />
+          <ToggleCard icon={<BadgeCheck className="h-5 w-5" />} title="Verified" description="Show buyers that this listing is verified." checked={vehicle.verified} onChange={(verified) => setVehicleAction((current) => ({ ...current, verified }))} />
+          <ToggleCard icon={<Wind className="h-5 w-5" />} title="Turbo" description="Show that the vehicle has a turbocharged engine." checked={vehicle.turbo} onChange={(turbo) => setVehicleAction((current) => ({ ...current, turbo }))} />
+        </div>
       </div>
     </section>
   );

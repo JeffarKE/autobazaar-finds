@@ -10,6 +10,7 @@ export type VehicleImage = {
 };
 
 export type Vehicle = {
+  listingTitle: string;
   make: string;
   model: string;
   year: string;
@@ -39,6 +40,7 @@ export type Vehicle = {
   negotiable: boolean;
   featured: boolean;
   verified: boolean;
+  turbo: boolean;
   publishImmediately: boolean;
 
   description: string;
@@ -53,6 +55,7 @@ export type Vehicle = {
 };
 
 export const emptyVehicle: Vehicle = {
+  listingTitle: "",
   make: "",
   model: "",
   year: "",
@@ -82,6 +85,7 @@ export const emptyVehicle: Vehicle = {
   negotiable: true,
   featured: false,
   verified: true,
+  turbo: false,
   publishImmediately: true,
 
   description: "",

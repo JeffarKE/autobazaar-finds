@@ -46,6 +46,7 @@ export interface Vehicle {
 
   featured: boolean;
   verified: boolean;
+  turbo?: boolean;
 
   images: string[];
 

@@ -43,6 +43,7 @@ export async function publishVehicle(vehicle: Vehicle) {
   const { data: createdVehicle, error: vehicleError } = await supabase
     .from("vehicles")
     .insert({
+      listingTitle: vehicle.listingTitle || null,
       make: vehicle.make,
       model: vehicle.model,
       year: optionalNumber(vehicle.year, "Year"),
@@ -74,6 +75,7 @@ export async function publishVehicle(vehicle: Vehicle) {
       negotiable: vehicle.negotiable,
       featured: vehicle.featured,
       verified: vehicle.verified,
+      turbo: vehicle.turbo,
       publishImmediately: vehicle.publishImmediately,
     })
     .select()

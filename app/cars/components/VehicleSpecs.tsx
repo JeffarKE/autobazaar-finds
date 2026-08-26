@@ -6,6 +6,7 @@ import {
   CarFront,
   Cog,
   Calendar,
+  Wind,
 } from "lucide-react";
 
 import type { Vehicle } from "../types";
@@ -72,6 +73,11 @@ const specs = (vehicle: Vehicle) => [
     icon: Settings2,
     label: "Vehicle history",
     value: vehicle.history ?? "",
+  },
+  {
+    icon: Wind,
+    label: "Turbo",
+    value: vehicle.turbo ? "Turbocharged" : "",
   },
   {
     icon: Cog,
