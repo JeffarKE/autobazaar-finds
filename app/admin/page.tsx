@@ -27,6 +27,7 @@ type VehicleStatus =
 
 type VehicleRow = {
   id: string | number;
+  listingTitle: string | null;
   make: string | null;
   model: string | null;
   year: number | string | null;
@@ -46,6 +47,7 @@ type VehicleImageRow = {
 
 type DashboardVehicle = {
   id: string;
+  listingTitle: string;
   make: string;
   model: string;
   year: number;
@@ -118,6 +120,16 @@ function formatDate(date: string) {
   });
 }
 
+function vehicleName(vehicle: DashboardVehicle) {
+  return (
+    vehicle.listingTitle.trim() ||
+    [vehicle.year > 0 ? vehicle.year : "", vehicle.make, vehicle.model]
+      .filter(Boolean)
+      .join(" ") ||
+    "Untitled vehicle"
+  );
+}
+
 function statusClasses(status: VehicleStatus) {
   switch (status) {
     case "Live":
@@ -153,7 +165,7 @@ export default function AdminDashboard() {
 
     try {
       const [vehiclesResult, imagesResult] = await Promise.all([
-        supabase.from("vehicles").select("id, make, model, year, price, location, status, created_at").order("created_at", { ascending: false }),
+        supabase.from("vehicles").select("id, listingTitle, make, model, year, price, location, status, created_at").order("created_at", { ascending: false }),
         supabase.from("vehicle_images").select("vehicle_id, image_url, storage_path, is_cover, display_order").order("display_order", { ascending: true }),
       ]);
       if (vehiclesResult.error) throw new Error(vehiclesResult.error.message);
@@ -203,6 +215,7 @@ export default function AdminDashboard() {
         .slice(0, 5)
         .map((vehicle) => ({
           id: String(vehicle.id),
+          listingTitle: vehicle.listingTitle ?? "",
           make: vehicle.make ?? "",
           model: vehicle.model ?? "",
           year: Number(vehicle.year) || 0,
@@ -621,7 +634,7 @@ function RecentVehicleRow({
       </div>
       <div className="min-w-0">
         <h3 className="font-semibold text-gray-900">
-          {vehicle.year} {vehicle.make} {vehicle.model}
+          {vehicleName(vehicle)}
         </h3>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">

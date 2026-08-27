@@ -28,6 +28,7 @@ type VehicleStatus =
 
 type InventoryVehicle = {
   id: string;
+  listingTitle: string;
   make: string;
   model: string;
   year: number;
@@ -45,6 +46,7 @@ type InventoryVehicle = {
 
 type VehicleRow = {
   id: string | number;
+  listingTitle?: string | null;
   make: string | null;
   model: string | null;
   year: number | string | null;
@@ -91,11 +93,17 @@ function formatPrice(price: number) {
 }
 
 function formatMileage(mileage: number) {
-  if (!Number.isFinite(mileage)) {
-    return "—";
-  }
-
   return `${mileage.toLocaleString("en-KE")} km`;
+}
+
+function vehicleName(vehicle: InventoryVehicle) {
+  return (
+    vehicle.listingTitle.trim() ||
+    [vehicle.year > 0 ? vehicle.year : "", vehicle.make, vehicle.model]
+      .filter(Boolean)
+      .join(" ") ||
+    "Untitled vehicle"
+  );
 }
 
 function normalizeStatus(status: string | null): VehicleStatus {
@@ -276,6 +284,7 @@ export default function InventoryPage() {
 
           return {
             id,
+            listingTitle: vehicle.listingTitle ?? "",
             make: vehicle.make ?? "",
             model: vehicle.model ?? "",
             year: Number(vehicle.year) || 0,
@@ -371,23 +380,23 @@ export default function InventoryPage() {
 
     switch (vehicle.status) {
       case "Draft":
-        message = `Publish ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        message = `Publish ${vehicleName(vehicle)}?`;
         break;
 
       case "Live":
-        message = `Reserve ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        message = `Reserve ${vehicleName(vehicle)}?`;
         break;
 
       case "Reserved":
-        message = `Release the reservation for ${vehicle.year} ${vehicle.make} ${vehicle.model}?`;
+        message = `Release the reservation for ${vehicleName(vehicle)}?`;
         break;
 
       case "Sold":
-        message = `Re-list ${vehicle.year} ${vehicle.make} ${vehicle.model} as a draft?`;
+        message = `Re-list ${vehicleName(vehicle)} as a draft?`;
         break;
 
       case "Archived":
-        message = `Re-list ${vehicle.year} ${vehicle.make} ${vehicle.model} now?`;
+        message = `Re-list ${vehicleName(vehicle)} now?`;
         break;
     }
 
@@ -400,7 +409,7 @@ export default function InventoryPage() {
 
   async function markSold(vehicle: InventoryVehicle) {
     const confirmed = window.confirm(
-      `Mark ${vehicle.year} ${vehicle.make} ${vehicle.model} as sold?`
+      `Mark ${vehicleName(vehicle)} as sold?`
     );
 
     if (!confirmed) {
@@ -412,7 +421,7 @@ export default function InventoryPage() {
 
   async function archiveVehicle(vehicle: InventoryVehicle) {
     const confirmed = window.confirm(
-      `Delist ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nIt will disappear from the public site but remain ready to re-list later.`
+      `Delist ${vehicleName(vehicle)}?\n\nIt will disappear from the public site but remain ready to re-list later.`
     );
 
     if (!confirmed) {
@@ -424,7 +433,7 @@ export default function InventoryPage() {
 
   async function deleteVehicle(vehicle: InventoryVehicle) {
     const confirmed = window.confirm(
-      `Delete ${vehicle.year} ${vehicle.make} ${vehicle.model}?\n\nThis will permanently remove the vehicle listing and its uploaded photos. This cannot be undone.`
+      `Delete ${vehicleName(vehicle)}?\n\nThis will permanently remove the vehicle listing and its uploaded photos. This cannot be undone.`
     );
 
     if (!confirmed) {
@@ -508,7 +517,7 @@ export default function InventoryPage() {
 
       const matchesSearch =
         !query ||
-        `${vehicle.make} ${vehicle.model} ${vehicle.year} ${vehicle.location}`
+        `${vehicleName(vehicle)} ${vehicle.make} ${vehicle.model} ${vehicle.year || ""} ${vehicle.location}`
           .toLowerCase()
           .includes(query);
 
@@ -527,7 +536,8 @@ export default function InventoryPage() {
           return a.price - b.price;
 
         case "mileage-low":
-          return a.mileage - b.mileage;
+          return (a.mileage > 0 ? a.mileage : Infinity) -
+            (b.mileage > 0 ? b.mileage : Infinity);
 
         case "year-new":
           return b.year - a.year;
@@ -885,7 +895,7 @@ function VehicleCard({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={vehicle.image}
-              alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+              alt={vehicleName(vehicle)}
               className="h-52 w-full object-cover"
               onError={onImageError}
             />
@@ -938,7 +948,7 @@ function VehicleCard({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={vehicle.image}
-              alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+              alt={vehicleName(vehicle)}
               className="h-32 w-full rounded-xl object-cover sm:w-52"
               onError={onImageError}
             />
@@ -983,7 +993,7 @@ function VehicleTitle({
   return (
     <div className="flex flex-wrap items-center gap-2">
       <h2 className="text-xl font-bold text-gray-900">
-        {vehicle.year} {vehicle.make} {vehicle.model}
+        {vehicleName(vehicle)}
       </h2>
 
       {vehicle.featured && (
@@ -1005,7 +1015,7 @@ function VehicleMeta({
       </p>
 
       <div className="mt-4 flex flex-wrap gap-5 text-sm text-gray-500">
-        <span>{formatMileage(vehicle.mileage)}</span>
+        {vehicle.mileage > 0 && <span>{formatMileage(vehicle.mileage)}</span>}
 
         <span className="flex items-center gap-2">
           <Eye className="h-4 w-4" />

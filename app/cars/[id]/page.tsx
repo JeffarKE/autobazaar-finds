@@ -234,10 +234,12 @@ export default async function VehicleDetailsPage({
                   </span>
                 )}
 
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4" />
-                  {vehicle.year}
-                </span>
+                {vehicle.year > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-4 w-4" />
+                    {vehicle.year}
+                  </span>
+                )}
 
                 <span className="flex items-center gap-1.5">
                   <MapPin className="h-4 w-4" />
