@@ -23,6 +23,9 @@ const socials = [
 ];
 
 const whatsappUrl = `${contact.whatsapp}?text=Hi%20Auto%20Bazaar%20Finds%2C%20I%20saw%20your%20website%20and%20I%20need%20some%20help.`;
+const websiteEnquiryUrl = `${contact.whatsapp}?text=${encodeURIComponent(
+  "Hi, I saw the Auto Bazaar Finds website and I would like a similar website for my business."
+)}`;
 
 export default function Footer() {
   return (
@@ -64,6 +67,14 @@ export default function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-5 border-t border-white/10 pt-8 text-sm text-neutral-500 sm:flex-row">
           <span>© {new Date().getFullYear()} Auto Bazaar Finds. Built in Kenya.</span>
+          <Link
+            href={websiteEnquiryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-neutral-400 transition hover:text-emerald-400"
+          >
+            Need a website like this? Let&apos;s build yours.
+          </Link>
           <div className="flex items-center gap-3"><span>Appearance</span><ThemeToggle darkSurface /></div>
         </div>
       </div>

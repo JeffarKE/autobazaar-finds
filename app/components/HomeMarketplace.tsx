@@ -81,14 +81,6 @@ export default function HomeMarketplace({ vehicles, siteUrl }: Props) {
             <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search Toyota, Subaru, SUV..." className="h-14 w-full rounded-2xl border border-white/10 bg-white/10 pl-12 pr-4 text-base text-white outline-none placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20" />
           </label>
-          <div className="scrollbar-none mb-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:px-6">
-            {["Available now", "Newly listed", "Featured", "Toyota", "Subaru", "SUVs", "Under KSh 2M", "Showroom cars", "Private sellers"].map((item, index) => (
-              <Link key={item} href={index < 3 ? "#listings" : "/cars"} className="min-w-max rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-400 hover:text-white">
-                {item}
-              </Link>
-            ))}
-          </div>
-
           <div className="scrollbar-none flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:hidden">
             {featured.map((item, itemIndex) => {
               const itemImages = item.images.length ? item.images : ["/cars/forester.jpg"];
