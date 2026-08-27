@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Menu,
@@ -71,14 +72,23 @@ export default function Navbar() {
         <Link
           href="/"
           aria-label="Auto Bazaar Finds home"
-          className="flex items-center gap-1 text-2xl font-extrabold tracking-tight"
+          className="flex items-center gap-2 text-lg font-extrabold tracking-tight sm:text-2xl"
         >
-          <span className="text-white">Auto</span>
-          <span className="text-green-500">Bazaar</span>
-          <span className="text-white">Finds</span>
-
-          <span className="rounded-md bg-green-500 px-2 py-0.5 text-xs font-bold text-black">
-            KE
+          <Image
+            src="/brand-mark.svg"
+            alt=""
+            width={40}
+            height={40}
+            priority
+            className="h-9 w-9 shrink-0 sm:h-10 sm:w-10"
+          />
+          <span className="flex items-center gap-1">
+            <span className="text-white">Auto</span>
+            <span className="text-green-500">Bazaar</span>
+            <span className="text-white">Finds</span>
+            <span className="rounded-md bg-green-500 px-1.5 py-0.5 text-[10px] font-bold text-black sm:px-2 sm:text-xs">
+              KE
+            </span>
           </span>
         </Link>
 

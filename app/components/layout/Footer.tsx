@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Mail, MapPin, MessageCircle, Radio } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaThreads, FaTiktok } from "react-icons/fa6";
 import { contact, socialLinks } from "@/lib/site";
@@ -33,7 +34,10 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h2 className="text-3xl font-black tracking-[-0.04em]">Auto Bazaar <span className="text-emerald-400">Finds</span></h2>
+            <div className="flex items-center gap-3">
+              <Image src="/brand-mark.svg" alt="" width={44} height={44} className="h-11 w-11" />
+              <h2 className="text-3xl font-black tracking-[-0.04em]">Auto Bazaar <span className="text-emerald-400">Finds</span></h2>
+            </div>
             <p className="mt-5 leading-7 text-neutral-400">Cars from private owners and showroom partners, plus help finding the right car for you.</p>
             <div className="mt-7 flex gap-2">
               {socials.map(({ href, label, icon: Icon }) => (

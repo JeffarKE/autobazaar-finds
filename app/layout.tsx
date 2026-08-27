@@ -93,7 +93,7 @@ export default function RootLayout({
         "@id": `${siteUrl}/#organization`,
         name: siteName,
         url: siteUrl,
-        logo: `${siteUrl}/favicon.ico`,
+        logo: `${siteUrl}/brand-mark.svg`,
         email: "autobazaarfinds@gmail.com",
         telephone: "+254741056053",
         description: defaultDescription,
