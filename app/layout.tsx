@@ -41,6 +41,15 @@ export const metadata: Metadata = {
     email: false,
     telephone: false,
   },
+  icons: {
+    icon: [
+      {
+        url: "/brand-mark.svg",
+        type: "image/svg+xml",
+        sizes: "64x64",
+      },
+    ],
+  },
   manifest: "/manifest.webmanifest",
   robots: {
     index: true,
